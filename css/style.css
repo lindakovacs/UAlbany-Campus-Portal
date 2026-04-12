@@ -1,0 +1,1151 @@
+/* Global Styles */
+:root {
+  --primary-color: #9032ed;
+  --nav-color: #eeb211; /* UAlbany Gold for navbar only */
+  --dark-color: #787d82;
+  --light-color: #f4f4f4;
+  /* distance between fixed navbar and page content (adjustable) */
+  --nav-offset: 7.5rem;
+  /* consistent right spacing for floating controls */
+  --right-offset: 1rem;
+  --danger-color: #da1a2d;
+  --success-color: #256dfb;
+}
+
+/* enable smooth scrolling for anchor links (back-to-top) */
+html {
+  scroll-behavior: smooth;
+}
+
+/* keep anchor targets visible under fixed navbar */
+#top {
+  scroll-margin-top: var(--nav-offset);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background-color: #fff;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  width: 100%;
+}
+
+/* Utilities */
+.container {
+  max-width: 1100px;
+  margin: auto;
+  overflow: hidden;
+  padding: 0 2rem;
+  margin-top: var(--nav-offset);
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 769px) {
+  .container {
+    margin-top: calc(var(--nav-offset) + 0.75rem);
+  }
+}
+
+/* Text Styles*/
+.x-large {
+  font-size: 4rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.large {
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.lead {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color: var(--primary-color);
+}
+
+.text-dark {
+  color: var(--dark-color);
+}
+
+/* Padding */
+.p {
+  padding: 0.5rem;
+}
+.p-1 {
+  padding: 1rem;
+}
+.p-2 {
+  padding: 2rem;
+}
+.p-3 {
+  padding: 3rem;
+}
+.py {
+  padding: 0.5rem 0;
+}
+.py-1 {
+  padding: 1rem 0;
+}
+.py-2 {
+  padding: 2rem 0;
+}
+.py-3 {
+  padding: 3rem 0;
+}
+
+/* Margin */
+.m {
+  margin: 0.5rem;
+}
+.m-1 {
+  margin: 1rem;
+}
+.m-2 {
+  margin: 2rem;
+}
+.m-3 {
+  margin: 3rem;
+}
+.my {
+  margin: 0.5rem 0;
+}
+.my-1 {
+  margin: 1rem 0;
+}
+.my-2 {
+  margin: 2rem 0;
+}
+.my-3 {
+  margin: 3rem 0;
+}
+
+.btn {
+  display: inline-block;
+  background: var(--nav-color);
+  color: #fff;
+  padding: 0.4rem 1.3rem;
+  font-size: 1rem;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: opacity 0.2s ease-in;
+  outline: none;
+}
+
+.badge {
+  font-size: 0.8rem;
+  padding: 0.1rem;
+  text-align: center;
+  margin: 0.3rem;
+  background: var(--light-color);
+  color: #333;
+}
+
+.alert {
+  padding: 0.8rem;
+  margin: 1rem 0;
+  opacity: 0.9;
+  background: var(--light-color);
+  color: #333;
+}
+
+.btn-primary,
+.bg-primary,
+.badge-primary,
+.alert-primary {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.btn-light,
+.bg-light,
+.badge-light,
+.alert-light {
+  background: var(--light-color);
+  color: #333;
+}
+
+.btn-dark,
+.bg-dark,
+.badge-dark,
+.alert-dark {
+  background: var(--dark-color);
+  color: #fff;
+}
+
+.btn-danger,
+.bg-danger,
+.badge-danger,
+.alert-danger {
+  background: var(--danger-color);
+  color: #fff;
+}
+
+.btn-success,
+.bg-success,
+.badge-success,
+.alert-success {
+  background: var(--success-color);
+  color: #fff;
+}
+
+.btn-white,
+.bg-white,
+.badge-white,
+.alert-white {
+  background: #fff;
+  color: #333;
+  border: #ccc solid 1px;
+}
+
+/* Button-only overrides to match the requested color scheme */
+.btn-light,
+.btn-dark {
+  background: var(--nav-color);
+  color: #fff;
+  border-color: #fff;
+}
+
+.btn-primary,
+.btn-danger,
+.btn-success {
+  border-color: #fff;
+}
+
+.btn-white {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.bg-light,
+.badge-light {
+  border: #ccc solid 1px;
+}
+
+.round-img {
+  border-radius: 50%;
+}
+
+.line {
+  height: 1px;
+  background: #ccc;
+  margin: 1.5rem 0;
+}
+
+/* Overlay */
+.dark-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Forms */
+.form {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.form .form-group {
+  margin: 1.2rem 0;
+}
+
+.form .form-text {
+  display: block;
+  margin-top: 0.3rem;
+  color: #888;
+}
+
+.form input[type='text'],
+.form input[type='email'],
+.form input[type='password'],
+.form input[type='date'],
+.form select,
+.form textarea {
+  display: block;
+  width: 100%;
+  padding: 0.4rem;
+  font-size: 1.2rem;
+  border: 1px solid #ccc;
+}
+
+/* Form validation error states */
+.form input[aria-invalid='true'],
+.form textarea[aria-invalid='true'] {
+  border-color: var(--danger-color);
+  background-color: #fff9f9;
+}
+
+.error-message {
+  display: block;
+  color: var(--danger-color);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Profile photo upload */
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.photo-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.photo-card-header {
+  margin-bottom: 1rem;
+}
+
+.photo-card-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.profile-photo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.photo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.photo-actions-inline {
+  margin-bottom: 0.75rem;
+}
+
+.photo-input {
+  display: none;
+}
+
+/* Back-to-top button */
+.back-to-top {
+  position: fixed;
+  right: var(--right-offset);
+  bottom: 6.5rem;
+  width: 44px;
+  height: 44px;
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 1202;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    visibility 0.18s;
+  border: 2px solid #fff;
+  background-clip: padding-box;
+  text-decoration: none;
+  display: inline-flex;
+}
+
+.back-to-top:hover {
+  opacity: 0.8;
+}
+
+/* Ensure form submit buttons are positioned normally and remain clickable */
+.form input[type='submit'],
+.form button[type='submit'] {
+  position: relative;
+  display: inline-block;
+  z-index: auto;
+}
+
+.form .social-input i.fa-linkedin {
+  color: #0077b5;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.table th {
+  background: var(--light-color);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--nav-color);
+  padding: 0.7rem 2rem;
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  top: 0;
+  border-bottom: solid 1px var(--nav-color);
+  opacity: 0.9;
+}
+
+.navbar ul {
+  display: flex;
+}
+
+.navbar a {
+  color: #fff;
+  padding: 0.45rem;
+  margin: 0 0.25rem;
+}
+
+/* navbar logo image (replaces fontawesome code icon) */
+.nav-logo {
+  width: 100px;
+  height: auto;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.navbar a:hover {
+  color: var(--primary-color);
+}
+
+.navbar .welcome span {
+  margin-right: 0.6rem;
+}
+
+/* Accessible hidden text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* hidden checkbox used for CSS-only mobile nav toggle */
+.nav-checkbox {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+/* Nav brand and toggle */
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-brand a {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+}
+
+/* when the nav checkbox is checked, show the mobile menu (no JS required) */
+.nav-checkbox:checked ~ .nav-menu {
+  display: flex;
+}
+
+/* Mobile: collapse the menu into a hamburger-controlled drawer */
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* inset the hamburger slightly from the right edge for breathing room */
+    position: absolute;
+    right: var(--right-offset);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1001;
+    /* slightly larger touch target on mobile */
+    padding: 0.4rem;
+  }
+
+  /* make brand full width so the toggle can sit at the far right */
+  .nav-brand {
+    width: 100%;
+  }
+
+  .nav-logo {
+    width: 80px;
+  }
+
+  .navbar {
+    padding: 0.6rem 1rem;
+  }
+
+  .nav-menu {
+    display: none; /* hidden by default on mobile */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 999;
+    padding: 1rem 0;
+    flex-direction: column;
+  }
+
+  .nav-menu.open {
+    display: flex;
+  }
+
+  .nav-menu ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .nav-menu a {
+    display: block;
+    padding: 0.75rem 1.25rem;
+    color: #fff;
+  }
+
+  /* show the full text (including elements hidden elsewhere with .hide-sm)
+     when the menu is expanded in mobile -- users expect labels next to icons */
+  .nav-menu .hide-sm {
+    display: inline;
+  }
+
+  .nav-menu a i {
+    margin-right: 0.6rem;
+    min-width: 1.1rem;
+    text-align: center;
+  }
+
+  /* ensure the main content isn't hidden under the menu when it opens */
+  .container {
+    margin-top: calc(var(--nav-offset) + 0.5rem);
+  }
+}
+
+/* Landing Page */
+.landing {
+  position: relative;
+  background: url('../img/showcase.jpg') no-repeat center center/cover;
+  height: 100vh;
+}
+
+.landing-inner {
+  color: #fff;
+  height: 100%;
+  width: 80%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* add space below the fixed navbar so the landing text isn't hidden */
+  padding-top: 10rem;
+}
+
+/* Profiles Page */
+.profile {
+  display: grid;
+  grid-template-columns: 2fr 4fr 2fr;
+  align-items: center;
+  grid-gap: 2rem;
+  padding: 1rem;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+/* Profile Page */
+.profile-grid {
+  display: grid;
+  grid-template-areas:
+    'top top'
+    'about about'
+    'exp edu'
+    'github github';
+  grid-gap: 1rem;
+}
+
+.profile-top {
+  grid-area: top;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.profile-top img {
+  width: 250px;
+}
+
+.profile-top .icons a {
+  color: #fff;
+  margin: 0 0.3rem;
+}
+
+.profile-top .icons a:hover {
+  color: var(--dark-color);
+}
+
+.profile-about {
+  grid-area: about;
+  text-align: center;
+}
+
+/* AI Chat widget styles */
+/* Legacy chat styles removed - using chat-bot.css instead */
+
+.profile-about .skills {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.profile-exp {
+  grid-area: exp;
+}
+
+.profile-edu {
+  grid-area: edu;
+}
+
+.profile-exp h2,
+.profile-edu h2 {
+  margin-bottom: 1rem;
+}
+
+.profile-exp > div,
+.profile-edu > div {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: #ccc 1px dotted;
+}
+
+.profile-exp > div:last-child,
+.profile-edu > div:last-child {
+  border: 0;
+}
+
+.profile-exp p,
+.profile-edu p {
+  margin: 0.5rem 0;
+}
+
+.profile-github {
+  grid-area: github;
+}
+
+.profile-github .repo {
+  display: flex;
+}
+
+.profile-github .repo > div:first-child {
+  flex: 7;
+  flex-basis: 70%;
+}
+
+.profile-github > div:last-child {
+  flex: 3;
+  flex-basis: 20%;
+}
+
+/* Posts Page */
+
+.post img {
+  width: 100px;
+}
+
+.post .comment-count {
+  background: var(--light-color);
+  color: var(--primary-color);
+  padding: 0.1rem 0.2rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+
+.post .post-date {
+  color: #aaa;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Post interactions styling */
+.post button {
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.post button:hover {
+  transform: scale(1.05);
+}
+
+/* Like button liked state */
+.post button.liked {
+  background: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+.post button.liked:hover {
+  background: #7a1fa3;
+  border-color: #7a1fa3;
+}
+
+/* Add visual feedback for liked state animation */
+@keyframes likeAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.post button.liked i {
+  animation: likeAnimation 0.3s ease;
+}
+
+/* Comments section styling */
+.comments {
+  margin-top: 2rem;
+}
+
+.comments .post {
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.empty-comments {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+}
+
+/* Character counter styling */
+.char-counter {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.char-counter.warning {
+  color: var(--danger-color);
+  font-weight: bold;
+}
+
+/* Post form styling for mobile */
+.post-form {
+  margin: 2rem 0;
+}
+
+.post-form .bg-primary {
+  border-radius: 16px 16px 0 0;
+}
+
+.post-form .form {
+  border-radius: 0 0 16px 16px;
+  margin-top: 0;
+}
+
+/* Enhance touch targets for mobile accessibility */
+@media (max-width: 768px) {
+  .post button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.6rem 1rem;
+    font-size: 1.1rem;
+  }
+
+  .post-form .form {
+    padding: 1rem;
+  }
+
+  .post-form .form textarea {
+    font-size: 1.1rem;
+    padding: 0.6rem;
+    min-height: 100px;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 700px) {
+  .container {
+    margin-top: calc(var(--nav-offset) + 0.5rem);
+  }
+
+  .hide-sm {
+    display: none;
+  }
+
+  /* Text Styles */
+  .x-large {
+    font-size: 3rem;
+  }
+
+  .large {
+    font-size: 2rem;
+  }
+
+  .lead {
+    font-size: 1rem;
+  }
+
+  /* Navbar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* navbar-only color (orange) */
+    background: var(--nav-color);
+    padding: 0.7rem 2rem;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    top: 0;
+    border-bottom: solid 1px var(--nav-color);
+    opacity: 0.9;
+  }
+  .navbar .welcome {
+    display: none;
+  }
+
+  /* Profiles Page */
+  .profile {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .profile ul {
+    display: none;
+  }
+
+  /* Profile Page */
+
+  .profile-top img,
+  .profile img {
+    width: 200px;
+    margin: auto;
+  }
+
+  .profile-grid {
+    grid-template-areas:
+      'top'
+      'about'
+      'exp'
+      'edu'
+      'github';
+  }
+
+  .profile-about .skills {
+    flex-direction: column;
+  }
+
+  .dash-buttons a {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.2rem;
+  }
+
+  .post {
+    grid-template-columns: 1fr;
+  }
+  .post a,
+  .post button {
+    padding: 0.3rem 0.4rem;
+  }
+}
+
+/* Footer */
+.footer {
+  background: var(--primary-color);
+  color: #fff;
+  text-align: center;
+  /* keep the footer band full-bleed like the fixed navbar */
+  width: 100%;
+  left: 0;
+  margin-top: auto;
+}
+
+/* align the footer content with the site's .container width */
+.footer p {
+  max-width: 1100px;
+  margin: 0 auto;
+  /* add vertical padding so the footer band is taller */
+  padding: 3rem 3rem;
+  line-height: 1.2; /* use normal line height with padding for vertical spacing */
+}
+
+/* Chat: put this into css/style.css (append) */
+
+/* hide real checkbox but keep it usable for label toggles */
+.chat-checkbox {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+/* fab toggle (label) */
+.chat-fab {
+  position: fixed;
+  right: var(--right-offset);
+  bottom: 20px;
+  width: 56px;
+  height: 56px;
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1200;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  /* ensure contrast when overlapping dark sections like the purple footer */
+  border: 2px solid #fff;
+  background-clip: padding-box;
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease;
+}
+.chat-fab:hover {
+  transform: translateY(-3px);
+}
+
+/* overlay (hidden by default) */
+.chat-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.18s ease,
+    visibility 0.18s ease;
+  z-index: 1100;
+}
+
+/* chat panel base */
+.chat-panel {
+  position: fixed;
+  right: var(--right-offset);
+  bottom: 90px;
+  width: 360px;
+  max-width: calc(100% - 40px);
+  height: 480px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  transform: translateY(12px) scale(0.98);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    visibility 0.18s ease;
+  z-index: 1201;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Back-to-top button - hidden by default, shown with .show class */
+/* .back-to-top {
+  position: fixed;
+  right: 1rem;
+  bottom: 6.5rem; /* sits above chat controls * /
+  width: 44px;
+  height: 44px;
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 1202;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    visibility 0.18s;
+  border: 2px solid #fff;
+  background-clip: padding-box;
+}
+
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+} */
+
+@media (max-width: 420px) {
+  :root {
+    --right-offset: 0.75rem;
+  }
+
+  .back-to-top {
+    bottom: 7.5rem;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Legacy chat styles removed - using chat-bot.css instead */
+
+/* show state when checkbox is checked */
+.chat-checkbox:checked ~ .chat-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+.chat-checkbox:checked ~ .chat-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+.chat-checkbox:checked ~ .chat-fab {
+  transform: scale(0.9);
+  opacity: 0.95;
+}
+
+/* small utility for screen-reader only text */
+.sr-only {
+  position: absolute !important;
+  left: -9999px !important;
+  top: auto !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}

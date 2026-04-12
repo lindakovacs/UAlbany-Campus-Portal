@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="author" content="Linda Kovacs" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dark-mode.css" />
+    <link rel="stylesheet" href="css/profile-search.css" />
+    <link rel="stylesheet" href="css/chat-bot.css" />
+    <title>Welcome To UAlbany Campus</title>
+  </head>
+  <body>
+    <!-- top anchor for Back-to-Top -->
+    <a id="top"></a>
+
+    <!-- Navbar loaded from modules -->
+    <header id="navbar-container"></header>
+    <script>
+      fetch('modules/navbar.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('navbar-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading navbar:', error));
+    </script>
+    <main>
+      <section class="container">
+        <h1 class="large text-primary">Students</h1>
+        <p class="lead">
+          <i class="fab fa-connectdevelop"></i> Browse and connect with students
+        </p>
+        <div class="profiles">
+          <div class="profile bg-light card">
+            <img
+              class="round-img"
+              src="https://linda-kovacs.com/wp-content/uploads/2017/03/Linda-Kovacs.jpg?s=200"
+              alt=""
+            />
+            <div>
+              <h2>Linda Kovacs</h2>
+              <p>Sr Software Engineer @ Accenture</p>
+              <p>Albany, NY</p>
+              <a href="profile.html" class="btn btn-primary">View Profile</a>
+            </div>
+
+            <ul>
+              <li class="text-primary"><i class="fas fa-check"></i> HTML</li>
+              <li class="text-primary"><i class="fas fa-check"></i> CSS</li>
+              <li class="text-primary">
+                <i class="fas fa-check"></i> JavaScript
+              </li>
+              <li class="text-primary"><i class="fas fa-check"></i> React</li>
+              <li class="text-primary"><i class="fas fa-check"></i> Node</li>
+            </ul>
+          </div>
+
+          <div class="profile bg-light card">
+            <img
+              class="round-img"
+              src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
+              alt=""
+            />
+            <div>
+              <h2>John Doe</h2>
+              <p>Developer at Microsoft</p>
+              <p>Seattle, WA</p>
+              <a href="profile.html" class="btn btn-primary">View Profile</a>
+            </div>
+
+            <ul>
+              <li class="text-primary"><i class="fas fa-check"></i> HTML</li>
+              <li class="text-primary"><i class="fas fa-check"></i> CSS</li>
+              <li class="text-primary">
+                <i class="fas fa-check"></i> JavaScript
+              </li>
+            </ul>
+          </div>
+          <div class="profile bg-light card">
+            <img
+              class="round-img"
+              src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
+              alt=""
+            />
+            <div>
+              <h2>John Doe</h2>
+              <p>Developer at Microsoft</p>
+              <p>Seattle, WA</p>
+              <a href="profile.html" class="btn btn-primary">View Profile</a>
+            </div>
+
+            <ul>
+              <li class="text-primary"><i class="fas fa-check"></i> HTML</li>
+              <li class="text-primary"><i class="fas fa-check"></i> CSS</li>
+              <li class="text-primary">
+                <i class="fas fa-check"></i> JavaScript
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- Footer loaded from modules -->
+    <footer id="footer-container"></footer>
+    <script>
+      fetch('modules/footer.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('footer-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading footer:', error));
+    </script>
+
+    <!-- Profile Search and Filter Scripts -->
+    <script src="js/profile-search.js"></script>
+
+    <!-- Accessibility Features Scripts -->
+    <script src="js/accessibility.js"></script>
+    <script src="js/accessibility-ui.js"></script>
+
+    <!-- Chat Bot Script -->
+    <script src="js/chat-bot.js"></script>
+  </body>
+</html>

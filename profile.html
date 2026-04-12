@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="author" content="Linda Kovacs" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dark-mode.css" />
+    <link rel="stylesheet" href="css/profile-edit.css" />
+    <link rel="stylesheet" href="css/experience-education.css" />
+    <link rel="stylesheet" href="css/chat-bot.css" />
+    <title>Welcome To UAlbany Campus</title>
+  </head>
+  <body>
+    <!-- top anchor for Back-to-Top -->
+    <a id="top"></a>
+
+    <!-- Navbar loaded from modules -->
+    <header id="navbar-container"></header>
+    <script>
+      fetch('modules/navbar.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('navbar-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading navbar:', error));
+    </script>
+    <main>
+      <section class="container">
+        <a href="profiles.html" class="btn btn-light">Back To Profiles</a>
+
+        <div class="profile-grid my-1">
+          <!-- Top -->
+          <div class="profile-top bg-primary p-2 card">
+            <img
+              class="round-img my-1"
+              src="https://linda-kovacs.com/wp-content/uploads/2017/03/Linda-Kovacs.jpg?s=200"
+              alt=""
+            />
+            <div class="photo-actions photo-actions-inline">
+              <label class="btn btn-light" for="profile-photo">
+                <i class="fas fa-camera"></i> Update Photo
+              </label>
+              <input
+                id="profile-photo"
+                type="file"
+                accept="image/*"
+                class="photo-input"
+              />
+            </div>
+            <h1 class="large">Linda Kovacs</h1>
+            <p class="lead">Sr Software Engineer @ Accenture</p>
+            <p>Albany, NY</p>
+            <div class="icons my-1">
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Personal Website"
+              >
+                <i class="fas fa-globe fa-2x"></i>
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="LinkedIn"
+              >
+                <i class="fab fa-linkedin fa-2x"></i>
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="GitHub"
+              >
+                <i class="fab fa-github fa-2x"></i>
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Twitter"
+              >
+                <i class="fab fa-twitter fa-2x"></i>
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Facebook"
+              >
+                <i class="fab fa-facebook fa-2x"></i>
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="YouTube"
+              >
+                <i class="fab fa-youtube fa-2x"></i>
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Instagram"
+              >
+                <i class="fab fa-instagram fa-2x"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- About -->
+          <div class="profile-about bg-light p-2 card">
+            <h2 class="text-primary">Linda's Bio</h2>
+            <p>
+              Hi 👋, I'm Linda Kovacs and I'm a Sr Software Engineer @
+              Accenture. Portofolio:
+              <a
+                href="https://linda-kovacs.com/portfolio/"
+                target="_blank"
+                rel="noopener noreferrer"
+              ></a>
+            </p>
+            <div class="line"></div>
+            <h2 class="text-primary">Skill Set</h2>
+            <div class="skills">
+              <div class="p-1"><i class="fa fa-check"></i> HTML</div>
+              <div class="p-1"><i class="fa fa-check"></i> CSS</div>
+              <div class="p-1"><i class="fa fa-check"></i> JavaScript</div>
+              <div class="p-1"><i class="fa fa-check"></i> React</div>
+              <div class="p-1"><i class="fa fa-check"></i> Node</div>
+            </div>
+          </div>
+
+          <!-- Experience -->
+          <div class="profile-exp bg-white p-2 card">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-bottom: 1rem;
+              "
+            >
+              <h2 class="text-primary" style="margin: 0">Experience</h2>
+              <button
+                class="btn btn-primary btn-sm"
+                onclick="toggleAddExperienceForm()"
+                aria-label="Add new experience"
+              >
+                <i class="fas fa-plus"></i> Add Experience
+              </button>
+            </div>
+
+            <!-- Add Experience Form (Hidden by default) -->
+            <form
+              id="add-experience-form"
+              class="form"
+              style="display: none; margin-bottom: 2rem"
+            >
+              <h4>Add An Experience</h4>
+              <small>* = required field</small>
+
+              <div class="form-group">
+                <input
+                  type="text"
+                  placeholder="* Job Title"
+                  id="exp-title"
+                  name="title"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <input
+                  type="text"
+                  placeholder="* Company"
+                  id="exp-company"
+                  name="company"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <input
+                  type="text"
+                  placeholder="Location"
+                  id="exp-location"
+                  name="location"
+                />
+              </div>
+
+              <div class="form-group">
+                <h4>From Date</h4>
+                <input type="date" id="exp-from" name="from" required />
+              </div>
+
+              <div class="form-group">
+                <p>
+                  <input type="checkbox" id="exp-current" name="current" />
+                  <label for="exp-current">Current Job</label>
+                </p>
+              </div>
+
+              <div class="form-group">
+                <h4>To Date</h4>
+                <input type="date" id="exp-to" name="to" />
+              </div>
+
+              <div class="form-group">
+                <textarea
+                  id="exp-description"
+                  name="description"
+                  cols="30"
+                  rows="5"
+                  placeholder="Job Description"
+                ></textarea>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-primary my-1"
+                onclick="submitAddExperienceForm()"
+              >
+                Save Experience
+              </button>
+              <button
+                type="button"
+                class="btn btn-light my-1"
+                onclick="toggleAddExperienceForm()"
+              >
+                Cancel
+              </button>
+            </form>
+
+            <!-- Experience List Container -->
+            <div id="profile-exp" class="experience-list">
+              <!-- Experiences render here via JavaScript -->
+            </div>
+          </div>
+
+          <!-- Education -->
+          <div class="profile-edu bg-white p-2 card">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-bottom: 1rem;
+              "
+            >
+              <h2 class="text-primary" style="margin: 0">Education</h2>
+              <button
+                class="btn btn-primary btn-sm"
+                onclick="toggleAddEducationForm()"
+                aria-label="Add new education"
+              >
+                <i class="fas fa-plus"></i> Add Education
+              </button>
+            </div>
+
+            <!-- Add Education Form (Hidden by default) -->
+            <form
+              id="add-education-form"
+              class="form"
+              style="display: none; margin-bottom: 2rem"
+            >
+              <h4>Add Your Education</h4>
+              <small>* = required field</small>
+
+              <div class="form-group">
+                <input
+                  type="text"
+                  placeholder="* School or Bootcamp"
+                  id="edu-school"
+                  name="school"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <input
+                  type="text"
+                  placeholder="* Degree or Certificate"
+                  id="edu-degree"
+                  name="degree"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <input
+                  type="text"
+                  placeholder="Minor"
+                  id="edu-fieldofstudy"
+                  name="fieldofstudy"
+                />
+              </div>
+
+              <div class="form-group">
+                <h4>From Date</h4>
+                <input type="date" id="edu-from" name="from" required />
+              </div>
+
+              <div class="form-group">
+                <p>
+                  <input type="checkbox" id="edu-current" name="current" />
+                  <label for="edu-current">Current School or Bootcamp</label>
+                </p>
+              </div>
+
+              <div class="form-group">
+                <h4>To Date</h4>
+                <input type="date" id="edu-to" name="to" />
+              </div>
+
+              <div class="form-group">
+                <textarea
+                  id="edu-description"
+                  name="description"
+                  cols="30"
+                  rows="5"
+                  placeholder="Program Description"
+                ></textarea>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-primary my-1"
+                onclick="submitAddEducationForm()"
+              >
+                Save Education
+              </button>
+              <button
+                type="button"
+                class="btn btn-light my-1"
+                onclick="toggleAddEducationForm()"
+              >
+                Cancel
+              </button>
+            </form>
+
+            <!-- Education List Container -->
+            <div id="profile-edu" class="education-list">
+              <!-- Educations render here via JavaScript -->
+            </div>
+          </div>
+
+          <!-- Github -->
+          <div class="profile-github card">
+            <h2 class="text-primary my-1">
+              <i class="fab fa-github"></i> Github Repos
+            </h2>
+            <div class="repo bg-white p-1 my-1 card">
+              <div>
+                <h4>
+                  <a href="#" target="_blank" rel="noopener noreferrer"
+                    >Repo One</a
+                  >
+                </h4>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Repellat, laborum!
+                </p>
+              </div>
+              <div>
+                <ul>
+                  <li class="badge badge-primary">Stars: 44</li>
+                  <li class="badge badge-dark">Watchers: 21</li>
+                  <li class="badge badge-light">Forks: 25</li>
+                </ul>
+              </div>
+            </div>
+            <div class="repo bg-white p-1 my-1 card">
+              <div>
+                <h4>
+                  <a href="#" target="_blank" rel="noopener noreferrer"
+                    >Repo Two</a
+                  >
+                </h4>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Repellat, laborum!
+                </p>
+              </div>
+              <div>
+                <ul>
+                  <li class="badge badge-primary">Stars: 44</li>
+                  <li class="badge badge-dark">Watchers: 21</li>
+                  <li class="badge badge-light">Forks: 25</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- Footer loaded from modules -->
+    <footer id="footer-container"></footer>
+    <script>
+      fetch('modules/footer.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('footer-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading footer:', error));
+    </script>
+
+    <!-- Profile Edit Scripts -->
+    <script src="js/profile-edit.js"></script>
+
+    <!-- Accessibility Features Scripts -->
+    <script src="js/accessibility.js"></script>
+    <script src="js/accessibility-ui.js"></script>
+
+    <!-- Chat Bot Script -->
+    <script src="js/chat-bot.js"></script>
+
+    <!-- Debugging localStorage -->
+    <script>
+      console.log('=== localStorage Diagnostic ===');
+
+      // Check if localStorage is available
+      try {
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
+        console.log('✓ localStorage is available');
+      } catch (e) {
+        console.error('✗ localStorage is NOT available:', e);
+      }
+
+      // List all keys
+      console.log('Current localStorage keys:', Object.keys(localStorage));
+
+      // Check for our specific keys
+      const expKey = 'experienceList';
+      const eduKey = 'educationList';
+      console.log(`  "${expKey}":`, localStorage.getItem(expKey));
+      console.log(`  "${eduKey}":`, localStorage.getItem(eduKey));
+
+      // Test form elements exist
+      console.log('Form elements:');
+      console.log(
+        '  add-experience-form:',
+        document.getElementById('add-experience-form')
+          ? '✓ Found'
+          : '✗ NOT found',
+      );
+      console.log(
+        '  exp-title input:',
+        document.getElementById('exp-title') ? '✓ Found' : '✗ NOT found',
+      );
+      console.log(
+        '  exp-company input:',
+        document.getElementById('exp-company') ? '✓ Found' : '✗ NOT found',
+      );
+      console.log(
+        '  exp-from input:',
+        document.getElementById('exp-from') ? '✓ Found' : '✗ NOT found',
+      );
+
+      // Test functions exist
+      console.log('Functions:');
+      console.log(
+        '  submitAddExperienceForm:',
+        typeof submitAddExperienceForm !== 'undefined'
+          ? '✓ Available'
+          : '✗ NOT defined',
+      );
+      console.log(
+        '  toggleAddExperienceForm:',
+        typeof toggleAddExperienceForm !== 'undefined'
+          ? '✓ Available'
+          : '✗ NOT defined',
+      );
+      console.log(
+        '  addExperience:',
+        typeof addExperience !== 'undefined' ? '✓ Available' : '✗ NOT defined',
+      );
+      console.log(
+        '  getExperienceList:',
+        typeof getExperienceList !== 'undefined'
+          ? '✓ Available'
+          : '✗ NOT defined',
+      );
+    </script>
+  </body>
+</html>

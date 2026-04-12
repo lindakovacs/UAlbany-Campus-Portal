@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="author" content="Linda Kovacs" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dark-mode.css" />
+    <link rel="stylesheet" href="css/experience-education.css" />
+    <link rel="stylesheet" href="css/chat-bot.css" />
+    <title>Welcome To UAlbany Campus</title>
+  </head>
+  <body>
+    <!-- top anchor for Back-to-Top -->
+    <a id="top"></a>
+
+    <!-- Navbar loaded from modules -->
+    <header id="navbar-container"></header>
+    <script>
+      fetch('modules/navbar.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('navbar-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading navbar:', error));
+    </script>
+    <main>
+      <section class="container">
+        <h1 class="large text-primary">Add Your Education</h1>
+        <p class="lead">
+          <i class="fas fa-graduation-cap"></i> Add any school, bootcamp, etc
+          that you have attended
+        </p>
+        <small>* = required field</small>
+        <form class="form">
+          <div class="form-group">
+            <input
+              type="text"
+              placeholder="* School or Bootcamp"
+              name="school"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              placeholder="* Degree or Certificate"
+              name="degree"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              placeholder="Minor"
+              name="fieldofstudy"
+            />
+          </div>
+          <div class="form-group">
+            <h4>From Date</h4>
+            <input type="date" name="from" />
+          </div>
+          <div class="form-group">
+            <p>
+              <input type="checkbox" name="current" value="" /> Current School
+              or Bootcamp
+            </p>
+          </div>
+          <div class="form-group">
+            <h4>To Date</h4>
+            <input type="date" name="to" />
+          </div>
+          <div class="form-group">
+            <textarea
+              name="description"
+              cols="30"
+              rows="5"
+              placeholder="Program Description"
+            ></textarea>
+          </div>
+          <input type="submit" class="btn btn-primary my-1" />
+          <a class="btn btn-light my-1" href="dashboard.html">Go Back</a>
+        </form>
+      </section>
+    </main>
+    <!-- Footer loaded from modules -->
+    <footer id="footer-container"></footer>
+    <script>
+      fetch('modules/footer.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('footer-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading footer:', error));
+    </script>
+
+    <!-- Accessibility Features Scripts -->
+    <script src="js/accessibility.js"></script>
+    <script src="js/accessibility-ui.js"></script>
+
+    <!-- Chat Bot Script -->
+    <script src="js/chat-bot.js"></script>
+
+    <!-- Form Toggle Script -->
+    <script>
+      let editingId = null;
+
+      /**
+       * Format date to readable string
+       * @param {string} dateStr - ISO date string (YYYY-MM-DD)
+       * @returns {string} - Formatted date
+       */
+      function formatLocalDate(dateStr) {
+        if (!dateStr) return '';
+        // Split ISO date string to create local date (avoids timezone offset issues)
+        const [year, month, day] = dateStr.split('-');
+        const date = new Date(year, month - 1, day);
+        return date.toLocaleDateString();
+      }
+
+      /**
+       * Sort educations: current first, then by most recent
+       */
+      function sortEducations(educations) {
+        return educations.sort((a, b) => {
+          // Current schools first
+          if (a.current && !b.current) return -1;
+          if (!a.current && b.current) return 1;
+          // Then sort by date (most recent first)
+          const dateA = new Date(a.to || a.from);
+          const dateB = new Date(b.to || b.from);
+          return dateB - dateA;
+        });
+      }
+
+      /**
+       * Load and display saved educations on the page
+       */
+      function displaySavedEducations() {
+        let educationList = JSON.parse(
+          localStorage.getItem('educationList') || '[]'
+        );
+
+        // Sort educations
+        educationList = sortEducations(educationList);
+
+        if (!educationList.length) return;
+
+        // Create a container if it doesn't exist
+        let container = document.getElementById('saved-educations-list');
+        if (!container) {
+          container = document.createElement('div');
+          container.id = 'saved-educations-list';
+          container.style.marginTop = '2rem';
+          const form = document.querySelector('.form');
+          form.parentNode.insertBefore(container, form.nextSibling);
+        }
+
+        container.innerHTML =
+          '<h2 class="text-primary my-2">Your Education</h2>';
+
+        educationList.forEach((edu) => {
+          const eduDiv = document.createElement('div');
+          eduDiv.className = 'card bg-light p-2 my-1';
+          const currentBadge = edu.current ? '<span class="badge badge-success">Current</span>' : '';
+          eduDiv.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+              <div>
+                <h3 class="text-dark">${edu.school} ${currentBadge}</h3>
+                <p class="lead">${edu.degree}</p>
+                <p>${edu.fieldofstudy ? '<strong>Minor:</strong> ' + edu.fieldofstudy : ''}</p>
+                <p><strong>From:</strong> ${formatLocalDate(edu.from)} ${edu.to ? '- <strong>To:</strong> ' + formatLocalDate(edu.to) : '- Currently studying'}</p>
+                ${edu.description ? '<p><strong>Description:</strong> ' + edu.description + '</p>' : ''}
+              </div>
+              <div>
+                <button class="btn btn-primary btn-sm" onclick="editEducationFromPage('${edu.id}')" style="margin-bottom: 0.5rem;"><i class="fas fa-edit"></i> Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteEducationFromPage('${edu.id}')"><i class="fas fa-trash"></i> Delete</button>
+              </div>
+            </div>
+          `;
+          container.appendChild(eduDiv);
+        });
+      }
+
+      /**
+       * Edit education - populate form with selected education
+       */
+      function editEducationFromPage(eduId) {
+        let educations = JSON.parse(
+          localStorage.getItem('educationList') || '[]'
+        );
+        const edu = educations.find((e) => e.id === eduId);
+
+        if (!edu) {
+          alert('Education not found');
+          return;
+        }
+
+        editingId = eduId;
+
+        // Populate form
+        document.querySelector('[name="school"]').value = edu.school;
+        document.querySelector('[name="degree"]').value = edu.degree;
+        document.querySelector('[name="fieldofstudy"]').value = edu.fieldofstudy;
+        document.querySelector('[name="from"]').value = edu.from;
+        document.querySelector('[name="to"]').value = edu.to;
+        document.querySelector('[name="current"]').checked = edu.current;
+        document.querySelector('[name="description"]').value = edu.description;
+
+        // Update submit button text
+        const submitBtn = document.querySelector('input[type="submit"]');
+        submitBtn.value = 'Update Education';
+
+        // Scroll to form
+        document.querySelector('.form').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      /**
+       * Delete education and refresh display
+       */
+      function deleteEducationFromPage(eduId) {
+        if (!confirm('Are you sure you want to delete this education?')) return;
+
+        let educations = JSON.parse(
+          localStorage.getItem('educationList') || '[]'
+        );
+        educations = educations.filter((edu) => edu.id !== eduId);
+        localStorage.setItem('educationList', JSON.stringify(educations));
+        displaySavedEducations();
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        // Display saved educations
+        displaySavedEducations();
+
+        // Check if editing from dashboard
+        const editingId = sessionStorage.getItem('editingEducationId');
+        if (editingId) {
+          sessionStorage.removeItem('editingEducationId');
+          editEducationFromPage(editingId);
+        }
+
+        // Handle current school checkbox
+        const currentCheckbox = document.querySelector('input[name="current"]');
+        const toDateInput = document.querySelector('input[name="to"]');
+
+        if (currentCheckbox && toDateInput) {
+          // Set initial state
+          if (currentCheckbox.checked) {
+            toDateInput.disabled = true;
+          }
+
+          // Handle checkbox change
+          currentCheckbox.addEventListener('change', function () {
+            if (this.checked) {
+              toDateInput.disabled = true;
+              toDateInput.value = '';
+            } else {
+              toDateInput.disabled = false;
+            }
+          });
+        }
+
+        // Handle form submission
+        const form = document.querySelector('.form');
+        if (form) {
+          form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Get form data
+            const educationData = {
+              id: editingId || Date.now().toString(),
+              school: form.querySelector('[name="school"]').value.trim(),
+              degree: form.querySelector('[name="degree"]').value.trim(),
+              fieldofstudy: form.querySelector('[name="fieldofstudy"]').value.trim(),
+              from: form.querySelector('[name="from"]').value,
+              to: form.querySelector('[name="to"]').value,
+              current: form.querySelector('[name="current"]').checked,
+              description: form.querySelector('[name="description"]').value.trim(),
+              createdAt: new Date().toISOString(),
+            };
+
+            // Validate required fields
+            if (!educationData.school || !educationData.degree) {
+              alert('Please fill in all required fields (School and Degree)');
+              return;
+            }
+
+            // Get existing educations
+            let educations = JSON.parse(
+              localStorage.getItem('educationList') || '[]'
+            );
+
+            if (editingId) {
+              // Update existing
+              educations = educations.map((e) =>
+                e.id === editingId ? educationData : e
+              );
+              alert('Education updated successfully!');
+              editingId = null;
+            } else {
+              // Add new
+              educations.push(educationData);
+              alert('Education added successfully!');
+            }
+
+            // Save to localStorage
+            try {
+              localStorage.setItem('educationList', JSON.stringify(educations));
+              console.log('Education saved:', educationData);
+
+              // Reset form
+              form.reset();
+              const submitBtn = document.querySelector('input[type="submit"]');
+              submitBtn.value = 'Submit';
+
+              // Refresh display
+              displaySavedEducations();
+            } catch (e) {
+              console.error('Error saving education:', e);
+              alert('Error saving education. Please try again.');
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

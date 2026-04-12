@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="author" content="Linda Kovacs" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dark-mode.css" />
+    <link rel="stylesheet" href="css/chat-bot.css" />
+    <title>Posts - UAlbany Campus</title>
+  </head>
+  <body>
+    <!-- top anchor for Back-to-Top -->
+    <a id="top"></a>
+
+    <!-- Navbar loaded from modules -->
+    <header id="navbar-container"></header>
+    <script>
+      fetch('modules/navbar.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('navbar-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading navbar:', error));
+    </script>
+    <main>
+      <section class="container">
+        <h1 class="large text-primary">Posts</h1>
+        <p class="lead">
+          <i class="fas fa-user"></i> Welcome to Online UAlbany Students
+          Community!
+        </p>
+
+        <div class="post-form">
+          <div class="bg-primary p">
+            <h3>Say Something...</h3>
+          </div>
+          <form class="form my-1">
+            <textarea
+              name="text"
+              cols="30"
+              rows="5"
+              placeholder="Create a post"
+              required
+            ></textarea>
+            <input type="submit" class="btn btn-dark my-1" value="Submit" />
+          </form>
+        </div>
+
+        <div class="posts">
+          <div class="post bg-white p-1 my-1 card">
+            <div>
+              <a href="profile.html">
+                <img
+                  class="round-img"
+                  src="https://linda-kovacs.com/wp-content/uploads/2017/03/Linda-Kovacs.jpg?s=200"
+                  alt=""
+                />
+                <h4>Linda Kovacs</h4>
+              </a>
+            </div>
+            <div>
+              <p class="my-1">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
+                possimus corporis sunt necessitatibus! Minus nesciunt soluta
+                suscipit nobis. Amet accusamus distinctio cupiditate blanditiis
+                dolor? Illo perferendis eveniet cum cupiditate aliquam?
+              </p>
+              <p class="post-date">Posted on 04/16/2019</p>
+              <button type="button" class="btn btn-light">
+                <i class="fas fa-thumbs-up"></i>
+                <span>4</span>
+              </button>
+              <button type="button" class="btn btn-light">
+                <i class="fas fa-thumbs-down"></i>
+              </button>
+              <a href="post.html" class="btn btn-primary">
+                Discussion <span class="comment-count">2</span>
+              </a>
+              <button type="button" class="btn btn-danger">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="post bg-white p-1 my-1 card">
+            <div>
+              <a href="profile.html">
+                <img
+                  class="round-img"
+                  src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
+                  alt=""
+                />
+                <h4>John Doe</h4>
+              </a>
+            </div>
+            <div>
+              <p class="my-1">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
+                possimus corporis sunt necessitatibus! Minus nesciunt soluta
+                suscipit nobis. Amet accusamus distinctio cupiditate blanditiis
+                dolor? Illo perferendis eveniet cum cupiditate aliquam?
+              </p>
+              <p class="post-date">Posted on 04/16/2019</p>
+              <button type="button" class="btn btn-light">
+                <i class="fas fa-thumbs-up"></i>
+                <span>4</span>
+              </button>
+              <button type="button" class="btn btn-light">
+                <i class="fas fa-thumbs-down"></i>
+              </button>
+              <a href="post.html" class="btn btn-primary">
+                Discussion <span class="comment-count">3</span>
+              </a>
+              <button type="button" class="btn btn-danger">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- Footer loaded from modules -->
+    <footer id="footer-container"></footer>
+    <script>
+      fetch('modules/footer.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('footer-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading footer:', error));
+    </script>
+    <!-- Post Interactions Script -->
+    <script src="js/post-interactions.js"></script>
+
+    <!-- Comments Module Script (for updating comment counts) -->
+    <script src="js/comments.js"></script>
+
+    <!-- Accessibility Features Scripts -->
+    <script src="js/accessibility.js"></script>
+    <script src="js/accessibility-ui.js"></script>
+
+    <!-- Chat Bot Script -->
+    <script src="js/chat-bot.js"></script>
+  </body>
+</html>

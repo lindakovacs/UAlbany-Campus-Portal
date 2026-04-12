@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="author" content="Linda Kovacs" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dark-mode.css" />
+    <link rel="stylesheet" href="css/chat-bot.css" />
+    <title>Welcome To UAlbany Campus</title>
+  </head>
+  <body>
+    <!-- top anchor for Back-to-Top -->
+    <a id="top"></a>
+
+    <!-- Navbar loaded from modules -->
+    <header id="navbar-container"></header>
+    <script>
+      fetch('modules/navbar.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('navbar-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading navbar:', error));
+    </script>
+    <main>
+    <section class="container">
+      <h1 class="large text-primary">Create Your Profile</h1>
+      <p class="lead">
+        <i class="fas fa-user"></i> Let's get some information to make your
+        profile stand out
+      </p>
+      <small>* = required field</small>
+      <form class="form" id="create-profile-form">
+        <div class="form-group">
+          <input type="text" placeholder="* Full Name" name="name" required />
+          <small class="form-text">This will be displayed on your profile</small>
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="* Professional Title" name="title" required />
+          <small class="form-text">eg. Senior Developer, Product Manager</small>
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="* Company" name="company" required />
+          <small class="form-text">Where do you work?</small>
+        </div>
+        <div class="form-group">
+          <select name="status" required>
+            <option value="0">* Select Professional Status</option>
+            <option value="Developer">Developer</option>
+            <option value="Junior Developer">Junior Developer</option>
+            <option value="Senior Developer">Senior Developer</option>
+            <option value="Manager">Manager</option>
+            <option value="Student or Learning">Student or Learning</option>
+            <option value="Instructor">Instructor or Teacher</option>
+            <option value="Intern">Intern</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="Location" name="location" />
+          <small class="form-text"
+            >City & state suggested (eg. Boston, MA)</small
+          >
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="* Skills" name="skills" />
+          <small class="form-text"
+            >Please use comma separated values (eg.
+            HTML,CSS,JavaScript,PHP)</small
+          >
+        </div>
+        <div class="form-group">
+          <input
+            type="text"
+            placeholder="Github Username"
+            name="githubusername"
+          />
+          <small class="form-text"
+            >If you want your latest repos and a Github link, include your
+            username</small
+          >
+        </div>
+        <div class="form-group">
+          <textarea placeholder="A short bio of yourself" name="bio"></textarea>
+          <small class="form-text">Tell us a little about yourself</small>
+        </div>
+
+        <div class="my-2">
+          <button type="button" class="btn btn-light">
+            Add Social Network Links
+          </button>
+          <span>Optional</span>
+        </div>
+
+        <div class="form-group social-input">
+          <i class="fas fa-globe fa-2x"></i>
+          <input type="text" placeholder="Personal Website URL" name="website" />
+        </div>
+
+        <div class="form-group social-input">
+          <i class="fab fa-linkedin fa-2x"></i>
+          <input type="text" placeholder="LinkedIn URL" name="linkedin" />
+        </div>
+
+        <div class="form-group social-input">
+          <i class="fab fa-github fa-2x"></i>
+          <input type="text" placeholder="GitHub URL" name="github" />
+        </div>
+
+        <div class="form-group social-input">
+          <i class="fab fa-twitter fa-2x"></i>
+          <input type="text" placeholder="Twitter URL" name="twitter" />
+        </div>
+
+        <div class="form-group social-input">
+          <i class="fab fa-facebook fa-2x"></i>
+          <input type="text" placeholder="Facebook URL" name="facebook" />
+        </div>
+
+        <div class="form-group social-input">
+          <i class="fab fa-youtube fa-2x"></i>
+          <input type="text" placeholder="YouTube URL" name="youtube" />
+        </div>
+
+        <div class="form-group social-input">
+          <i class="fab fa-instagram fa-2x"></i>
+          <input type="text" placeholder="Instagram URL" name="instagram" />
+        </div>
+        <input type="submit" class="btn btn-primary my-1" />
+        <a class="btn btn-light my-1" href="dashboard.html">Go Back</a>
+      </form>
+    </section>
+    </main>
+    <!-- Footer loaded from modules -->
+    <footer id="footer-container"></footer>
+    <script>
+      fetch('modules/footer.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('footer-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading footer:', error));
+    </script>
+
+    <!-- Accessibility Features Scripts -->
+    <script src="js/accessibility.js"></script>
+    <script src="js/accessibility-ui.js"></script>
+
+    <!-- Chat Bot Script -->
+    <script src="js/chat-bot.js"></script>
+
+    <!-- Create Profile Form Handler -->
+    <script>
+      /**
+       * Load saved profile data into form fields
+       * Pre-populates form when user returns to create-profile.html
+       */
+      function loadProfileDataIntoForm() {
+        const profileData = localStorage.getItem('profileData');
+        if (!profileData) return;
+
+        try {
+          const data = JSON.parse(profileData);
+          const form = document.getElementById('create-profile-form');
+          if (!form) return;
+
+          // Populate form fields with saved data
+          const nameInput = form.querySelector('[name="name"]');
+          if (nameInput) nameInput.value = data.name || '';
+
+          const titleInput = form.querySelector('[name="title"]');
+          if (titleInput) titleInput.value = data.title || '';
+
+          const companyInput = form.querySelector('[name="company"]');
+          if (companyInput) companyInput.value = data.company || '';
+
+          const statusSelect = form.querySelector('[name="status"]');
+          if (statusSelect) statusSelect.value = data.status || '0';
+
+          const locationInput = form.querySelector('[name="location"]');
+          if (locationInput) locationInput.value = data.location || '';
+
+          const skillsInput = form.querySelector('[name="skills"]');
+          if (skillsInput) skillsInput.value = data.skills || '';
+
+          const githubInput = form.querySelector('[name="githubusername"]');
+          if (githubInput) githubInput.value = data.githubusername || '';
+
+          const bioTextarea = form.querySelector('[name="bio"]');
+          if (bioTextarea) bioTextarea.value = data.bio || '';
+
+          // Populate social links
+          if (data.social) {
+            const websiteInput = form.querySelector('[name="website"]');
+            if (websiteInput) websiteInput.value = data.social.website || '';
+
+            const githubInput = form.querySelector('[name="github"]');
+            if (githubInput) githubInput.value = data.social.github || '';
+
+            const twitterInput = form.querySelector('[name="twitter"]');
+            if (twitterInput) twitterInput.value = data.social.twitter || '';
+
+            const facebookInput = form.querySelector('[name="facebook"]');
+            if (facebookInput) facebookInput.value = data.social.facebook || '';
+
+            const youtubeInput = form.querySelector('[name="youtube"]');
+            if (youtubeInput) youtubeInput.value = data.social.youtube || '';
+
+            const linkedinInput = form.querySelector('[name="linkedin"]');
+            if (linkedinInput) linkedinInput.value = data.social.linkedin || '';
+
+            const instagramInput = form.querySelector('[name="instagram"]');
+            if (instagramInput) instagramInput.value = data.social.instagram || '';
+          }
+
+          console.log('Profile data loaded into form:', data);
+        } catch (e) {
+          console.error('Error loading profile data into form:', e);
+        }
+      }
+
+      /**
+       * Handle create profile form submission
+       * Saves data to localStorage and syncs to profile.html
+       */
+      document.addEventListener('DOMContentLoaded', function () {
+        // Pre-populate form with saved data
+        loadProfileDataIntoForm();
+
+        const form = document.getElementById('create-profile-form');
+        if (!form) return;
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          // Get form data
+          const formData = {
+            name: form.querySelector('[name="name"]').value.trim(),
+            title: form.querySelector('[name="title"]').value.trim(),
+            company: form.querySelector('[name="company"]').value.trim(),
+            status: form.querySelector('[name="status"]').value,
+            location: form.querySelector('[name="location"]').value.trim(),
+            skills: form.querySelector('[name="skills"]').value.trim(),
+            githubusername:
+              form.querySelector('[name="githubusername"]').value.trim() || '',
+            bio: form.querySelector('[name="bio"]').value.trim(),
+            social: {
+              website: form.querySelector('[name="website"]').value.trim() || '',
+              github: form.querySelector('[name="github"]').value.trim() || '',
+              twitter: form.querySelector('[name="twitter"]').value.trim() || '',
+              facebook: form.querySelector('[name="facebook"]').value.trim() || '',
+              youtube: form.querySelector('[name="youtube"]').value.trim() || '',
+              linkedin: form.querySelector('[name="linkedin"]').value.trim() || '',
+              instagram: form.querySelector('[name="instagram"]').value.trim() || '',
+            },
+          };
+
+          // Validate required fields
+          if (
+            !formData.name ||
+            !formData.title ||
+            !formData.company ||
+            formData.status === '0' ||
+            !formData.skills
+          ) {
+            alert('Please fill in all required fields (marked with *).');
+            return;
+          }
+
+          // Save to localStorage
+          try {
+            localStorage.setItem('profileData', JSON.stringify(formData));
+            console.log('Profile data saved:', formData);
+            alert('Profile created successfully!');
+            // Redirect to profile page
+            window.location.href = 'profile.html';
+          } catch (e) {
+            console.error('Error saving profile:', e);
+            alert('Error saving profile. Please try again.');
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+/**
+ * Profile Edit Styles
+ * Styling for inline profile editing functionality
+ */
+
+.profile-edit-btn-container {
+  margin-top: 1rem;
+}
+
+.profile-edit-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.profile-edit-input {
+  display: block;
+  width: 100%;
+  padding: 0.6rem;
+  font-size: 1.1rem;
+  border: 2px solid var(--primary-color);
+  border-radius: 4px;
+  margin: 0.5rem 0;
+  background-color: #fff;
+  color: #333;
+  font-family: 'Raleway', sans-serif;
+}
+
+.profile-edit-input:focus {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+body.dark-mode .profile-edit-input {
+  background-color: #333;
+  color: #e0e0e0;
+  border-color: var(--primary-color);
+}
+
+.profile-name-input {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.profile-title-input {
+  font-size: 1.3rem;
+}
+
+/* Mobile touch targets and responsive layout */
+@media (max-width: 768px) {
+  .profile-edit-input {
+    min-height: 44px;
+    font-size: 1rem;
+  }
+
+  .profile-edit-actions {
+    flex-direction: column;
+  }
+
+  .profile-edit-actions button {
+    width: 100%;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .profile-edit-input {
+    transition: none;
+  }
+}

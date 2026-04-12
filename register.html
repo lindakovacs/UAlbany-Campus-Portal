@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="author" content="Linda Kovacs" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dark-mode.css" />
+    <link rel="stylesheet" href="css/chat-bot.css" />
+    <title>Welcome To UAlbany Campus - Register</title>
+  </head>
+  <body>
+    <!-- top anchor for Back-to-Top -->
+    <a id="top"></a>
+
+    <!-- Navbar loaded from modules -->
+    <header id="navbar-container"></header>
+    <script>
+      fetch('modules/navbar.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('navbar-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading navbar:', error));
+    </script>
+    <main>
+      <section class="container">
+        <h1 class="large text-primary">Sign Up</h1>
+        <p class="lead"><i class="fas fa-user"></i> Create Your Account</p>
+        <form class="form" action="create-profile.html">
+          <div class="form-group">
+            <input type="text" placeholder="Name" name="name" required />
+          </div>
+          <div class="form-group">
+            <input type="email" placeholder="Email Address" name="email" />
+            <small class="form-text"
+              >This site uses Gravatar so if you want a profile image, use a
+              Gravatar email</small
+            >
+          </div>
+          <div class="form-group">
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              minlength="6"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              name="password2"
+              minlength="6"
+            />
+          </div>
+          <input type="submit" class="btn btn-primary" value="Register" />
+        </form>
+        <p class="my-1">
+          Already have an account? <a href="login.html">Sign In</a>
+        </p>
+      </section>
+    </main>
+    <!-- Footer loaded from modules -->
+    <footer id="footer-container"></footer>
+    <script>
+      fetch('modules/footer.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('footer-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading footer:', error));
+    </script>
+    <!-- Form Validation Script -->
+    <script src="js/form-validation.js"></script>
+
+    <!-- Accessibility Features Scripts -->
+    <script src="js/accessibility.js"></script>
+    <script src="js/accessibility-ui.js"></script>
+
+    <!-- Chat Bot Script -->
+    <script src="js/chat-bot.js"></script>
+  </body>
+</html>

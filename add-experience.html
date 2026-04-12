@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="author" content="Linda Kovacs" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dark-mode.css" />
+    <link rel="stylesheet" href="css/experience-education.css" />
+    <link rel="stylesheet" href="css/chat-bot.css" />
+    <title>Welcome To UAlbany Campus</title>
+  </head>
+  <body>
+    <!-- top anchor for Back-to-Top -->
+    <a id="top"></a>
+
+    <!-- Navbar loaded from modules -->
+    <header id="navbar-container"></header>
+    <script>
+      fetch('modules/navbar.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('navbar-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading navbar:', error));
+    </script>
+    <main>
+      <section class="container">
+        <h1 class="large text-primary">Add An Experience</h1>
+        <p class="lead">
+          <i class="fas fa-code-branch"></i> Add any developer/programming
+          positions that you have had in the past
+        </p>
+        <small>* = required field</small>
+        <form class="form">
+          <div class="form-group">
+            <input
+              type="text"
+              placeholder="* Job Title"
+              name="title"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              placeholder="* Company"
+              name="company"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input type="text" placeholder="Location" name="location" />
+          </div>
+          <div class="form-group">
+            <h4>From Date</h4>
+            <input type="date" name="from" />
+          </div>
+          <div class="form-group">
+            <p><input type="checkbox" name="current" value="" /> Current Job</p>
+          </div>
+          <div class="form-group">
+            <h4>To Date</h4>
+            <input type="date" name="to" />
+          </div>
+          <div class="form-group">
+            <textarea
+              name="description"
+              cols="30"
+              rows="5"
+              placeholder="Job Description"
+            ></textarea>
+          </div>
+          <input type="submit" class="btn btn-primary my-1" />
+          <a class="btn btn-light my-1" href="dashboard.html">Go Back</a>
+        </form>
+      </section>
+    </main>
+    <!-- Footer loaded from modules -->
+    <footer id="footer-container"></footer>
+    <script>
+      fetch('modules/footer.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('footer-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading footer:', error));
+    </script>
+
+    <!-- Accessibility Features Scripts -->
+    <script src="js/accessibility.js"></script>
+    <script src="js/accessibility-ui.js"></script>
+
+    <!-- Chat Bot Script -->
+    <script src="js/chat-bot.js"></script>
+
+    <!-- Form Toggle Script -->
+    <script>
+      let editingId = null;
+
+      /**
+       * Format date to readable string
+       * @param {string} dateStr - ISO date string (YYYY-MM-DD)
+       * @returns {string} - Formatted date
+       */
+      function formatLocalDate(dateStr) {
+        if (!dateStr) return '';
+        // Split ISO date string to create local date (avoids timezone offset issues)
+        const [year, month, day] = dateStr.split('-');
+        const date = new Date(year, month - 1, day);
+        return date.toLocaleDateString();
+      }
+
+      /**
+       * Sort experiences: current first, then by most recent
+       */
+      function sortExperiences(experiences) {
+        return experiences.sort((a, b) => {
+          // Current jobs first
+          if (a.current && !b.current) return -1;
+          if (!a.current && b.current) return 1;
+          // Then sort by date (most recent first)
+          const dateA = new Date(a.to || a.from);
+          const dateB = new Date(b.to || b.from);
+          return dateB - dateA;
+        });
+      }
+
+      /**
+       * Load and display saved experiences on the page
+       */
+      function displaySavedExperiences() {
+        let experienceList = JSON.parse(
+          localStorage.getItem('experienceList') || '[]'
+        );
+
+        // Sort experiences
+        experienceList = sortExperiences(experienceList);
+
+        if (!experienceList.length) return;
+
+        // Create a container if it doesn't exist
+        let container = document.getElementById('saved-experiences-list');
+        if (!container) {
+          container = document.createElement('div');
+          container.id = 'saved-experiences-list';
+          container.style.marginTop = '2rem';
+          const form = document.querySelector('.form');
+          form.parentNode.insertBefore(container, form.nextSibling);
+        }
+
+        container.innerHTML =
+          '<h2 class="text-primary my-2">Your Experiences</h2>';
+
+        experienceList.forEach((exp) => {
+          const expDiv = document.createElement('div');
+          expDiv.className = 'card bg-light p-2 my-1';
+          const currentBadge = exp.current ? '<span class="badge badge-success">Current</span>' : '';
+          expDiv.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+              <div>
+                <h3 class="text-dark">${exp.company} ${currentBadge}</h3>
+                <p class="lead">${exp.title}</p>
+                <p>${exp.location ? '<strong>Location:</strong> ' + exp.location : ''}</p>
+                <p><strong>From:</strong> ${formatLocalDate(exp.from)} ${exp.to ? '- <strong>To:</strong> ' + formatLocalDate(exp.to) : '- Currently working here'}</p>
+                ${exp.description ? '<p><strong>Description:</strong> ' + exp.description + '</p>' : ''}
+              </div>
+              <div>
+                <button class="btn btn-primary btn-sm" onclick="editExperienceFromPage('${exp.id}')" style="margin-bottom: 0.5rem;"><i class="fas fa-edit"></i> Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteExperienceFromPage('${exp.id}')"><i class="fas fa-trash"></i> Delete</button>
+              </div>
+            </div>
+          `;
+          container.appendChild(expDiv);
+        });
+      }
+
+      /**
+       * Edit experience - populate form with selected experience
+       */
+      function editExperienceFromPage(expId) {
+        let experiences = JSON.parse(
+          localStorage.getItem('experienceList') || '[]'
+        );
+        const exp = experiences.find((e) => e.id === expId);
+
+        if (!exp) {
+          alert('Experience not found');
+          return;
+        }
+
+        editingId = expId;
+
+        // Populate form
+        document.querySelector('[name="title"]').value = exp.title;
+        document.querySelector('[name="company"]').value = exp.company;
+        document.querySelector('[name="location"]').value = exp.location;
+        document.querySelector('[name="from"]').value = exp.from;
+        document.querySelector('[name="to"]').value = exp.to;
+        document.querySelector('[name="current"]').checked = exp.current;
+        document.querySelector('[name="description"]').value = exp.description;
+
+        // Update submit button text
+        const submitBtn = document.querySelector('input[type="submit"]');
+        submitBtn.value = 'Update Experience';
+
+        // Scroll to form
+        document.querySelector('.form').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      /**
+       * Delete experience and refresh display
+       */
+      function deleteExperienceFromPage(expId) {
+        if (!confirm('Are you sure you want to delete this experience?')) return;
+
+        let experiences = JSON.parse(
+          localStorage.getItem('experienceList') || '[]'
+        );
+        experiences = experiences.filter((exp) => exp.id !== expId);
+        localStorage.setItem('experienceList', JSON.stringify(experiences));
+        displaySavedExperiences();
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        // Display saved experiences
+        displaySavedExperiences();
+
+        // Check if editing from dashboard
+        const editingId = sessionStorage.getItem('editingExperienceId');
+        if (editingId) {
+          sessionStorage.removeItem('editingExperienceId');
+          editExperienceFromPage(editingId);
+        }
+
+        // Handle current job checkbox
+        const currentCheckbox = document.querySelector('input[name="current"]');
+        const toDateInput = document.querySelector('input[name="to"]');
+
+        if (currentCheckbox && toDateInput) {
+          // Set initial state
+          if (currentCheckbox.checked) {
+            toDateInput.disabled = true;
+          }
+
+          // Handle checkbox change
+          currentCheckbox.addEventListener('change', function () {
+            if (this.checked) {
+              toDateInput.disabled = true;
+              toDateInput.value = '';
+            } else {
+              toDateInput.disabled = false;
+            }
+          });
+        }
+
+        // Handle form submission
+        const form = document.querySelector('.form');
+        if (form) {
+          form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Get form data
+            const experienceData = {
+              id: editingId || Date.now().toString(),
+              title: form.querySelector('[name="title"]').value.trim(),
+              company: form.querySelector('[name="company"]').value.trim(),
+              location: form.querySelector('[name="location"]').value.trim(),
+              from: form.querySelector('[name="from"]').value,
+              to: form.querySelector('[name="to"]').value,
+              current: form.querySelector('[name="current"]').checked,
+              description: form.querySelector('[name="description"]').value.trim(),
+              createdAt: new Date().toISOString(),
+            };
+
+            // Validate required fields
+            if (!experienceData.title || !experienceData.company) {
+              alert('Please fill in all required fields (Title and Company)');
+              return;
+            }
+
+            // Get existing experiences
+            let experiences = JSON.parse(
+              localStorage.getItem('experienceList') || '[]'
+            );
+
+            if (editingId) {
+              // Update existing
+              experiences = experiences.map((e) =>
+                e.id === editingId ? experienceData : e
+              );
+              alert('Experience updated successfully!');
+              editingId = null;
+            } else {
+              // Add new
+              experiences.push(experienceData);
+              alert('Experience added successfully!');
+            }
+
+            // Save to localStorage
+            try {
+              localStorage.setItem('experienceList', JSON.stringify(experiences));
+              console.log('Experience saved:', experienceData);
+
+              // Reset form
+              form.reset();
+              const submitBtn = document.querySelector('input[type="submit"]');
+              submitBtn.value = 'Submit';
+
+              // Refresh display
+              displaySavedExperiences();
+            } catch (e) {
+              console.error('Error saving experience:', e);
+              alert('Error saving experience. Please try again.');
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

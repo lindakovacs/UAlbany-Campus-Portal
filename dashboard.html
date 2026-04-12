@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="author" content="Linda Kovacs" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dark-mode.css" />
+    <link rel="stylesheet" href="css/profile-edit.css" />
+    <link rel="stylesheet" href="css/experience-education.css" />
+    <link rel="stylesheet" href="css/chat-bot.css" />
+    <title>Welcome To UAlbany Campus</title>
+  </head>
+  <body>
+    <!-- top anchor for Back-to-Top -->
+    <a id="top"></a>
+
+    <!-- Navbar loaded from modules -->
+    <header id="navbar-container"></header>
+    <script>
+      fetch('modules/navbar.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('navbar-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading navbar:', error));
+    </script>
+    <main>
+      <section class="container">
+        <h1 class="large text-primary">Dashboard</h1>
+        <p class="lead"><i class="fas fa-user"></i> Welcome Linda Kovacs</p>
+        
+        <!-- Quick Action Buttons -->
+        <div class="dash-buttons" style="margin-bottom: 2rem;">
+          <a href="create-profile.html" class="btn btn-light"
+            ><i class="fas fa-user-circle text-primary"></i> Edit Profile</a
+          >
+          <a href="add-experience.html" class="btn btn-light"
+            ><i class="fab fa-black-tie text-primary"></i> Add Experience</a
+          >
+          <a href="add-education.html" class="btn btn-light"
+            ><i class="fas fa-graduation-cap text-primary"></i> Add Education</a
+          >
+        </div>
+
+        <div class="photo-card bg-white p-2 my-2">
+          <div class="photo-card-header">
+            <h2 class="text-primary">Profile Photo</h2>
+            <p class="text-dark">Upload or change your profile picture.</p>
+          </div>
+          <div class="photo-card-body" style="display: flex; gap: 2rem; flex-wrap: wrap;">
+            <!-- Photo Section -->
+            <div style="flex: 0 0 auto; display: flex; flex-direction: column; align-items: center;">
+              <img
+                src="https://linda-kovacs.com/wp-content/uploads/2017/03/Linda-Kovacs.jpg?s=200"
+                alt="Profile preview"
+                class="profile-photo"
+              />
+              <div class="photo-actions" style="display: flex; flex-direction: column; align-items: center; margin-top: 1rem;">
+                <label class="btn btn-light" for="dashboard-photo" style="margin-bottom: 0.5rem;">
+                  <i class="fas fa-camera"></i> Choose Photo
+                </label>
+                <input
+                  id="dashboard-photo"
+                  type="file"
+                  accept="image/*"
+                  class="photo-input"
+                />
+                <small class="form-text">JPG or PNG, max 5MB.</small>
+              </div>
+            </div>
+
+            <!-- Bio Section -->
+            <div style="flex: 1; min-width: 200px;">
+              <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                  <h3 class="text-primary" style="margin-top: 0;">Bio</h3>
+                  <p id="dashboard-bio" class="text-dark" style="margin: 0;">Loading bio...</p>
+                </div>
+                <a href="create-profile.html" class="btn btn-primary btn-sm" style="white-space: nowrap;">
+                  <i class="fas fa-edit"></i> Edit
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Skills Section -->
+          <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #ddd;">
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+              <h3 class="text-primary" style="margin: 0;">Skills</h3>
+              <div id="dashboard-skills" class="skills" style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                <!-- Skills will be populated here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Links Section -->
+          <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #ddd;">
+            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+              <h3 class="text-primary" style="margin: 0;">Connect</h3>
+              <div id="dashboard-social" class="icons" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                <!-- Social links will be populated here -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="my-2">Experience Credentials</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th class="hide-sm">Title</th>
+              <th class="hide-sm">Years</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="dashboard-experience-tbody"></tbody>
+        </table>
+
+        <h2 class="my-2">Education Credentials</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>School</th>
+              <th class="hide-sm">Degree</th>
+              <th class="hide-sm">Years</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="dashboard-education-tbody"></tbody>
+        </table>
+
+        <div class="my-2">
+          <button class="btn btn-danger">
+            <i class="fas fa-user-minus"></i>
+
+            Delete My Account
+          </button>
+        </div>
+      </section>
+    </main>
+    <!-- Footer loaded from modules -->
+    <footer id="footer-container"></footer>
+    <script>
+      fetch('modules/footer.html')
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById('footer-container').innerHTML = html;
+        })
+        .catch((error) => console.error('Error loading footer:', error));
+    </script>
+    <!-- Profile Edit Scripts -->
+    <script src="js/profile-edit.js"></script>
+
+    <!-- Accessibility Features Scripts -->
+    <script src="js/accessibility.js"></script>
+    <script src="js/accessibility-ui.js"></script>
+
+    <!-- Chat Bot Script -->
+    <script src="js/chat-bot.js"></script>
+
+    <!-- Dashboard Data Population Script -->
+    <script>
+      /**
+       * Format date to readable string
+       * @param {string} dateStr - ISO date string (YYYY-MM-DD)
+       * @returns {string} - Formatted date (e.g., "Jan 2024")
+       */
+      function formatDashboardDate(dateStr) {
+        if (!dateStr) return '';
+        // Split ISO date string to create local date (avoids timezone offset issues)
+        const [year, month, day] = dateStr.split('-');
+        const date = new Date(year, month - 1, day);
+        return date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+        });
+      }
+
+      /**
+       * Sort experiences: current first, then by most recent
+       */
+      function sortExperiences(experiences) {
+        return experiences.sort((a, b) => {
+          if (a.current && !b.current) return -1;
+          if (!a.current && b.current) return 1;
+          const dateA = new Date(a.to || a.from);
+          const dateB = new Date(b.to || b.from);
+          return dateB - dateA;
+        });
+      }
+
+      /**
+       * Populate experience table from localStorage
+       */
+      function populateDashboardExperience() {
+        const tbody = document.getElementById('dashboard-experience-tbody');
+        if (!tbody) return;
+
+        let experienceList = JSON.parse(
+          localStorage.getItem('experienceList') || '[]',
+        );
+
+        // Sort experiences
+        experienceList = sortExperiences(experienceList);
+
+        tbody.innerHTML = '';
+
+        if (experienceList.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="5" class="text-center text-muted">No experience yet</td></tr>';
+          return;
+        }
+
+        experienceList.forEach((exp) => {
+          const fromDate = formatDashboardDate(exp.from);
+          const toDate = exp.to ? formatDashboardDate(exp.to) : 'Now';
+          const years = `${fromDate} - ${toDate}`;
+          const currentBadge = exp.current ? '<span class="badge badge-success">Current</span>' : '';
+
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${exp.company} ${currentBadge}</td>
+            <td class="hide-sm">${exp.title}</td>
+            <td class="hide-sm">${years}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" onclick="window.location.href='add-experience.html'; sessionStorage.setItem('editingExperienceId', '${exp.id}');" style="margin-right: 0.25rem;">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteDashboardExperience('${exp.id}')">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      /**
+       * Sort educations: current first, then by most recent
+       */
+      function sortEducations(educations) {
+        return educations.sort((a, b) => {
+          if (a.current && !b.current) return -1;
+          if (!a.current && b.current) return 1;
+          const dateA = new Date(a.to || a.from);
+          const dateB = new Date(b.to || b.from);
+          return dateB - dateA;
+        });
+      }
+
+      /**
+       * Populate education table from localStorage
+       */
+      function populateDashboardEducation() {
+        const tbody = document.getElementById('dashboard-education-tbody');
+        if (!tbody) return;
+
+        let educationList = JSON.parse(
+          localStorage.getItem('educationList') || '[]',
+        );
+
+        // Sort educations
+        educationList = sortEducations(educationList);
+
+        tbody.innerHTML = '';
+
+        if (educationList.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="5" class="text-center text-muted">No education yet</td></tr>';
+          return;
+        }
+
+        educationList.forEach((edu) => {
+          const fromDate = formatDashboardDate(edu.from);
+          const toDate = edu.to ? formatDashboardDate(edu.to) : 'Now';
+          const years = `${fromDate} - ${toDate}`;
+          const currentBadge = edu.current ? '<span class="badge badge-success">Current</span>' : '';
+
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${edu.school} ${currentBadge}</td>
+            <td class="hide-sm">${edu.degree}</td>
+            <td class="hide-sm">${years}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" onclick="window.location.href='add-education.html'; sessionStorage.setItem('editingEducationId', '${edu.id}');" style="margin-right: 0.25rem;">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteDashboardEducation('${edu.id}')">
+                <i class="fas fa-trash\"></i> Delete
+              </button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      /**
+       * Load and display bio from localStorage
+       */
+      function loadDashboardBio() {
+        const bioElement = document.getElementById('dashboard-bio');
+        if (!bioElement) return;
+
+        const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
+        const bio = profileData.bio?.trim();
+
+        if (bio) {
+          bioElement.textContent = bio;
+        } else {
+          bioElement.textContent = 'No bio added yet. Click "Edit Bio" to add one.';
+          bioElement.style.color = '#999';
+        }
+      }
+
+      /**
+       * Load and display skills from localStorage
+       */
+      function loadDashboardSkills() {
+        const skillsContainer = document.getElementById('dashboard-skills');
+        if (!skillsContainer) return;
+
+        const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
+        const skills = profileData.skills?.trim();
+
+        skillsContainer.innerHTML = '';
+
+        if (skills) {
+          const skillArray = skills.split(',').map(s => s.trim()).filter(s => s);
+          if (skillArray.length > 0) {
+            skillArray.forEach(skill => {
+              const skillDiv = document.createElement('div');
+              skillDiv.className = 'p-1';
+              skillDiv.style.display = 'flex';
+              skillDiv.style.alignItems = 'center';
+              skillDiv.style.gap = '0.5rem';
+              skillDiv.innerHTML = `<i class="fa fa-check"></i> ${skill}`;
+              skillsContainer.appendChild(skillDiv);
+            });
+            return;
+          }
+        }
+
+        skillsContainer.innerHTML = '<p class="text-muted">No skills added yet.</p>';
+      }
+
+      /**
+       * Load and display social links from localStorage
+       */
+      function loadDashboardSocial() {
+        const socialContainer = document.getElementById('dashboard-social');
+        if (!socialContainer) return;
+
+        const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
+        const social = profileData.social || {};
+
+        socialContainer.innerHTML = '';
+
+        // Social links order: Website, LinkedIn, GitHub, Twitter, Facebook, YouTube, Instagram
+        const socialLinks = [
+          { key: 'website', icon: 'fas fa-globe', title: 'Personal Website' },
+          { key: 'linkedin', icon: 'fab fa-linkedin', title: 'LinkedIn' },
+          { key: 'github', icon: 'fab fa-github', title: 'GitHub' },
+          { key: 'twitter', icon: 'fab fa-twitter', title: 'Twitter' },
+          { key: 'facebook', icon: 'fab fa-facebook', title: 'Facebook' },
+          { key: 'youtube', icon: 'fab fa-youtube', title: 'YouTube' },
+          { key: 'instagram', icon: 'fab fa-instagram', title: 'Instagram' }
+        ];
+
+        let hasLinks = false;
+        socialLinks.forEach(link => {
+          if (social[link.key]) {
+            hasLinks = true;
+            const a = document.createElement('a');
+            a.href = social[link.key];
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.title = link.title;
+            a.style.fontSize = '1.5rem';
+            a.style.color = '#007bff';
+            a.innerHTML = `<i class="${link.icon}"></i>`;
+            socialContainer.appendChild(a);
+          }
+        });
+
+        if (!hasLinks) {
+          socialContainer.innerHTML = '<p class="text-muted">No social links added yet.</p>';
+        }
+      }
+
+      /**
+       * Delete experience from dashboard
+       * @param {string} expId - Experience ID
+       */
+      function deleteDashboardExperience(expId) {
+        if (!confirm('Are you sure you want to delete this experience?'))
+          return;
+
+        let experiences = JSON.parse(
+          localStorage.getItem('experienceList') || '[]',
+        );
+        experiences = experiences.filter((exp) => exp.id !== expId);
+        localStorage.setItem('experienceList', JSON.stringify(experiences));
+
+        populateDashboardExperience();
+      }
+
+      /**
+       * Delete education from dashboard
+       * @param {string} eduId - Education ID
+       */
+      function deleteDashboardEducation(eduId) {
+        if (!confirm('Are you sure you want to delete this education?')) return;
+
+        let educations = JSON.parse(
+          localStorage.getItem('educationList') || '[]',
+        );
+        educations = educations.filter((edu) => edu.id !== eduId);
+        localStorage.setItem('educationList', JSON.stringify(educations));
+
+        populateDashboardEducation();
+      }
+
+      // Populate tables and load bio, skills, and social links when page loads
+      document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(function () {
+          loadDashboardBio();
+          loadDashboardSkills();
+          loadDashboardSocial();
+          populateDashboardExperience();
+          populateDashboardEducation();
+        }, 100);
+      });
+    </script>
+  </body>
+</html>
