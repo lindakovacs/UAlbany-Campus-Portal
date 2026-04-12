@@ -7,6 +7,8 @@ const app = express();
 const dbMiddleware = require('./middleware/db');
 const pool = require('./config/db');
 const authRoutes = require('./routes/auth');
+const profileRoutes = require('./routes/profiles');
+const { ApiError } = require('./utils/errors');
 
 // Middleware
 app.use(
@@ -45,13 +47,18 @@ app.get('/api/health', async (req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
-// app.use('/api/profiles', profileRoutes);
+app.use('/api/profiles', profileRoutes);
 // app.use('/api/posts', postRoutes);
 // etc.
 
 // Error handler middleware
 app.use((err, req, res, next) => {
   console.error(err);
+
+  if (err instanceof ApiError) {
+    return res.status(err.statusCode).json({ error: err.message });
+  }
+
   res.status(500).json({ error: 'Internal server error' });
 });
 

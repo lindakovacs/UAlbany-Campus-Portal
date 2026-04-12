@@ -44,9 +44,17 @@ const register = async (req, res) => {
       [name, email, hashedPassword],
     );
 
+    const userId = result.insertId;
+
+    // Auto-create profile for new user
+    await req.db.query(
+      'INSERT INTO profiles (user_id) VALUES (?)',
+      [userId],
+    );
+
     // Generate JWT token
     const token = jwt.sign(
-      { id: result.insertId, email },
+      { id: userId, email },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE || '7d' },
     );
@@ -55,7 +63,7 @@ const register = async (req, res) => {
       message: 'User registered successfully',
       token,
       user: {
-        id: result.insertId,
+        id: userId,
         name,
         email,
       },
