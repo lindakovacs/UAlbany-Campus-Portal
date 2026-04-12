@@ -342,6 +342,201 @@ The backend API runs on `http://localhost:3001` during development. Below are al
   - `404` - Profile not found
   - `400` - Invalid user ID or invalid data
 
+#### Education Endpoints
+
+**GET /api/education/:userId** - Get user's education history
+
+- **URL:** `http://localhost:3001/api/education/1`
+- **Method:** GET
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "data": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "school": "University of Albany",
+        "degree": "Bachelor of Science",
+        "field_of_study": "Computer Science",
+        "from_date": "2020-09-01",
+        "to_date": "2024-05-31",
+        "current": false,
+        "description": "Completed coursework in algorithms and software engineering",
+        "created_at": "2026-04-12T10:30:00Z"
+      }
+    ]
+  }
+  ```
+
+**POST /api/education/:userId** - Add education entry (Protected)
+
+- **URL:** `http://localhost:3001/api/education/1`
+- **Method:** POST
+- **Headers:** 
+  - `Content-Type: application/json`
+  - `Authorization: Bearer <your_jwt_token>`
+- **Body (JSON):**
+  ```json
+  {
+    "school": "University of Albany",
+    "degree": "Bachelor of Science",
+    "field_of_study": "Computer Science",
+    "from_date": "2020-09-01",
+    "to_date": "2024-05-31",
+    "current": false,
+    "description": "Completed coursework in algorithms and software engineering"
+  }
+  ```
+- **Expected Response (201):**
+  ```json
+  {
+    "status": "success",
+    "message": "Education entry added successfully",
+    "data": {
+      "id": 1,
+      "user_id": 1,
+      "school": "University of Albany",
+      "degree": "Bachelor of Science",
+      "field_of_study": "Computer Science",
+      "from_date": "2020-09-01",
+      "to_date": "2024-05-31",
+      "current": false,
+      "description": "Completed coursework in algorithms and software engineering"
+    }
+  }
+  ```
+- **Error Cases:**
+  - `401` - Missing token or not profile owner
+  - `400` - Missing required fields (school, degree, from_date)
+
+**PUT /api/education/:educationId** - Update education entry (Protected, owner only)
+
+- **URL:** `http://localhost:3001/api/education/1`
+- **Method:** PUT
+- **Headers:** 
+  - `Content-Type: application/json`
+  - `Authorization: Bearer <your_jwt_token>`
+- **Body (JSON):** (All fields optional)
+  ```json
+  {
+    "school": "Updated School Name",
+    "current": true
+  }
+  ```
+- **Expected Response (200):** Same as POST response
+
+**DELETE /api/education/:educationId** - Delete education entry (Protected, owner only)
+
+- **URL:** `http://localhost:3001/api/education/1`
+- **Method:** DELETE
+- **Headers:** `Authorization: Bearer <your_jwt_token>`
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "message": "Education entry deleted successfully"
+  }
+  ```
+
+#### Experience Endpoints
+
+**GET /api/experience/:userId** - Get user's work experience
+
+- **URL:** `http://localhost:3001/api/experience/1`
+- **Method:** GET
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "data": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "company": "Tech Company Inc",
+        "title": "Software Engineer",
+        "location": "New York, NY",
+        "from_date": "2024-06-01",
+        "to_date": null,
+        "current": true,
+        "description": "Developing web applications and APIs",
+        "created_at": "2026-04-12T11:00:00Z"
+      }
+    ]
+  }
+  ```
+
+**POST /api/experience/:userId** - Add work experience (Protected)
+
+- **URL:** `http://localhost:3001/api/experience/1`
+- **Method:** POST
+- **Headers:** 
+  - `Content-Type: application/json`
+  - `Authorization: Bearer <your_jwt_token>`
+- **Body (JSON):**
+  ```json
+  {
+    "company": "Tech Company Inc",
+    "title": "Software Engineer",
+    "location": "New York, NY",
+    "from_date": "2024-06-01",
+    "to_date": null,
+    "current": true,
+    "description": "Developing web applications and APIs"
+  }
+  ```
+- **Expected Response (201):**
+  ```json
+  {
+    "status": "success",
+    "message": "Experience entry added successfully",
+    "data": {
+      "id": 1,
+      "user_id": 1,
+      "company": "Tech Company Inc",
+      "title": "Software Engineer",
+      "location": "New York, NY",
+      "from_date": "2024-06-01",
+      "to_date": null,
+      "current": true,
+      "description": "Developing web applications and APIs"
+    }
+  }
+  ```
+- **Error Cases:**
+  - `401` - Missing token or not profile owner
+  - `400` - Missing required fields (company, title, from_date)
+
+**PUT /api/experience/:experienceId** - Update experience entry (Protected, owner only)
+
+- **URL:** `http://localhost:3001/api/experience/1`
+- **Method:** PUT
+- **Headers:** 
+  - `Content-Type: application/json`
+  - `Authorization: Bearer <your_jwt_token>`
+- **Body (JSON):** (All fields optional)
+  ```json
+  {
+    "title": "Senior Software Engineer",
+    "to_date": "2026-04-12",
+    "current": false
+  }
+  ```
+- **Expected Response (200):** Same as POST response
+
+**DELETE /api/experience/:experienceId** - Delete experience entry (Protected, owner only)
+
+- **URL:** `http://localhost:3001/api/experience/1`
+- **Method:** DELETE
+- **Headers:** `Authorization: Bearer <your_jwt_token>`
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "message": "Experience entry deleted successfully"
+  }
+  ```
+
 ### Postman Workflow Example
 
 1. **Register a new user:**
@@ -368,6 +563,24 @@ The backend API runs on `http://localhost:3001` during development. Below are al
 6. **View specific profile:**
    - Use `GET /api/profiles/<user_id>`
    - No authentication required
+
+7. **Add education:**
+   - Use `POST /api/education/<your_user_id>`
+   - Set header `Authorization: Bearer <token_from_step_2>`
+   - Add school, degree, field_of_study, from_date in JSON body
+
+8. **View your education:**
+   - Use `GET /api/education/<your_user_id>`
+   - No authentication required
+
+9. **Add work experience:**
+   - Use `POST /api/experience/<your_user_id>`
+   - Set header `Authorization: Bearer <token_from_step_2>`
+   - Add company, title, location, from_date in JSON body
+
+10. **View your work experience:**
+    - Use `GET /api/experience/<your_user_id>`
+    - No authentication required
 
 ### Testing Tips
 
