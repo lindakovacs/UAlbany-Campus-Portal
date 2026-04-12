@@ -6,9 +6,25 @@ require('dotenv').config();
 const app = express();
 const dbMiddleware = require('./middleware/db');
 const pool = require('./config/db');
+const authRoutes = require('./routes/auth');
 
 // Middleware
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+        connectSrc: ["'self'", "http://localhost:*"],
+      },
+    },
+    frameguard: { action: 'deny' },
+    noSniff: true,
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  }),
+);
 app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
 app.use(express.json());
 app.use(dbMiddleware);
@@ -27,9 +43,10 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// Routes will go here
-// app.use('/api/auth', authRoutes);
+// Routes
+app.use('/api/auth', authRoutes);
 // app.use('/api/profiles', profileRoutes);
+// app.use('/api/posts', postRoutes);
 // etc.
 
 // Error handler middleware
