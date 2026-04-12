@@ -4,15 +4,27 @@ const helmet = require('helmet');
 require('dotenv').config();
 
 const app = express();
+const dbMiddleware = require('./middleware/db');
+const pool = require('./config/db');
 
 // Middleware
 app.use(helmet());
 app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
 app.use(express.json());
+app.use(dbMiddleware);
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Backend is running' });
+app.get('/api/health', async (req, res) => {
+  try {
+    const conn = await pool.getConnection();
+    await conn.query('SELECT 1');
+    conn.release();
+    res.json({ status: 'ok', db: 'connected', message: 'Backend is running' });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ status: 'error', db: 'disconnected', error: err.message });
+  }
 });
 
 // Routes will go here
