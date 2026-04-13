@@ -202,6 +202,29 @@
       <h3>32. Get Comment Count for Post</h3>
       <code>apiGetCommentCount(1)</code>
 
+      <h2>AI Chatbot:</h2>
+
+      <h3>33. Send Message to Chatbot (Using Gemini API or Mock)</h3>
+      <code
+        >fetch('http://localhost:3001/api/chat', { method: 'POST', headers: {
+        'Content-Type': 'application/json' }, body: JSON.stringify({ message:
+        'Tell me about UAlbany campus' }) }).then(r => r.json()).then(d =>
+        console.log(d.data))</code
+      >
+
+      <h3>34. Check Chatbot Health & Configuration</h3>
+      <code
+        >fetch('http://localhost:3001/api/chat/health').then(r =>
+        r.json()).then(d => console.log(d.data))</code
+      >
+
+      <h3>35. Test Chatbot Error Handling (Empty Message)</h3>
+      <code
+        >fetch('http://localhost:3001/api/chat', { method: 'POST', headers: {
+        'Content-Type': 'application/json' }, body: JSON.stringify({ message: ''
+        }) }).then(r => r.json()).then(d => console.log(d))</code
+      >
+
       <hr />
       <p>
         <strong>Backend Status:</strong>
@@ -298,6 +321,10 @@
           'apiUpdateComment',
           'apiDeleteComment',
           'apiGetCommentCount',
+        ],
+        chatbot: [
+          'POST /api/chat - Send message to chatbot',
+          'GET /api/chat/health - Check chatbot configuration',
         ],
         utils: [
           'getToken',

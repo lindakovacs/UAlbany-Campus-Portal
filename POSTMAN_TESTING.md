@@ -860,6 +860,75 @@ The backend API runs on `http://localhost:3001` during development. Below are al
 - **Error Cases:**
   - `404` - Post not found
 
+## AI Chatbot Endpoints
+
+**POST /api/chat** - Send message to AI chatbot
+
+- **URL:** `http://localhost:3001/api/chat`
+- **Method:** POST
+- **Headers:**
+  - `Content-Type: application/json`
+- **Body (JSON):**
+  ```json
+  {
+    "message": "Tell me about UAlbany campus"
+  }
+  ```
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "data": {
+      "response": "University at Albany is located in Albany, NY. We have beautiful dining facilities, research labs, and modern student housing. The campus spans over 600 acres! Learn more: https://www.albany.edu",
+      "usedMock": false
+    }
+  }
+  ```
+- **Notes:**
+  - `usedMock: false` = Using real Gemini API
+  - `usedMock: true` = Using fallback mock responses (no API key configured)
+  - No authentication required
+  - Message max length: 2000 characters
+- **Error Cases:**
+  - `400` - Missing or empty message
+  - `429` - Rate limit exceeded (chatbot busy - try again later)
+  - `500` - Server error (falls back to mock responses)
+
+**GET /api/chat/health** - Check chatbot configuration status
+
+- **URL:** `http://localhost:3001/api/chat/health`
+- **Method:** GET
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "data": {
+      "chatbotActive": true,
+      "apiConfigured": true,
+      "model": "gemini-2.5-flash",
+      "useMock": false,
+      "message": "🤖 Gemini AI chatbot active (gemini-2.5-flash)"
+    }
+  }
+  ```
+- **Configuration Meanings:**
+  - `apiConfigured: true` = API key is set in .env
+  - `apiConfigured: false` = Using mock responses (no API key)
+  - `model` = Active Gemini model (default: gemini-2.5-flash)
+- **Response Example (Mock Mode):**
+  ```json
+  {
+    "status": "success",
+    "data": {
+      "chatbotActive": true,
+      "apiConfigured": false,
+      "model": "gemini-2.5-flash",
+      "useMock": true,
+      "message": "📝 Mock chatbot active - no API key configured"
+    }
+  }
+  ```
+
 ## Postman Workflow Example
 
 1. **Register a new user:**

@@ -331,6 +331,147 @@ The project includes a centralized API utility module (`frontend/js/api.js`) for
   3. Reload browser page (Cmd+R or Ctrl+R)
 - **Can't connect to backend?** Verify `CONFIG.BACKEND_HOST` and `CONFIG.BACKEND_PORT` in `config.js`
 
+## AI Chatbot with Gemini API
+
+The UAlbany Campus Portal includes an intelligent AI chatbot powered by **Google Gemini 2.5 Flash-Lite** for answering student questions about campus, programs, events, and services.
+
+### Setup & Configuration
+
+#### Option 1: Use Mock Responses (Default - No Setup Required)
+
+The chatbot works immediately with **mock responses** without any API key:
+
+1. ✅ No additional setup needed
+2. ✅ Chatbot responds to common campus-related questions
+3. ✅ Perfect for testing and development
+
+```bash
+# Just start the server - mock mode enabled by default
+cd server && npm start
+```
+
+**When to use:** Development, testing, and demos.
+
+#### Option 2: Enable Real Gemini AI (Recommended for Production)
+
+To enable the real Gemini API with advanced AI responses:
+
+1. **Get a free API key:**
+   - Visit: https://ai.google.dev/
+   - Sign in with your Google account
+   - Click "Get API key" → "Create API key in new project"
+   - Copy your API key
+
+2. **Add API key to `.env` file:**
+
+   ```bash
+   # server/.env
+   GEMINI_API_KEY="Your GeminiAI_API_KEY here"   # Paste your key here
+   GEMINI_MODEL=gemini-2.5-flash      # Latest flash model
+   ```
+
+3. **Install dependency (if not already done):**
+
+   ```bash
+   cd server
+   npm install @google/generative-ai
+   ```
+
+4. **Restart the server:**
+
+   ```bash
+   cd server && npm start
+   ```
+
+5. **Verify it's working:**
+
+   ```bash
+   curl http://localhost:3001/api/chat/health
+   # Output should show: "apiConfigured": true
+   ```
+
+### Rate Limiting & Quotas
+
+**Gemini 2.5 Flash-Lite (Free Tier):**
+- ✅ **1,000 requests per day** - Perfect for a small student team
+- ✅ **No credit card required**
+- ✅ No rate limits during development
+
+**Pro Tip:** For high traffic, implement request caching on the frontend to minimize API calls.
+
+### Error Handling
+
+The chatbot includes automatic fallback logic:
+
+```
+Request Flow:
+1. User sends message → Frontend API call
+2. Backend checks for GEMINI_API_KEY
+   ✅ If configured → Call Gemini API (real AI response)
+   ❌ If not configured → Use mock responses (keyword matching)
+3. Handle 429 error (rate limit) → Show user-friendly message
+4. Any other error → Graceful fallback to mock responses
+```
+
+**What happens if rate limit (429) is reached?:**
+
+```
+User sees: "🤖 The AI chatbot is temporarily busy due to high traffic. 
+Please try again in a moment! Visit https://www.albany.edu for more info."
+```
+
+### Chatbot Endpoints
+
+**POST `/api/chat`** - Send a message to the chatbot
+
+```bash
+curl -X POST http://localhost:3001/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message":"Tell me about UAlbany"}'
+
+# Response:
+{
+  "status": "success",
+  "data": {
+    "response": "University at Albany is...",
+    "usedMock": false
+  }
+}
+```
+
+**GET `/api/chat/health`** - Check chatbot status
+
+```bash
+curl http://localhost:3001/api/chat/health
+
+# Response shows:
+{
+  "chatbotActive": true,
+  "apiConfigured": true,
+  "model": "gemini-2.5-flash",
+  "useMock": false
+}
+```
+
+### Frontend Integration
+
+The chatbot is automatically integrated into HTML pages via `js/chat-bot.js`:
+
+```html
+<script src="js/chat-bot.js"></script>
+<script>
+  // Initialize when page loads
+  initializeChatBot();
+</script>
+```
+
+**Features:**
+- 💬 Floating chat bubble in corner
+- 📱 Mobile-responsive interface
+- ♿ WCAG AA accessibility compliant
+- 🔒 Secure (API key stored on backend only)
+- 💾 Chat history saved to localStorage
+
 ## Frontend API Testing
 
 Test the API directly from your browser without using Postman. The frontend includes a comprehensive testing interface that connects to your backend and database.

@@ -15,6 +15,7 @@ const experienceRoutes = require('./routes/experience');
 const postRoutes = require('./routes/posts');
 const likeRoutes = require('./routes/likes');
 const commentRoutes = require('./routes/comments');
+const chatRoutes = require('./routes/chat');
 const { ApiError } = require('./utils/errors');
 
 // Middleware
@@ -89,6 +90,7 @@ app.use('/api/posts', commentRoutes); // Comment endpoints: /:postId/comments, /
 app.use('/api/posts', likeRoutes); // Like endpoints: /:postId/like, /:postId/likes
 app.use('/api/posts', postRoutes); // Post CRUD endpoints: /, /:postId, etc.
 app.use('/api/comments', commentRoutes); // Alternative comment endpoint: /api/comments/:commentId
+app.use('/api/chat', chatRoutes); // Chatbot endpoint: /api/chat
 
 // Error handler middleware
 app.use((err, req, res, next) => {

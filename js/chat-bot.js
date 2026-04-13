@@ -218,11 +218,12 @@ function attachChatEventListeners() {
 }
 
 /**
- * Send chat message
+ * Send chat message - async version with API integration
  */
-function sendChatMessage() {
+async function sendChatMessage() {
   const chatInput = document.getElementById('chat-input');
   const chatMessages = document.getElementById('chat-messages');
+  const sendBtn = document.getElementById('send-chat-btn');
   const userMessage = chatInput.value.trim();
 
   if (!userMessage) return;
@@ -230,20 +231,52 @@ function sendChatMessage() {
   // Add user message to chat
   addMessageToChat(userMessage, 'user');
 
-  // Clear input
+  // Clear input and disable send button
   chatInput.value = '';
+  sendBtn.disabled = true;
 
   // Save to history
   saveChatMessage(userMessage, 'user');
 
-  // Get bot response
-  const botResponse = getBotResponse(userMessage);
+  // Show typing indicator
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'chat-message bot-message typing-indicator';
+  typingDiv.id = 'typing-indicator';
+  typingDiv.innerHTML = `
+    <div class="message-content">
+      <p>Bot is typing...</p>
+    </div>
+  `;
+  chatMessages.appendChild(typingDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 
-  // Add bot response after a short delay
-  setTimeout(() => {
+  try {
+    // Get bot response from API
+    const botResponse = await getBotResponseFromAPI(userMessage);
+
+    // Remove typing indicator
+    const indicator = document.getElementById('typing-indicator');
+    if (indicator) indicator.remove();
+
+    // Add bot response
     addMessageToChat(botResponse, 'bot');
     saveChatMessage(botResponse, 'bot');
-  }, 500);
+  } catch (error) {
+    // Remove typing indicator
+    const indicator = document.getElementById('typing-indicator');
+    if (indicator) indicator.remove();
+
+    // Show error message
+    const errorMessage =
+      error.message ||
+      'Sorry, I encountered an error. Please try again later.';
+    addMessageToChat(errorMessage, 'bot');
+    saveChatMessage(errorMessage, 'bot');
+  } finally {
+    // Re-enable send button
+    sendBtn.disabled = false;
+    chatInput.focus();
+  }
 
   // Auto-scroll to bottom
   chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -293,8 +326,76 @@ function addMessageToChat(message, sender) {
 }
 
 /**
- * Get AI response to user message
- * MOCK VERSION - Replace with real API call for production
+ * Get bot response from Gemini API via backend endpoint
+ * Falls back to mock responses if API key not configured
+ * Handles 429 rate limit errors gracefully
+ * @param {string} userMessage - The user's message
+ * @returns {Promise<string>} - The bot's response
+ */
+async function getBotResponseFromAPI(userMessage) {
+  try {
+    // Get backend URL from config if available, otherwise construct it
+    const backendUrl =
+      typeof CONFIG !== 'undefined' && CONFIG.BACKEND_HOST && CONFIG.BACKEND_PORT
+        ? `${CONFIG.BACKEND_HOST}:${CONFIG.BACKEND_PORT}`
+        : 'http://localhost:3001';
+
+    const chatEndpoint = `${backendUrl}/api/chat`;
+
+    const response = await fetch(chatEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: userMessage,
+      }),
+    });
+
+    // Check if response is OK
+    if (!response.ok) {
+      // Handle 429 Too Many Requests (rate limit)
+      if (response.status === 429) {
+        throw new Error(
+          '🤖 The AI chatbot is temporarily busy due to high traffic. Please try again in a moment! Visit https://www.albany.edu for more information.',
+        );
+      }
+
+      // Handle other HTTP errors
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.error ||
+          `Server error (${response.status}). Please try again.`,
+      );
+    }
+
+    const data = await response.json();
+
+    // Return the response from the API
+    if (data.status === 'success' && data.data && data.data.response) {
+      return data.data.response;
+    } else {
+      throw new Error('Unexpected response format from server');
+    }
+  } catch (error) {
+    console.error('❌ Chat API error:', error);
+
+    // If it's a network error, show helpful message
+    if (error instanceof TypeError) {
+      throw new Error(
+        'Unable to connect to the chat service. Please check your connection and try again.',
+      );
+    }
+
+    // Re-throw the error with the message
+    throw error;
+  }
+}
+
+/**
+ * Get bot response to user message - MOCK VERSION (fallback)
+ * This function is kept for reference but not actively used
+ * when API is available. It serves as fallback on the server side.
  * @param {string} userMessage - The user's question
  * @returns {string} - The bot's response
  */
