@@ -44,115 +44,224 @@
     <main>
       <section class="container">
         <h1 class="large text-primary">Dashboard</h1>
-        <p class="lead"><i class="fas fa-user"></i> Welcome Linda Kovacs</p>
-        
-        <!-- Quick Action Buttons -->
-        <div class="dash-buttons" style="margin-bottom: 2rem;">
-          <a href="create-profile.html" class="btn btn-light"
-            ><i class="fas fa-user-circle text-primary"></i> Edit Profile</a
-          >
-          <a href="add-experience.html" class="btn btn-light"
-            ><i class="fab fa-black-tie text-primary"></i> Add Experience</a
-          >
-          <a href="add-education.html" class="btn btn-light"
-            ><i class="fas fa-graduation-cap text-primary"></i> Add Education</a
-          >
+        <p class="lead">
+          <i class="fas fa-user"></i> Welcome
+          <span id="user-welcome-name">User</span>
+        </p>
+
+        <!-- Loading Indicator -->
+        <div
+          id="dashboard-loading"
+          style="display: none; text-align: center; padding: 2rem"
+        >
+          <div
+            style="
+              width: 40px;
+              height: 40px;
+              border: 4px solid #f3f3f3;
+              border-top: 4px solid #3498db;
+              border-radius: 50%;
+              animation: spin 1s linear infinite;
+              margin: 0 auto 20px;
+            "
+          ></div>
+          <p>Loading your dashboard...</p>
         </div>
 
-        <div class="photo-card bg-white p-2 my-2">
-          <div class="photo-card-header">
-            <h2 class="text-primary">Profile Photo</h2>
-            <p class="text-dark">Upload or change your profile picture.</p>
+        <!-- Dashboard Content (hidden initially) -->
+        <div id="dashboard-content" style="display: none">
+          <div class="dash-buttons" style="margin-bottom: 2rem">
+            <a
+              id="dashboard-edit-profile"
+              href="create-profile.html"
+              class="btn btn-light"
+              ><i class="fas fa-user-circle text-primary"></i> Edit Profile</a
+            >
+            <a
+              id="dashboard-add-experience"
+              href="add-experience.html"
+              class="btn btn-light"
+              ><i class="fab fa-black-tie text-primary"></i> Add Experience</a
+            >
+            <a
+              id="dashboard-add-education"
+              href="add-education.html"
+              class="btn btn-light"
+              ><i class="fas fa-graduation-cap text-primary"></i> Add
+              Education</a
+            >
           </div>
-          <div class="photo-card-body" style="display: flex; gap: 2rem; flex-wrap: wrap;">
-            <!-- Photo Section -->
-            <div style="flex: 0 0 auto; display: flex; flex-direction: column; align-items: center;">
-              <img
-                src="https://linda-kovacs.com/wp-content/uploads/2017/03/Linda-Kovacs.jpg?s=200"
-                alt="Profile preview"
-                class="profile-photo"
-              />
-              <div class="photo-actions" style="display: flex; flex-direction: column; align-items: center; margin-top: 1rem;">
-                <label class="btn btn-light" for="dashboard-photo" style="margin-bottom: 0.5rem;">
-                  <i class="fas fa-camera"></i> Choose Photo
-                </label>
-                <input
-                  id="dashboard-photo"
-                  type="file"
-                  accept="image/*"
-                  class="photo-input"
+
+          <div class="photo-card bg-white p-2 my-2">
+            <div class="photo-card-header">
+              <h2 class="text-primary">Profile Photo</h2>
+              <p class="text-dark">Upload or change your profile picture.</p>
+            </div>
+            <div
+              class="photo-card-body"
+              style="display: flex; gap: 2rem; flex-wrap: wrap"
+            >
+              <!-- Photo Section -->
+              <div
+                style="
+                  flex: 0 0 auto;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                "
+              >
+                <img
+                  src="https://linda-kovacs.com/wp-content/uploads/2017/03/Linda-Kovacs.jpg?s=200"
+                  alt="Profile preview"
+                  class="profile-photo"
                 />
-                <small class="form-text">JPG or PNG, max 5MB.</small>
-              </div>
-            </div>
-
-            <!-- Bio Section -->
-            <div style="flex: 1; min-width: 200px;">
-              <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem; margin-bottom: 1rem;">
-                <div>
-                  <h3 class="text-primary" style="margin-top: 0;">Bio</h3>
-                  <p id="dashboard-bio" class="text-dark" style="margin: 0;">Loading bio...</p>
+                <div
+                  class="photo-actions"
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-top: 1rem;
+                  "
+                >
+                  <label
+                    id="dashboard-photo-label"
+                    class="btn btn-light"
+                    for="dashboard-photo"
+                    style="margin-bottom: 0.5rem"
+                  >
+                    <i class="fas fa-camera"></i> Choose Photo
+                  </label>
+                  <input
+                    id="dashboard-photo"
+                    type="file"
+                    accept="image/*"
+                    class="photo-input"
+                  />
+                  <small class="form-text">JPG or PNG, max 5MB.</small>
                 </div>
-                <a href="create-profile.html" class="btn btn-primary btn-sm" style="white-space: nowrap;">
-                  <i class="fas fa-edit"></i> Edit
-                </a>
+              </div>
+
+              <!-- Bio Section -->
+              <div style="flex: 1; min-width: 200px">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: start;
+                    gap: 1rem;
+                    margin-bottom: 1rem;
+                  "
+                >
+                  <div>
+                    <h3 class="text-primary" style="margin-top: 0">Bio</h3>
+                    <p id="dashboard-bio" class="text-dark" style="margin: 0">
+                      Loading bio...
+                    </p>
+                  </div>
+                  <a
+                    href="create-profile.html"
+                    class="btn btn-primary btn-sm"
+                    style="white-space: nowrap"
+                  >
+                    <i class="fas fa-edit"></i> Edit
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Skills Section -->
+            <div
+              style="
+                margin-top: 1.5rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid #ddd;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 1rem;
+                  flex-wrap: wrap;
+                "
+              >
+                <h3 class="text-primary" style="margin: 0">Skills</h3>
+                <div
+                  id="dashboard-skills"
+                  class="skills"
+                  style="display: flex; flex-wrap: wrap; gap: 1rem"
+                >
+                  <!-- Skills will be populated here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Social Links Section -->
+            <div
+              style="
+                margin-top: 1.5rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid #ddd;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 1.5rem;
+                  flex-wrap: wrap;
+                "
+              >
+                <h3 class="text-primary" style="margin: 0">Connect</h3>
+                <div
+                  id="dashboard-social"
+                  class="icons"
+                  style="
+                    display: flex;
+                    gap: 1rem;
+                    flex-wrap: wrap;
+                    align-items: center;
+                  "
+                >
+                  <!-- Social links will be populated here -->
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Skills Section -->
-          <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #ddd;">
-            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-              <h3 class="text-primary" style="margin: 0;">Skills</h3>
-              <div id="dashboard-skills" class="skills" style="display: flex; flex-wrap: wrap; gap: 1rem;">
-                <!-- Skills will be populated here -->
-              </div>
-            </div>
+          <h2 class="my-2">Experience Credentials</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th class="hide-sm">Title</th>
+                <th class="hide-sm">Years</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="dashboard-experience-tbody"></tbody>
+          </table>
+
+          <h2 class="my-2">Education Credentials</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>School</th>
+                <th class="hide-sm">Degree</th>
+                <th class="hide-sm">Years</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="dashboard-education-tbody"></tbody>
+          </table>
+
+          <div class="my-2">
+            <button class="btn btn-danger" onclick="handleDeleteAccount()">
+              <i class="fas fa-user-minus"></i>
+              Delete My Account
+            </button>
           </div>
-
-          <!-- Social Links Section -->
-          <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #ddd;">
-            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-              <h3 class="text-primary" style="margin: 0;">Connect</h3>
-              <div id="dashboard-social" class="icons" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
-                <!-- Social links will be populated here -->
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h2 class="my-2">Experience Credentials</h2>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Company</th>
-              <th class="hide-sm">Title</th>
-              <th class="hide-sm">Years</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="dashboard-experience-tbody"></tbody>
-        </table>
-
-        <h2 class="my-2">Education Credentials</h2>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>School</th>
-              <th class="hide-sm">Degree</th>
-              <th class="hide-sm">Years</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="dashboard-education-tbody"></tbody>
-        </table>
-
-        <div class="my-2">
-          <button class="btn btn-danger">
-            <i class="fas fa-user-minus"></i>
-
-            Delete My Account
-          </button>
         </div>
       </section>
     </main>
@@ -173,14 +282,121 @@
     <script src="js/accessibility.js"></script>
     <script src="js/accessibility-ui.js"></script>
 
+    <!-- API Configuration and Client -->
+    <script src="frontend/config.js"></script>
+    <script src="frontend/js/api-client.js"></script>
+
     <!-- Navbar Authentication Handler -->
     <script src="js/navbar-auth.js"></script>
+
+    <!-- Authentication Guard -->
+    <script src="frontend/js/auth-guard.js"></script>
 
     <!-- Chat Bot Script -->
     <script src="js/chat-bot.js"></script>
 
     <!-- Dashboard Data Population Script -->
     <script>
+      // Add animation styles
+      const styleSheet = document.createElement('style');
+      styleSheet.textContent = `
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `;
+      document.head.appendChild(styleSheet);
+
+      /**
+       * Display user data on dashboard
+       * @param {Object} user - User object from API
+       */
+      function displayUserData(user) {
+        if (!user) return;
+
+        // Update welcome message
+        const userName = user.name || 'User';
+        document.getElementById('user-welcome-name').textContent = userName;
+
+        // Store user profile data for use by other components
+        localStorage.setItem('currentUser', JSON.stringify(user));
+
+        // Show edit buttons for authenticated user
+        showDashboardEditButtons();
+      }
+
+      /**
+       * Show dashboard edit buttons for authenticated users
+       */
+      function showDashboardEditButtons() {
+        const editProfileBtn = document.getElementById(
+          'dashboard-edit-profile',
+        );
+        const addExperienceBtn = document.getElementById(
+          'dashboard-add-experience',
+        );
+        const addEducationBtn = document.getElementById(
+          'dashboard-add-education',
+        );
+        const photoLabel = document.getElementById('dashboard-photo-label');
+
+        if (editProfileBtn) editProfileBtn.style.display = 'inline-block';
+        if (addExperienceBtn) addExperienceBtn.style.display = 'inline-block';
+        if (addEducationBtn) addEducationBtn.style.display = 'inline-block';
+        if (photoLabel) photoLabel.style.display = 'block';
+      }
+
+      /**
+       * Hide dashboard edit buttons for non-authenticated users
+       */
+      function hideDashboardEditButtons() {
+        const editProfileBtn = document.getElementById(
+          'dashboard-edit-profile',
+        );
+        const addExperienceBtn = document.getElementById(
+          'dashboard-add-experience',
+        );
+        const addEducationBtn = document.getElementById(
+          'dashboard-add-education',
+        );
+        const photoLabel = document.getElementById('dashboard-photo-label');
+
+        if (editProfileBtn) editProfileBtn.style.display = 'none';
+        if (addExperienceBtn) addExperienceBtn.style.display = 'none';
+        if (addEducationBtn) addEducationBtn.style.display = 'none';
+        if (photoLabel) photoLabel.style.display = 'none';
+      }
+
+      /**
+       * Handle delete account action
+       */
+      async function handleDeleteAccount() {
+        if (
+          !confirm(
+            'Are you sure you want to delete your account? This action cannot be undone.',
+          )
+        ) {
+          return;
+        }
+
+        if (
+          !confirm(
+            'This will permanently delete your account and all associated data. Continue?',
+          )
+        ) {
+          return;
+        }
+
+        try {
+          // Call delete account API
+          await apiClient.auth.deleteAccount();
+
+          // Clear storage and redirect to login
+          logout();
+        } catch (error) {
+          showErrorMessage(error.message || 'Failed to delete account');
+        }
+      }
       /**
        * Format date to readable string
        * @param {string} dateStr - ISO date string (YYYY-MM-DD)
@@ -236,7 +452,9 @@
           const fromDate = formatDashboardDate(exp.from);
           const toDate = exp.to ? formatDashboardDate(exp.to) : 'Now';
           const years = `${fromDate} - ${toDate}`;
-          const currentBadge = exp.current ? '<span class="badge badge-success">Current</span>' : '';
+          const currentBadge = exp.current
+            ? '<span class="badge badge-success">Current</span>'
+            : '';
 
           const row = document.createElement('tr');
           row.innerHTML = `
@@ -295,7 +513,9 @@
           const fromDate = formatDashboardDate(edu.from);
           const toDate = edu.to ? formatDashboardDate(edu.to) : 'Now';
           const years = `${fromDate} - ${toDate}`;
-          const currentBadge = edu.current ? '<span class="badge badge-success">Current</span>' : '';
+          const currentBadge = edu.current
+            ? '<span class="badge badge-success">Current</span>'
+            : '';
 
           const row = document.createElement('tr');
           row.innerHTML = `
@@ -322,13 +542,16 @@
         const bioElement = document.getElementById('dashboard-bio');
         if (!bioElement) return;
 
-        const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
+        const profileData = JSON.parse(
+          localStorage.getItem('profileData') || '{}',
+        );
         const bio = profileData.bio?.trim();
 
         if (bio) {
           bioElement.textContent = bio;
         } else {
-          bioElement.textContent = 'No bio added yet. Click "Edit Bio" to add one.';
+          bioElement.textContent =
+            'No bio added yet. Click "Edit Bio" to add one.';
           bioElement.style.color = '#999';
         }
       }
@@ -340,15 +563,20 @@
         const skillsContainer = document.getElementById('dashboard-skills');
         if (!skillsContainer) return;
 
-        const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
+        const profileData = JSON.parse(
+          localStorage.getItem('profileData') || '{}',
+        );
         const skills = profileData.skills?.trim();
 
         skillsContainer.innerHTML = '';
 
         if (skills) {
-          const skillArray = skills.split(',').map(s => s.trim()).filter(s => s);
+          const skillArray = skills
+            .split(',')
+            .map((s) => s.trim())
+            .filter((s) => s);
           if (skillArray.length > 0) {
-            skillArray.forEach(skill => {
+            skillArray.forEach((skill) => {
               const skillDiv = document.createElement('div');
               skillDiv.className = 'p-1';
               skillDiv.style.display = 'flex';
@@ -361,7 +589,8 @@
           }
         }
 
-        skillsContainer.innerHTML = '<p class="text-muted">No skills added yet.</p>';
+        skillsContainer.innerHTML =
+          '<p class="text-muted">No skills added yet.</p>';
       }
 
       /**
@@ -371,7 +600,9 @@
         const socialContainer = document.getElementById('dashboard-social');
         if (!socialContainer) return;
 
-        const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
+        const profileData = JSON.parse(
+          localStorage.getItem('profileData') || '{}',
+        );
         const social = profileData.social || {};
 
         socialContainer.innerHTML = '';
@@ -384,11 +615,11 @@
           { key: 'twitter', icon: 'fab fa-twitter', title: 'Twitter' },
           { key: 'facebook', icon: 'fab fa-facebook', title: 'Facebook' },
           { key: 'youtube', icon: 'fab fa-youtube', title: 'YouTube' },
-          { key: 'instagram', icon: 'fab fa-instagram', title: 'Instagram' }
+          { key: 'instagram', icon: 'fab fa-instagram', title: 'Instagram' },
         ];
 
         let hasLinks = false;
-        socialLinks.forEach(link => {
+        socialLinks.forEach((link) => {
           if (social[link.key]) {
             hasLinks = true;
             const a = document.createElement('a');
@@ -404,7 +635,8 @@
         });
 
         if (!hasLinks) {
-          socialContainer.innerHTML = '<p class="text-muted">No social links added yet.</p>';
+          socialContainer.innerHTML =
+            '<p class="text-muted">No social links added yet.</p>';
         }
       }
 
@@ -443,13 +675,54 @@
 
       // Populate tables and load bio, skills, and social links when page loads
       document.addEventListener('DOMContentLoaded', function () {
-        setTimeout(function () {
-          loadDashboardBio();
-          loadDashboardSkills();
-          loadDashboardSocial();
-          populateDashboardExperience();
-          populateDashboardEducation();
-        }, 100);
+        // Hide edit buttons by default
+        hideDashboardEditButtons();
+
+        // Require authentication before loading dashboard
+        requireAuth(async function () {
+          const loadingDiv = document.getElementById('dashboard-loading');
+          const contentDiv = document.getElementById('dashboard-content');
+
+          // Show loading, hide content
+          if (loadingDiv) loadingDiv.style.display = 'block';
+          if (contentDiv) contentDiv.style.display = 'none';
+
+          try {
+            // Load current user data from API
+            const user = await apiClient.auth.getCurrentUser();
+            if (user) {
+              displayUserData(user);
+            }
+
+            // Load local profile data for supporting UI
+            setTimeout(function () {
+              loadDashboardBio();
+              loadDashboardSkills();
+              loadDashboardSocial();
+              populateDashboardExperience();
+              populateDashboardEducation();
+
+              // Hide loading, show content
+              if (loadingDiv) loadingDiv.style.display = 'none';
+              if (contentDiv) contentDiv.style.display = 'block';
+            }, 200);
+          } catch (error) {
+            console.error('Error loading dashboard:', error);
+            showErrorMessage('Failed to load dashboard. Please try again.');
+
+            // Still try to show content with local data
+            setTimeout(function () {
+              loadDashboardBio();
+              loadDashboardSkills();
+              loadDashboardSocial();
+              populateDashboardExperience();
+              populateDashboardEducation();
+
+              if (loadingDiv) loadingDiv.style.display = 'none';
+              if (contentDiv) contentDiv.style.display = 'block';
+            }, 200);
+          }
+        });
       });
     </script>
   </body>

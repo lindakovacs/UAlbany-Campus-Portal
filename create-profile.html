@@ -40,113 +40,173 @@
         .catch((error) => console.error('Error loading navbar:', error));
     </script>
     <main>
-    <section class="container">
-      <h1 class="large text-primary">Create Your Profile</h1>
-      <p class="lead">
-        <i class="fas fa-user"></i> Let's get some information to make your
-        profile stand out
-      </p>
-      <small>* = required field</small>
-      <form class="form" id="create-profile-form">
-        <div class="form-group">
-          <input type="text" placeholder="* Full Name" name="name" required />
-          <small class="form-text">This will be displayed on your profile</small>
-        </div>
-        <div class="form-group">
-          <input type="text" placeholder="* Professional Title" name="title" required />
-          <small class="form-text">eg. Senior Developer, Product Manager</small>
-        </div>
-        <div class="form-group">
-          <input type="text" placeholder="* Company" name="company" required />
-          <small class="form-text">Where do you work?</small>
-        </div>
-        <div class="form-group">
-          <select name="status" required>
-            <option value="0">* Select Professional Status</option>
-            <option value="Developer">Developer</option>
-            <option value="Junior Developer">Junior Developer</option>
-            <option value="Senior Developer">Senior Developer</option>
-            <option value="Manager">Manager</option>
-            <option value="Student or Learning">Student or Learning</option>
-            <option value="Instructor">Instructor or Teacher</option>
-            <option value="Intern">Intern</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <input type="text" placeholder="Location" name="location" />
-          <small class="form-text"
-            >City & state suggested (eg. Boston, MA)</small
-          >
-        </div>
-        <div class="form-group">
-          <input type="text" placeholder="* Skills" name="skills" />
-          <small class="form-text"
-            >Please use comma separated values (eg.
-            HTML,CSS,JavaScript,PHP)</small
-          >
-        </div>
-        <div class="form-group">
-          <input
-            type="text"
-            placeholder="Github Username"
-            name="githubusername"
-          />
-          <small class="form-text"
-            >If you want your latest repos and a Github link, include your
-            username</small
-          >
-        </div>
-        <div class="form-group">
-          <textarea placeholder="A short bio of yourself" name="bio"></textarea>
-          <small class="form-text">Tell us a little about yourself</small>
-        </div>
+      <!-- Loading Indicator -->
+      <div
+        id="page-loading"
+        style="display: block; text-align: center; padding: 2rem"
+      >
+        <div
+          style="
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+          "
+        ></div>
+        <p>Verifying your login...</p>
+      </div>
 
-        <div class="my-2">
-          <button type="button" class="btn btn-light">
-            Add Social Network Links
-          </button>
-          <span>Optional</span>
-        </div>
+      <!-- Add animation styles -->
+      <style>
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      </style>
 
-        <div class="form-group social-input">
-          <i class="fas fa-globe fa-2x"></i>
-          <input type="text" placeholder="Personal Website URL" name="website" />
-        </div>
+      <!-- Page Content (hidden initially) -->
+      <div id="page-content" style="display: none">
+        <section class="container">
+          <h1 class="large text-primary">Create Your Profile</h1>
+          <p class="lead">
+            <i class="fas fa-user"></i> Let's get some information to make your
+            profile stand out
+          </p>
+          <small>* = required field</small>
+          <form class="form" id="create-profile-form">
+            <div class="form-group">
+              <input
+                type="text"
+                placeholder="* Full Name"
+                name="name"
+                required
+              />
+              <small class="form-text"
+                >This will be displayed on your profile</small
+              >
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                placeholder="* Professional Title"
+                name="title"
+                required
+              />
+              <small class="form-text"
+                >eg. Senior Developer, Product Manager</small
+              >
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                placeholder="* Company"
+                name="company"
+                required
+              />
+              <small class="form-text">Where do you work?</small>
+            </div>
+            <div class="form-group">
+              <select name="status" required>
+                <option value="0">* Select Professional Status</option>
+                <option value="Developer">Developer</option>
+                <option value="Junior Developer">Junior Developer</option>
+                <option value="Senior Developer">Senior Developer</option>
+                <option value="Manager">Manager</option>
+                <option value="Student or Learning">Student or Learning</option>
+                <option value="Instructor">Instructor or Teacher</option>
+                <option value="Intern">Intern</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <input type="text" placeholder="Location" name="location" />
+              <small class="form-text"
+                >City & state suggested (eg. Boston, MA)</small
+              >
+            </div>
+            <div class="form-group">
+              <input type="text" placeholder="* Skills" name="skills" />
+              <small class="form-text"
+                >Please use comma separated values (eg.
+                HTML,CSS,JavaScript,PHP)</small
+              >
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                placeholder="Github Username"
+                name="githubusername"
+              />
+              <small class="form-text"
+                >If you want your latest repos and a Github link, include your
+                username</small
+              >
+            </div>
+            <div class="form-group">
+              <textarea
+                placeholder="A short bio of yourself"
+                name="bio"
+              ></textarea>
+              <small class="form-text">Tell us a little about yourself</small>
+            </div>
 
-        <div class="form-group social-input">
-          <i class="fab fa-linkedin fa-2x"></i>
-          <input type="text" placeholder="LinkedIn URL" name="linkedin" />
-        </div>
+            <div class="my-2">
+              <button type="button" class="btn btn-light">
+                Add Social Network Links
+              </button>
+              <span>Optional</span>
+            </div>
 
-        <div class="form-group social-input">
-          <i class="fab fa-github fa-2x"></i>
-          <input type="text" placeholder="GitHub URL" name="github" />
-        </div>
+            <div class="form-group social-input">
+              <i class="fas fa-globe fa-2x"></i>
+              <input
+                type="text"
+                placeholder="Personal Website URL"
+                name="website"
+              />
+            </div>
 
-        <div class="form-group social-input">
-          <i class="fab fa-twitter fa-2x"></i>
-          <input type="text" placeholder="Twitter URL" name="twitter" />
-        </div>
+            <div class="form-group social-input">
+              <i class="fab fa-linkedin fa-2x"></i>
+              <input type="text" placeholder="LinkedIn URL" name="linkedin" />
+            </div>
 
-        <div class="form-group social-input">
-          <i class="fab fa-facebook fa-2x"></i>
-          <input type="text" placeholder="Facebook URL" name="facebook" />
-        </div>
+            <div class="form-group social-input">
+              <i class="fab fa-github fa-2x"></i>
+              <input type="text" placeholder="GitHub URL" name="github" />
+            </div>
 
-        <div class="form-group social-input">
-          <i class="fab fa-youtube fa-2x"></i>
-          <input type="text" placeholder="YouTube URL" name="youtube" />
-        </div>
+            <div class="form-group social-input">
+              <i class="fab fa-twitter fa-2x"></i>
+              <input type="text" placeholder="Twitter URL" name="twitter" />
+            </div>
 
-        <div class="form-group social-input">
-          <i class="fab fa-instagram fa-2x"></i>
-          <input type="text" placeholder="Instagram URL" name="instagram" />
-        </div>
-        <input type="submit" class="btn btn-primary my-1" />
-        <a class="btn btn-light my-1" href="dashboard.html">Go Back</a>
-      </form>
-    </section>
+            <div class="form-group social-input">
+              <i class="fab fa-facebook fa-2x"></i>
+              <input type="text" placeholder="Facebook URL" name="facebook" />
+            </div>
+
+            <div class="form-group social-input">
+              <i class="fab fa-youtube fa-2x"></i>
+              <input type="text" placeholder="YouTube URL" name="youtube" />
+            </div>
+
+            <div class="form-group social-input">
+              <i class="fab fa-instagram fa-2x"></i>
+              <input type="text" placeholder="Instagram URL" name="instagram" />
+            </div>
+            <input type="submit" class="btn btn-primary my-1" />
+            <a class="btn btn-light my-1" href="dashboard.html">Go Back</a>
+          </form>
+        </section>
+      </div>
     </main>
     <!-- Footer loaded from modules -->
     <footer id="footer-container"></footer>
@@ -163,14 +223,41 @@
     <script src="js/accessibility.js"></script>
     <script src="js/accessibility-ui.js"></script>
 
+    <!-- API Configuration and Client -->
+    <script src="frontend/config.js"></script>
+    <script src="frontend/js/api-client.js"></script>
+
     <!-- Navbar Authentication Handler -->
     <script src="js/navbar-auth.js"></script>
+
+    <!-- Authentication Guard and Route Protection -->
+    <script src="frontend/js/auth-guard.js"></script>
+    <script src="frontend/js/route-protection.js"></script>
 
     <!-- Chat Bot Script -->
     <script src="js/chat-bot.js"></script>
 
     <!-- Create Profile Form Handler -->
     <script>
+      /**
+       * Protect profile creation page - require authentication
+       */
+      document.addEventListener('DOMContentLoaded', function () {
+        // Require authentication to access and use this page
+        applyRouteProtection(
+          function () {
+            // User is authenticated, enable form
+            document.getElementById('page-content').style.display = 'block';
+            loadProfileDataIntoForm();
+          },
+          {
+            redirectOnFail: true, // Redirect to login if not authenticated
+            redirectUrl: 'login.html',
+            showLoadingMessage: true,
+          },
+        );
+      });
+
       /**
        * Load saved profile data into form fields
        * Pre-populates form when user returns to create-profile.html
@@ -230,7 +317,8 @@
             if (linkedinInput) linkedinInput.value = data.social.linkedin || '';
 
             const instagramInput = form.querySelector('[name="instagram"]');
-            if (instagramInput) instagramInput.value = data.social.instagram || '';
+            if (instagramInput)
+              instagramInput.value = data.social.instagram || '';
           }
 
           console.log('Profile data loaded into form:', data);
@@ -265,13 +353,19 @@
               form.querySelector('[name="githubusername"]').value.trim() || '',
             bio: form.querySelector('[name="bio"]').value.trim(),
             social: {
-              website: form.querySelector('[name="website"]').value.trim() || '',
+              website:
+                form.querySelector('[name="website"]').value.trim() || '',
               github: form.querySelector('[name="github"]').value.trim() || '',
-              twitter: form.querySelector('[name="twitter"]').value.trim() || '',
-              facebook: form.querySelector('[name="facebook"]').value.trim() || '',
-              youtube: form.querySelector('[name="youtube"]').value.trim() || '',
-              linkedin: form.querySelector('[name="linkedin"]').value.trim() || '',
-              instagram: form.querySelector('[name="instagram"]').value.trim() || '',
+              twitter:
+                form.querySelector('[name="twitter"]').value.trim() || '',
+              facebook:
+                form.querySelector('[name="facebook"]').value.trim() || '',
+              youtube:
+                form.querySelector('[name="youtube"]').value.trim() || '',
+              linkedin:
+                form.querySelector('[name="linkedin"]').value.trim() || '',
+              instagram:
+                form.querySelector('[name="instagram"]').value.trim() || '',
             },
           };
 

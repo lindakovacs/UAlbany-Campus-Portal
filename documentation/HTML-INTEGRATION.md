@@ -804,6 +804,6 @@ The HTML Integration Guide covers:
 
 For more information, see:
 
-- [API Client Documentation](../POSTMAN_TESTING.md)
-- [Gemini AI Chatbot](../GEMINI_SETUP.md)
+- [API Client Documentation](POSTMAN_TESTING.md)
+- [Gemini AI Chatbot](GEMINI_SETUP.md)
 - [Project README](../README.md)

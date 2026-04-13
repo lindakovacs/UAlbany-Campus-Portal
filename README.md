@@ -605,7 +605,148 @@ For comprehensive integration guide including:
 - Loading state management
 - And more...
 
-See: **[HTML-INTEGRATION.md](HTML-INTEGRATION.md)**
+See: **[HTML-INTEGRATION.md](documentation/HTML-INTEGRATION.md)**
+
+## Frontend Authentication System
+
+The UAlbany Campus Portal implements a comprehensive frontend authentication system with route protection, user profile display, and session management.
+
+### Core Components
+
+**1. Authentication Guard** (`frontend/js/auth-guard.js`)
+
+- Check authentication status: `isAuthenticated()`
+- Get current user: `getCurrentUser()`
+- Protect pages: `requireAuth(callback)`
+- Token management: `getToken()`, `isTokenExpired()`, `logout()`
+- Utils: `showLoadingState()`, `showErrorMessage()`
+
+**2. Route Protection** (`frontend/js/route-protection.js`)
+
+- Centralized route configuration
+- Page-level protection: `applyRouteProtection(callback)`
+- Automatic redirects for unauthorized access
+- Role-based access control support
+
+**3. Navbar Authentication** (`js/navbar-auth.js`)
+
+- Dynamic navbar updates based on login state
+- Shows: [Dashboard] [Profile] [Logout] when authenticated
+- Shows: [Login] when not authenticated
+- Auto-updates after login/logout
+
+**4. API Client** (`frontend/js/api-client.js`)
+
+- Automatic JWT token injection in headers
+- Auth methods: `login()`, `register()`, `getCurrentUser()`, `logout()`
+- Organized by resource: profiles, posts, comments, etc.
+
+**5. Profile Display** (`frontend/js/profile-display.js`)
+
+- Components: `displayUserProfileCard()`, `displayUserAvatar()`, `displayUserMenu()`
+- Shows current user info across pages
+- User initials avatars and profile cards
+
+### Quick Start - Protect a Page
+
+**Include required scripts:**
+
+```html
+<script src="frontend/config.js"></script>
+<script src="frontend/js/api-client.js"></script>
+<script src="frontend/js/auth-guard.js"></script>
+<script src="frontend/js/route-protection.js"></script>
+```
+
+**Protect page in DOMContentLoaded:**
+
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+  applyRouteProtection(async () => {
+    // This code only runs if user is authenticated
+    const user = await apiClient.auth.getCurrentUser();
+    displayUserData(user);
+  });
+});
+```
+
+### Authentication Flow
+
+```
+User registers → Creates account → Stores JWT token in localStorage
+    ↓
+User logs in → Backend validates → Returns JWT token
+    ↓
+Token stored in localStorage → API client injects in all requests
+    ↓
+Access protected page → Check token exists → Allow access
+    ↓
+Token expires → Auto-logout → Redirect to login
+    ↓
+User logs out → Clear storage → Update navbar → Redirect to home
+```
+
+### Protected Routes
+
+| Page                  | Protected | Description                            |
+| --------------------- | --------- | -------------------------------------- |
+| `login.html`          | ❌ No     | Public login form                      |
+| `register.html`       | ❌ No     | Public registration form               |
+| `index.html`          | ❌ No     | Public home page                       |
+| `dashboard.html`      | ✅ Yes    | User dashboard (authenticated only)    |
+| `profile.html`        | ✅ Yes    | User profile (authenticated only)      |
+| `create-profile.html` | ✅ Yes    | Edit profile form (authenticated only) |
+| `add-education.html`  | ✅ Yes    | Education form (authenticated only)    |
+| `add-experience.html` | ✅ Yes    | Experience form (authenticated only)   |
+| `posts.html`          | ❌ No     | Public posts feed                      |
+| `post.html`           | ❌ No     | Public single post                     |
+| `profiles.html`       | ❌ No     | Public user search/browse              |
+
+### localStorage Keys
+
+| Key           | Content     | Purpose                  |
+| ------------- | ----------- | ------------------------ |
+| `token`       | JWT string  | Backend authentication   |
+| `user`        | JSON object | User info from login     |
+| `currentUser` | JSON object | User info from dashboard |
+| `userId`      | String      | User ID reference        |
+
+### Troubleshooting
+
+**Q: "apiClient is not defined"**  
+A: Ensure scripts are included in correct order:
+
+```html
+<script src="frontend/config.js"></script>
+<script src="frontend/js/api-client.js"></script>
+<!-- After config.js -->
+```
+
+**Q: Page redirects to login even when logged in**  
+A: Check that you're logged in:
+
+```javascript
+// In browser console
+console.log(localStorage.getItem('token')); // Should show token
+console.log(isAuthenticated()); // Should be true
+```
+
+**Q: Navbar shows "Login" instead of "Logout" after login**  
+A: Refresh page or wait for updateNavbarAuth() to be called
+
+**Q: Keep getting logged out after 1 minute**  
+A: Expected behavior - token expiration check runs every minute. Log in again.
+
+### Complete Documentation
+
+See **[AUTHENTICATION.md](documentation/AUTHENTICATION.md)** for comprehensive authentication system documentation including:
+
+- Complete architecture overview
+- All authentication functions and APIs
+- Security best practices
+- Integration patterns
+- Debugging and troubleshooting
+- Developer vs Production configurations
 
 ## Frontend API Testing (Legacy)
 
@@ -716,7 +857,7 @@ Also test API functions directly in your browser's DevTools console (F12) using 
 
 ## API Endpoints & Testing with Postman
 
-See [POSTMAN_TESTING.md](POSTMAN_TESTING.md) for comprehensive API documentation including:
+See [POSTMAN_TESTING.md](documentation/POSTMAN_TESTING.md) for comprehensive API documentation including:
 
 - All endpoint specifications with request/response examples
 - Installation and setup instructions

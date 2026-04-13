@@ -41,56 +41,92 @@
         .catch((error) => console.error('Error loading navbar:', error));
     </script>
     <main>
-      <section class="container">
-        <h1 class="large text-primary">Add An Experience</h1>
-        <p class="lead">
-          <i class="fas fa-code-branch"></i> Add any developer/programming
-          positions that you have had in the past
-        </p>
-        <small>* = required field</small>
-        <form class="form">
-          <div class="form-group">
-            <input
-              type="text"
-              placeholder="* Job Title"
-              name="title"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <input
-              type="text"
-              placeholder="* Company"
-              name="company"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <input type="text" placeholder="Location" name="location" />
-          </div>
-          <div class="form-group">
-            <h4>From Date</h4>
-            <input type="date" name="from" />
-          </div>
-          <div class="form-group">
-            <p><input type="checkbox" name="current" value="" /> Current Job</p>
-          </div>
-          <div class="form-group">
-            <h4>To Date</h4>
-            <input type="date" name="to" />
-          </div>
-          <div class="form-group">
-            <textarea
-              name="description"
-              cols="30"
-              rows="5"
-              placeholder="Job Description"
-            ></textarea>
-          </div>
-          <input type="submit" class="btn btn-primary my-1" />
-          <a class="btn btn-light my-1" href="dashboard.html">Go Back</a>
-        </form>
-      </section>
+      <!-- Loading Indicator -->
+      <div
+        id="page-loading"
+        style="display: block; text-align: center; padding: 2rem"
+      >
+        <div
+          style="
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+          "
+        ></div>
+        <p>Verifying your login...</p>
+      </div>
+
+      <!-- Add animation styles -->
+      <style>
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      </style>
+
+      <!-- Page Content (hidden initially) -->
+      <div id="page-content" style="display: none">
+        <section class="container">
+          <h1 class="large text-primary">Add An Experience</h1>
+          <p class="lead">
+            <i class="fas fa-code-branch"></i> Add any developer/programming
+            positions that you have had in the past
+          </p>
+          <small>* = required field</small>
+          <form class="form">
+            <div class="form-group">
+              <input
+                type="text"
+                placeholder="* Job Title"
+                name="title"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                placeholder="* Company"
+                name="company"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input type="text" placeholder="Location" name="location" />
+            </div>
+            <div class="form-group">
+              <h4>From Date</h4>
+              <input type="date" name="from" />
+            </div>
+            <div class="form-group">
+              <p>
+                <input type="checkbox" name="current" value="" /> Current Job
+              </p>
+            </div>
+            <div class="form-group">
+              <h4>To Date</h4>
+              <input type="date" name="to" />
+            </div>
+            <div class="form-group">
+              <textarea
+                name="description"
+                cols="30"
+                rows="5"
+                placeholder="Job Description"
+              ></textarea>
+            </div>
+            <input type="submit" class="btn btn-primary my-1" />
+            <a class="btn btn-light my-1" href="dashboard.html">Go Back</a>
+          </form>
+        </section>
+      </div>
     </main>
     <!-- Footer loaded from modules -->
     <footer id="footer-container"></footer>
@@ -107,14 +143,43 @@
     <script src="js/accessibility.js"></script>
     <script src="js/accessibility-ui.js"></script>
 
+    <!-- API Configuration and Client -->
+    <script src="frontend/config.js"></script>
+    <script src="frontend/js/api-client.js"></script>
+
     <!-- Navbar Authentication Handler -->
     <script src="js/navbar-auth.js"></script>
+
+    <!-- Authentication Guard and Route Protection -->
+    <script src="frontend/js/auth-guard.js"></script>
+    <script src="frontend/js/route-protection.js"></script>
 
     <!-- Chat Bot Script -->
     <script src="js/chat-bot.js"></script>
 
     <!-- Form Toggle Script -->
     <script>
+      /**
+       * Protect experience page - require authentication
+       */
+      document.addEventListener('DOMContentLoaded', function () {
+        // Require authentication to access and use this page
+        applyRouteProtection(
+          function () {
+            // User is authenticated, show content
+            document.getElementById('page-content').style.display = 'block';
+            if (document.getElementById('page-loading')) {
+              document.getElementById('page-loading').style.display = 'none';
+            }
+          },
+          {
+            redirectOnFail: true,
+            redirectUrl: 'login.html',
+            showLoadingMessage: true,
+          },
+        );
+      });
+
       let editingId = null;
 
       /**
@@ -150,7 +215,7 @@
        */
       function displaySavedExperiences() {
         let experienceList = JSON.parse(
-          localStorage.getItem('experienceList') || '[]'
+          localStorage.getItem('experienceList') || '[]',
         );
 
         // Sort experiences
@@ -174,7 +239,9 @@
         experienceList.forEach((exp) => {
           const expDiv = document.createElement('div');
           expDiv.className = 'card bg-light p-2 my-1';
-          const currentBadge = exp.current ? '<span class="badge badge-success">Current</span>' : '';
+          const currentBadge = exp.current
+            ? '<span class="badge badge-success">Current</span>'
+            : '';
           expDiv.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: start;">
               <div>
@@ -199,7 +266,7 @@
        */
       function editExperienceFromPage(expId) {
         let experiences = JSON.parse(
-          localStorage.getItem('experienceList') || '[]'
+          localStorage.getItem('experienceList') || '[]',
         );
         const exp = experiences.find((e) => e.id === expId);
 
@@ -231,10 +298,11 @@
        * Delete experience and refresh display
        */
       function deleteExperienceFromPage(expId) {
-        if (!confirm('Are you sure you want to delete this experience?')) return;
+        if (!confirm('Are you sure you want to delete this experience?'))
+          return;
 
         let experiences = JSON.parse(
-          localStorage.getItem('experienceList') || '[]'
+          localStorage.getItem('experienceList') || '[]',
         );
         experiences = experiences.filter((exp) => exp.id !== expId);
         localStorage.setItem('experienceList', JSON.stringify(experiences));
@@ -288,7 +356,9 @@
               from: form.querySelector('[name="from"]').value,
               to: form.querySelector('[name="to"]').value,
               current: form.querySelector('[name="current"]').checked,
-              description: form.querySelector('[name="description"]').value.trim(),
+              description: form
+                .querySelector('[name="description"]')
+                .value.trim(),
               createdAt: new Date().toISOString(),
             };
 
@@ -300,13 +370,13 @@
 
             // Get existing experiences
             let experiences = JSON.parse(
-              localStorage.getItem('experienceList') || '[]'
+              localStorage.getItem('experienceList') || '[]',
             );
 
             if (editingId) {
               // Update existing
               experiences = experiences.map((e) =>
-                e.id === editingId ? experienceData : e
+                e.id === editingId ? experienceData : e,
               );
               alert('Experience updated successfully!');
               editingId = null;
@@ -318,7 +388,10 @@
 
             // Save to localStorage
             try {
-              localStorage.setItem('experienceList', JSON.stringify(experiences));
+              localStorage.setItem(
+                'experienceList',
+                JSON.stringify(experiences),
+              );
               console.log('Experience saved:', experienceData);
 
               // Reset form

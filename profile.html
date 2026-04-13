@@ -431,11 +431,158 @@
     <script src="js/accessibility.js"></script>
     <script src="js/accessibility-ui.js"></script>
 
+    <!-- API Configuration and Client -->
+    <script src="frontend/config.js"></script>
+    <script src="frontend/js/api-client.js"></script>
+
     <!-- Navbar Authentication Handler -->
     <script src="js/navbar-auth.js"></script>
 
+    <!-- Authentication Guard and Route Protection -->
+    <script src="frontend/js/auth-guard.js"></script>
+    <script src="frontend/js/route-protection.js"></script>
+
     <!-- Chat Bot Script -->
     <script src="js/chat-bot.js"></script>
+
+    <!-- Profile Edit Protection -->
+    <script>
+      /**
+       * Protect profile editing - disable edit/add buttons when not authenticated
+       */
+      document.addEventListener('DOMContentLoaded', function () {
+        // Protect page - require authentication to show edit forms
+        applyRouteProtection(
+          function () {
+            // User is authenticated, enable all edit buttons
+            enableEditButtons();
+          },
+          {
+            redirectOnFail: false, // Don't redirect, just disable features
+            showLoadingMessage: false,
+          },
+        );
+
+        // Always disable edit if not authenticated
+        if (!isAuthenticated()) {
+          disableEditButtons();
+        }
+      });
+
+      /**
+       * Disable profile edit buttons and forms
+       */
+      function disableEditButtons() {
+        // Disable main Edit Profile button
+        const editProfileBtn = document.getElementById('profile-edit-toggle');
+        if (editProfileBtn) {
+          editProfileBtn.disabled = true;
+          editProfileBtn.style.opacity = '0.5';
+          editProfileBtn.style.cursor = 'not-allowed';
+          editProfileBtn.title = 'You must be logged in to edit your profile';
+        }
+
+        // Disable all "Add" buttons
+        const addButtons = document.querySelectorAll('[onclick*="toggleAdd"]');
+        addButtons.forEach((btn) => {
+          btn.disabled = true;
+          btn.style.opacity = '0.5';
+          btn.style.cursor = 'not-allowed';
+          btn.title = 'You must be logged in to edit your profile';
+        });
+
+        // Hide all add forms
+        const forms = document.querySelectorAll('[id*="add-"][id*="-form"]');
+        forms.forEach((form) => {
+          form.style.display = 'none';
+        });
+
+        // Disable edit buttons inside forms
+        const editBtns = document.querySelectorAll('[onclick*="submitAdd"]');
+        editBtns.forEach((btn) => {
+          btn.disabled = true;
+          btn.style.opacity = '0.5';
+        });
+
+        // Disable photo upload
+        const photoFileInput = document.getElementById('profile-photo');
+        if (photoFileInput) {
+          photoFileInput.disabled = true;
+        }
+        const photoLabel = document.querySelector('label[for="profile-photo"]');
+        if (photoLabel) {
+          photoLabel.style.opacity = '0.5';
+          photoLabel.style.cursor = 'not-allowed';
+          photoLabel.title = 'You must be logged in to upload photos';
+        }
+
+        // Show message to user
+        const profileTop = document.querySelector('.profile-top');
+        if (profileTop) {
+          const notice = document.createElement('div');
+          notice.style.cssText = `
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 1rem 0;
+            text-align: center;
+          `;
+          notice.innerHTML =
+            '<strong>ℹ️ You must be logged in to edit this profile.</strong> <a href="login.html">Log in here</a>';
+          profileTop.appendChild(notice);
+        }
+      }
+
+      /**
+       * Enable profile edit buttons and forms
+       */
+      function enableEditButtons() {
+        // Enable main Edit Profile button
+        const editProfileBtn = document.getElementById('profile-edit-toggle');
+        if (editProfileBtn) {
+          editProfileBtn.disabled = false;
+          editProfileBtn.style.opacity = '1';
+          editProfileBtn.style.cursor = 'pointer';
+          editProfileBtn.title = 'Edit your profile';
+        }
+
+        // Enable all "Add" buttons
+        const addButtons = document.querySelectorAll('[onclick*="toggleAdd"]');
+        addButtons.forEach((btn) => {
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.style.cursor = 'pointer';
+          btn.title = '';
+        });
+
+        // Enable edit buttons inside forms
+        const editBtns = document.querySelectorAll('[onclick*="submitAdd"]');
+        editBtns.forEach((btn) => {
+          btn.disabled = false;
+          btn.style.opacity = '1';
+        });
+
+        // Enable photo upload
+        const photoFileInput = document.getElementById('profile-photo');
+        if (photoFileInput) {
+          photoFileInput.disabled = false;
+        }
+        const photoLabel = document.querySelector('label[for="profile-photo"]');
+        if (photoLabel) {
+          photoLabel.style.opacity = '1';
+          photoLabel.style.cursor = 'pointer';
+          photoLabel.title = 'Update Photo';
+        }
+
+        // Remove login notice if present
+        const notice = document.querySelector('div:has(a[href="login.html"])');
+        if (notice && notice.textContent.includes('logged in to edit')) {
+          notice.remove();
+        }
+      }
+    </script>
 
     <!-- Debugging localStorage -->
     <script>

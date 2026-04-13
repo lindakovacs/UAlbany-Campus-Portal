@@ -9,7 +9,7 @@ function updateNavbarAuth() {
   // Check if navbar elements exist yet
   const navAuthLinks = document.querySelectorAll('#nav-auth');
   const dashboardLink = document.getElementById('nav-dashboard');
-  
+
   if (navAuthLinks.length === 0) {
     // Navbar not loaded yet, retry after a short delay
     setTimeout(updateNavbarAuth, 100);
@@ -34,13 +34,15 @@ function updateNavbarAuth() {
       profileLink.parentElement.style.display = 'block';
       profileLink.href = 'profile.html';
       profileLink.title = 'Profile';
-      profileLink.innerHTML = '<i class="fas fa-user"></i> <span class="hide-sm">Profile</span>';
+      profileLink.innerHTML =
+        '<i class="fas fa-user"></i> <span class="hide-sm">Profile</span>';
     }
 
     if (authLink) {
       authLink.href = '#';
       authLink.title = 'Logout';
-      authLink.innerHTML = '<i class="fas fa-sign-out-alt"></i> <span class="hide-sm">Logout</span>';
+      authLink.innerHTML =
+        '<i class="fas fa-sign-out-alt"></i> <span class="hide-sm">Logout</span>';
       // Remove any existing click handlers
       const newAuthLink = authLink.cloneNode(true);
       authLink.parentNode.replaceChild(newAuthLink, authLink);
@@ -68,7 +70,8 @@ function updateNavbarAuth() {
     if (authLink) {
       authLink.href = 'login.html';
       authLink.title = 'Login';
-      authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span class="hide-sm">Login</span>';
+      authLink.innerHTML =
+        '<i class="fas fa-sign-in-alt"></i> <span class="hide-sm">Login</span>';
     }
   }
 }
