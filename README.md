@@ -50,7 +50,257 @@ Deployed Static Webapp via [GitHub Pages](https://lindakovacs.github.io/UAlbany-
 
 ## Getting Started
 
-Open any HTML file in your browser (for example, in VS Code, right-click on your HTML file (such as index.html) in the editor and select "Open with Live Server" from the context menu. Alternatively, you can use the keyboard shortcut Alt + L then Alt + O.). No build step or server is required for this Static UI website phase.
+### Start Backend Server
+
+1. Navigate to the server directory:
+
+   ```bash
+   cd server
+   npm install  # First time only
+   npm start
+   ```
+
+2. Backend will run on `http://localhost:3001`
+   - Health check: `curl http://localhost:3001/api/health`
+
+### Start Frontend Server
+
+**Using Live Server (VS Code)**
+
+1. Install Live Server extension in VS Code (by Ritwick Dey)
+2. Right-click on any `.html` file (e.g., `index.html`)
+3. Select "Open with Live Server"
+4. Frontend will open on `http://127.0.0.1:5500` (or similar)
+
+**Port Reference:**
+
+- **Backend:** `http://localhost:3001`
+- **Frontend:** `http://127.0.0.1:5500` or configured in `frontend/config.js`
+
+### Verify Everything is Running
+
+### Verify Everything is Running
+
+- Frontend: Open browser and visit `http://localhost:3000` (or `http://127.0.0.1:5500`)
+- Backend: Open DevTools (F12) and in Console run: `apiGetCurrentUser()` (should show error if not logged in - that's normal)
+- Load modules: Include `<script src="config.js"></script>` and `<script src="js/api.js"></script>` in your HTML file
+
+### Configuration
+
+**Frontend Configuration (frontend/config.js):**
+The `config.js` file contains backend connection settings:
+
+```javascript
+const CONFIG = {
+  BACKEND_HOST: 'http://localhost',
+  BACKEND_PORT: 3001,
+};
+```
+
+To use a different backend:
+
+1. Edit `frontend/config.js` and update `CONFIG.BACKEND_HOST` and `CONFIG.BACKEND_PORT`
+2. Or override in browser console: `CONFIG.BACKEND_PORT = 5000`
+3. Or use the `configureBackend()` function for dynamic changes
+
+**Example configurations:**
+
+```javascript
+// Development (default)
+CONFIG.BACKEND_HOST = 'http://localhost';
+CONFIG.BACKEND_PORT = 3001;
+
+// Alternative port if 3001 is in use
+CONFIG.BACKEND_PORT = 5000;
+
+// Production
+CONFIG.BACKEND_HOST = 'https://api.example.com';
+CONFIG.BACKEND_PORT = 443;
+```
+
+### Port Synchronization
+
+**IMPORTANT:** Backend port and frontend config must stay in sync!
+
+**When you change backend port in `server/.env`:**
+
+1. Edit `server/.env` and change `PORT`:
+
+   ```env
+   PORT=5000    # Changed from 3001
+   ```
+
+2. Update `frontend/config.js` to match:
+
+   ```javascript
+   BACKEND_PORT: 5000,  // Changed to match server/.env
+   ```
+
+3. Restart backend:
+
+   ```bash
+   cd server
+   npm start
+   ```
+
+4. Reload browser page for frontend to pick up changes
+
+**Configuration Locations:**
+
+| Setting           | File                                               | How Backend Reads It     | How Frontend Reads It                     |
+| ----------------- | -------------------------------------------------- | ------------------------ | ----------------------------------------- |
+| Backend Port      | `server/.env` `PORT=3001`                          | `process.env.PORT`       | Must manually update `frontend/config.js` |
+| Frontend URL      | `server/.env` `FRONTEND_URL=http://localhost:3000` | Used for CORS validation | For reference only                        |
+| Backend Host/Port | `frontend/config.js` `CONFIG.BACKEND_HOST/PORT`    | N/A                      | Loaded via `<script>` tag                 |
+
+**CORS Policy (Development):**
+
+Backend accepts all **localhost** connections:
+
+- ✅ `http://localhost:3000` (production frontend)
+- ✅ `http://127.0.0.1:5500` (Live Server)
+- ✅ `http://localhost:5500` (alternate localhost)
+- ✅ Any other localhost port
+
+This allows flexibility during development. In production, set `NODE_ENV=production` in `.env` to restrict CORS to `FRONTEND_URL` only.
+
+The project includes a centralized API utility module (`frontend/js/api.js`) for testing the backend API and database directly from the browser.
+
+### Quick Start
+
+1. **Include the config and API modules in your HTML file:**
+
+   ```html
+   <script src="config.js"></script>
+   <script src="js/api.js"></script>
+   ```
+
+   > Note: `config.js` must be included before `api.js`
+
+2. **Configure backend (if not on default port 3001):**
+
+   ```javascript
+   configureBackend(3001, 'http://localhost'); // Default (port 3001)
+   configureBackend(5000, 'http://localhost'); // Alternative port if 3001 is in use
+   configureBackend(443, 'https://api.example.com'); // Production
+   ```
+
+3. **Open browser DevTools** (F12) and use the Console tab to test API calls
+
+4. **Example workflow:**
+
+   ```javascript
+   // Register a new user
+   apiRegister({
+     name: 'Jane Doe',
+     email: 'jane@example.com',
+     password: 'password123',
+     passwordConfirm: 'password123',
+   });
+
+   // Get current user
+   apiGetCurrentUser();
+
+   // Get all profiles
+   apiListProfiles(1, 10);
+
+   // Update your profile
+   apiUpdateProfile(1, {
+     bio: "Hello! I'm Jane",
+     skills: ['JavaScript', 'React', 'Node.js'],
+     social_links: { github: 'https://github.com/jane' },
+   });
+
+   // Add education
+   apiAddEducation(1, {
+     school: 'University of Albany',
+     degree: 'Bachelor of Science',
+     field_of_study: 'Computer Science',
+     from_date: '2020-09-01',
+     to_date: '2024-05-31',
+   });
+
+   // Get education
+   apiGetEducation(1);
+
+   // Add work experience
+   apiAddExperience(1, {
+     company: 'Tech Company Inc',
+     title: 'Software Engineer',
+     location: 'New York, NY',
+     from_date: '2024-06-01',
+     current: true,
+   });
+
+   // Get experience
+   apiGetExperience(1);
+
+   // Logout
+   apiLogout();
+   ```
+
+### All Available Functions
+
+**Authentication:**
+
+- `apiRegister(userData)` - Register new user
+- `apiLogin(credentials)` - Login with email/password
+- `apiGetCurrentUser()` - Get authenticated user
+- `apiLogout()` - Clear token and logout
+
+**Profiles:**
+
+- `apiListProfiles(page, limit)` - Get all profiles (paginated)
+- `apiGetProfile(userId)` - Get specific profile
+- `apiUpdateProfile(userId, profileData)` - Update profile
+
+**Education:**
+
+- `apiGetEducation(userId)` - Get user's education history
+- `apiAddEducation(userId, educationData)` - Add education entry
+- `apiUpdateEducation(educationId, educationData)` - Update education
+- `apiDeleteEducation(educationId)` - Delete education entry
+
+**Experience:**
+
+- `apiGetExperience(userId)` - Get user's work experience
+- `apiAddExperience(userId, experienceData)` - Add experience entry
+- `apiUpdateExperience(experienceId, experienceData)` - Update experience
+- `apiDeleteExperience(experienceId)` - Delete experience entry
+
+**Utilities:**
+
+- `configureBackend(port, host)` - Configure backend server connection (call before API requests if on different port/host)
+- `getToken()` - Get JWT token from localStorage
+- `isAuthenticated()` - Check if user is logged in
+- `clearStorage()` - Clear all localStorage (for testing)
+
+### JWT Token Storage
+
+- Tokens are automatically saved to `localStorage` after registration/login
+- Tokens are sent in `Authorization: Bearer <token>` header for protected requests
+- Tokens expire after 7 days
+
+### Troubleshooting
+
+- **CORS error?** During development, backend accepts all localhost ports (3000, 5500, etc.). Ensure:
+  - Backend port in `frontend/config.js` matches what backend is actually running on
+  - Check console: `✅ Server running on http://localhost:PORT`
+  - Reload browser page after making changes
+- **404 error?** Check that backend server is running: `cd server && npm start`
+- **Connection refused?** Verify the backend port matches:
+  - Backend (running on): Check console output for `✅ Server running on http://localhost:PORT`
+  - Frontend (configured for): Check `frontend/config.js` `BACKEND_PORT` value
+  - If different, update `frontend/config.js` to match server port, then reload page
+- **401 error?** Missing or expired token - register/login again
+- **Port already in use?**
+  - Kill existing process: `lsof -i :3001 | grep node | awk '{print $2}' | xargs kill -9`
+  - Or change PORT in `server/.env` and update `frontend/config.js`
+- **Changed PORT but still getting errors?**
+  1. Did you update `BACKEND_PORT` in `frontend/config.js`?
+  2. Restart backend: `cd server && npm start`
+  3. Reload browser page (Cmd+R or Ctrl+R)
+- **Can't connect to backend?** Verify `CONFIG.BACKEND_HOST` and `CONFIG.BACKEND_PORT` in `config.js`
 
 ## Project Structure
 
@@ -80,6 +330,7 @@ Open any HTML file in your browser (for example, in VS Code, right-click on your
 │   │   ├── profile-search.css
 │   │   └── chat-bot.css
 │   ├── js/
+│   │   ├── api.js (API utility for backend testing)
 │   │   ├── authentication.js
 │   │   ├── profile-edit.js
 │   │   ├── profile-search.js
@@ -220,7 +471,7 @@ The backend API runs on `http://localhost:3001` during development. Below are al
 
 - **URL:** `http://localhost:3001/api/auth/me`
 - **Method:** GET
-- **Headers:** 
+- **Headers:**
   - `Content-Type: application/json`
   - `Authorization: Bearer <your_jwt_token>`
 - **Example (Replace TOKEN with actual token):**
@@ -304,7 +555,7 @@ The backend API runs on `http://localhost:3001` during development. Below are al
 
 - **URL:** `http://localhost:3001/api/profiles/1`
 - **Method:** PUT
-- **Headers:** 
+- **Headers:**
   - `Content-Type: application/json`
   - `Authorization: Bearer <your_jwt_token>`
 - **Body (JSON):** (All fields optional - only send fields to update)
@@ -373,7 +624,7 @@ The backend API runs on `http://localhost:3001` during development. Below are al
 
 - **URL:** `http://localhost:3001/api/education/1`
 - **Method:** POST
-- **Headers:** 
+- **Headers:**
   - `Content-Type: application/json`
   - `Authorization: Bearer <your_jwt_token>`
 - **Body (JSON):**
@@ -414,7 +665,7 @@ The backend API runs on `http://localhost:3001` during development. Below are al
 
 - **URL:** `http://localhost:3001/api/education/1`
 - **Method:** PUT
-- **Headers:** 
+- **Headers:**
   - `Content-Type: application/json`
   - `Authorization: Bearer <your_jwt_token>`
 - **Body (JSON):** (All fields optional)
@@ -470,7 +721,7 @@ The backend API runs on `http://localhost:3001` during development. Below are al
 
 - **URL:** `http://localhost:3001/api/experience/1`
 - **Method:** POST
-- **Headers:** 
+- **Headers:**
   - `Content-Type: application/json`
   - `Authorization: Bearer <your_jwt_token>`
 - **Body (JSON):**
@@ -511,7 +762,7 @@ The backend API runs on `http://localhost:3001` during development. Below are al
 
 - **URL:** `http://localhost:3001/api/experience/1`
 - **Method:** PUT
-- **Headers:** 
+- **Headers:**
   - `Content-Type: application/json`
   - `Authorization: Bearer <your_jwt_token>`
 - **Body (JSON):** (All fields optional)

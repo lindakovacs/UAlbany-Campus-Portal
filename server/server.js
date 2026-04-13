@@ -21,7 +21,7 @@ app.use(
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", 'data:', 'https:'],
-        connectSrc: ["'self'", "http://localhost:*"],
+        connectSrc: ["'self'", 'http://localhost:*'],
       },
     },
     frameguard: { action: 'deny' },
@@ -29,7 +29,33 @@ app.use(
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   }),
 );
-app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
+
+// CORS: Allow localhost on any port (for development)
+// In production, set FRONTEND_URL to your actual domain
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow localhost connections (for development)
+    if (
+      !origin ||
+      origin.includes('localhost') ||
+      origin.includes('127.0.0.1')
+    ) {
+      callback(null, true);
+    }
+    // In production, validate against FRONTEND_URL
+    else if (
+      process.env.NODE_ENV === 'production' &&
+      origin === process.env.FRONTEND_URL
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(dbMiddleware);
 
@@ -66,7 +92,13 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`✅ Server running on http://localhost:${PORT}`),
-);
+// Start server
+// PORT is read from .env file (default: 3001)
+// If you change PORT in .env, also update BACKEND_PORT in frontend/config.js
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(
+    `📝 If you changed PORT in .env, update BACKEND_PORT in frontend/config.js`,
+  );
+});
