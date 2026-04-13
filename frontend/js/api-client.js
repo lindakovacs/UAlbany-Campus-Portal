@@ -82,10 +82,24 @@ class APIClient {
         headers,
       });
 
-      const data = await response.json();
+      // Check content type to determine if response is JSON
+      const contentType = response.headers.get('content-type');
+      let data;
+      
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        // If not JSON, read as text
+        const text = await response.text();
+        data = { message: text };
+      }
 
       if (!response.ok) {
-        throw new APIError(data.error || 'API Error', response.status, data);
+        throw new APIError(
+          data.error || data.message || 'API Error',
+          response.status,
+          data
+        );
       }
 
       console.log(`✅ ${options.method || 'GET'} ${endpoint}:`, data);
@@ -170,10 +184,27 @@ class APIClient {
     },
 
     update: async (profileData) => {
-      return this.request('/profiles', {
-        method: 'PUT',
-        body: JSON.stringify(profileData),
-      });
+      // Get current user ID
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const userId = user.id || localStorage.getItem('userId');
+      
+      if (!userId) {
+        throw new APIError('User ID not found - please log in first', 401, { error: 'Not authenticated' });
+      }
+      
+      const endpoint = `/profiles/${userId}`;
+      console.log('Calling profile update:', { endpoint, profileData, userId });
+      
+      try {
+        return await this.request(endpoint, {
+          method: 'PUT',
+          body: JSON.stringify(profileData),
+        });
+      } catch (error) {
+        // Note: Backend auto-creates profiles on first update, so 404 shouldn't happen
+        // If it does, it's a real error that should be reported
+        throw error;
+      }
     },
 
     search: async (query) => {

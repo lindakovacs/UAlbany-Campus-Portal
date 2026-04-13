@@ -1,5 +1,13 @@
-const { ValidationError, NotFoundError, AuthenticationError, ApiError } = require('../utils/errors');
-const { parseProfileJSON, parseProfilesJSON } = require('../utils/profileHelpers');
+const {
+  ValidationError,
+  NotFoundError,
+  AuthenticationError,
+  ApiError,
+} = require('../utils/errors');
+const {
+  parseProfileJSON,
+  parseProfilesJSON,
+} = require('../utils/profileHelpers');
 
 /**
  * Get a user profile by ID
@@ -16,8 +24,12 @@ const getProfile = async (req, res, next) => {
 
     const pool = req.db;
     const [profiles] = await pool.query(
-      'SELECT id, user_id, bio, skills, social_links, created_at, updated_at FROM profiles WHERE user_id = ?',
-      [userId]
+      `SELECT p.id, p.user_id, u.name, p.title, p.company, p.website, p.location, 
+              p.bio, p.skills, p.social_links, p.created_at, p.updated_at 
+       FROM profiles p
+       LEFT JOIN users u ON p.user_id = u.id
+       WHERE p.user_id = ?`,
+      [userId],
     );
 
     if (profiles.length === 0) {
@@ -43,7 +55,7 @@ const getProfile = async (req, res, next) => {
 const updateProfile = async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const { bio, skills, social_links } = req.body;
+    const { bio, skills, social_links, company, location, title } = req.body;
 
     if (!userId || isNaN(userId)) {
       throw new ValidationError('Invalid user ID');
@@ -61,17 +73,35 @@ const updateProfile = async (req, res, next) => {
     if (bio && bio.length > 500) {
       throw new ValidationError('Bio must be less than 500 characters');
     }
+    if (company !== undefined && typeof company !== 'string') {
+      throw new ValidationError('Company must be a string');
+    }
+    if (location !== undefined && typeof location !== 'string') {
+      throw new ValidationError('Location must be a string');
+    }
+    if (title !== undefined && typeof title !== 'string') {
+      throw new ValidationError('Title must be a string');
+    }
 
     const pool = req.db;
 
-    // Check if profile exists
+    // Check if profile exists, auto-create if not
     const [profiles] = await pool.query(
       'SELECT id FROM profiles WHERE user_id = ?',
-      [userId]
+      [userId],
     );
 
     if (profiles.length === 0) {
-      throw new NotFoundError('Profile not found');
+      // Auto-create profile if it doesn't exist
+      console.log(`Auto-creating profile for user ${userId}`);
+      try {
+        await pool.query('INSERT INTO profiles (user_id) VALUES (?)', [userId]);
+      } catch (insertError) {
+        console.error('Error auto-creating profile:', insertError);
+        throw new ApiError('Failed to create profile', 500, {
+          error: insertError.message,
+        });
+      }
     }
 
     // Build update query dynamically
@@ -82,13 +112,29 @@ const updateProfile = async (req, res, next) => {
       updates.push('bio = ?');
       values.push(bio);
     }
+    if (title !== undefined) {
+      updates.push('title = ?');
+      values.push(title);
+    }
+    if (company !== undefined) {
+      updates.push('company = ?');
+      values.push(company);
+    }
+    if (location !== undefined) {
+      updates.push('location = ?');
+      values.push(location);
+    }
     if (skills !== undefined) {
       updates.push('skills = ?');
       values.push(typeof skills === 'string' ? skills : JSON.stringify(skills));
     }
     if (social_links !== undefined) {
       updates.push('social_links = ?');
-      values.push(typeof social_links === 'string' ? social_links : JSON.stringify(social_links));
+      values.push(
+        typeof social_links === 'string'
+          ? social_links
+          : JSON.stringify(social_links),
+      );
     }
 
     if (updates.length === 0) {
@@ -101,10 +147,14 @@ const updateProfile = async (req, res, next) => {
     const query = `UPDATE profiles SET ${updates.join(', ')} WHERE user_id = ?`;
     await pool.query(query, values);
 
-    // Fetch updated profile
+    // Fetch updated profile with user info
     const [updatedProfiles] = await pool.query(
-      'SELECT id, user_id, bio, skills, social_links, created_at, updated_at FROM profiles WHERE user_id = ?',
-      [userId]
+      `SELECT p.id, p.user_id, u.name, p.title, p.company, p.website, p.location, 
+              p.bio, p.skills, p.social_links, p.created_at, p.updated_at 
+       FROM profiles p
+       LEFT JOIN users u ON p.user_id = u.id
+       WHERE p.user_id = ?`,
+      [userId],
     );
 
     const profile = parseProfileJSON(updatedProfiles[0]);
@@ -133,7 +183,9 @@ const listProfiles = async (req, res, next) => {
     const pool = req.db;
 
     // Get total count
-    const [countResult] = await pool.query('SELECT COUNT(*) as total FROM profiles');
+    const [countResult] = await pool.query(
+      'SELECT COUNT(*) as total FROM profiles',
+    );
     const total = countResult[0].total;
 
     // Fetch paginated profiles with user names
@@ -152,7 +204,7 @@ const listProfiles = async (req, res, next) => {
       JOIN users u ON p.user_id = u.id 
       ORDER BY p.created_at DESC 
       LIMIT ? OFFSET ?`,
-      [limit, offset]
+      [limit, offset],
     );
 
     // Parse JSON fields for all profiles

@@ -45,13 +45,51 @@
       <section class="container">
         <a href="profiles.html" class="btn btn-light">Back To Profiles</a>
 
+        <!-- Loading Indicator -->
+        <div
+          id="profile-loading"
+          style="
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin: 1rem 0;
+          "
+        >
+          <div
+            style="
+              display: inline-block;
+              width: 40px;
+              height: 40px;
+              border: 4px solid #f3f3f3;
+              border-top: 4px solid #007bff;
+              border-radius: 50%;
+              animation: spin 1s linear infinite;
+            "
+          ></div>
+          <p style="margin-top: 1rem; color: #666">Loading profile...</p>
+        </div>
+
+        <style>
+          @keyframes spin {
+            0% {
+              transform: rotate(0deg);
+            }
+            100% {
+              transform: rotate(360deg);
+            }
+          }
+        </style>
+
         <div class="profile-grid my-1">
           <!-- Top -->
           <div class="profile-top bg-primary p-2 card">
             <img
+              id="profile-photo-img"
               class="round-img my-1"
               src="https://linda-kovacs.com/wp-content/uploads/2017/03/Linda-Kovacs.jpg?s=200"
-              alt=""
+              alt="Profile"
             />
             <div class="photo-actions photo-actions-inline">
               <label class="btn btn-light" for="profile-photo">
@@ -64,9 +102,11 @@
                 class="photo-input"
               />
             </div>
-            <h1 class="large">Linda Kovacs</h1>
-            <p class="lead">Sr Software Engineer @ Accenture</p>
-            <p>Albany, NY</p>
+            <h1 id="profile-name" class="large">Linda Kovacs</h1>
+            <p id="profile-title" class="lead">
+              Sr Software Engineer @ Accenture
+            </p>
+            <p id="profile-location">Albany, NY</p>
             <div class="icons my-1">
               <a
                 href="#"
@@ -129,24 +169,17 @@
 
           <!-- About -->
           <div class="profile-about bg-light p-2 card">
-            <h2 class="text-primary">Linda's Bio</h2>
-            <p>
-              Hi 👋, I'm Linda Kovacs and I'm a Sr Software Engineer @
-              Accenture. Portofolio:
-              <a
-                href="https://linda-kovacs.com/portfolio/"
-                target="_blank"
-                rel="noopener noreferrer"
-              ></a>
+            <h2 class="text-primary" id="profile-bio-title">Bio</h2>
+            <p id="profile-bio">
+              Hi 👋, I'm a user and I'm a professional.
+              <a href="#" target="_blank" rel="noopener noreferrer"></a>
             </p>
             <div class="line"></div>
             <h2 class="text-primary">Skill Set</h2>
-            <div class="skills">
-              <div class="p-1"><i class="fa fa-check"></i> HTML</div>
-              <div class="p-1"><i class="fa fa-check"></i> CSS</div>
-              <div class="p-1"><i class="fa fa-check"></i> JavaScript</div>
-              <div class="p-1"><i class="fa fa-check"></i> React</div>
-              <div class="p-1"><i class="fa fa-check"></i> Node</div>
+            <div id="profile-skills" class="skills">
+              <div class="p-1">
+                <i class="fa fa-check"></i> Loading skills...
+              </div>
             </div>
           </div>
 
@@ -441,6 +474,9 @@
     <!-- Authentication Guard and Route Protection -->
     <script src="frontend/js/auth-guard.js"></script>
     <script src="frontend/js/route-protection.js"></script>
+
+    <!-- Profile Data Loader -->
+    <script src="frontend/js/profile-loader.js"></script>
 
     <!-- Chat Bot Script -->
     <script src="js/chat-bot.js"></script>

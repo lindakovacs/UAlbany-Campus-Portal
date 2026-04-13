@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT UNIQUE NOT NULL,
   company VARCHAR(255),
+  title VARCHAR(255),
   website VARCHAR(500),
   location VARCHAR(255),
   bio VARCHAR(2000),

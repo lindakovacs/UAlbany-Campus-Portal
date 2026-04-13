@@ -5,7 +5,7 @@ Full-stack web application for Albany Campus Portal platform. This project is a 
 ## Features
 
 - **User Authentication:** Secure registration and login with JWT tokens
-- **User Profiles:** Create, update, and manage user profiles with bio, skills, education/experience
+- **User Profiles:** Create, update, and manage user profiles with title, company, location, bio, skills, education/experience, and social media links
 - **Social Feed:** Post updates, like posts, comment on posts
 - **Search:** Search for other users and browse profiles
 - **Education & Experience:** Track educational history and work experience
@@ -205,6 +205,9 @@ The project includes a centralized API utility module (`frontend/js/api.js`) for
 
    // Update your profile
    apiUpdateProfile(1, {
+     title: 'Software Engineer',
+     company: 'Tech Company Inc',
+     location: 'New York, NY',
      bio: "Hello! I'm Jane",
      skills: ['JavaScript', 'React', 'Node.js'],
      social_links: { github: 'https://github.com/jane' },

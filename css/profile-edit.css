@@ -69,3 +69,38 @@ body.dark-mode .profile-edit-input {
     transition: none;
   }
 }
+
+/**
+ * Form Validation Styles
+ * Error display for form fields
+ */
+
+.input-error {
+  border-color: #e74c3c !important;
+  background-color: #fadbd8;
+}
+
+.input-error:focus {
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25) !important;
+  outline: none;
+}
+
+.field-error-message {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  font-weight: 500;
+}
+
+body.dark-mode .input-error {
+  background-color: #5a2a2a;
+  border-color: #e74c3c !important;
+  color: #fff;
+}
+
+body.dark-mode .field-error-message {
+  color: #ff6b6b;
+}

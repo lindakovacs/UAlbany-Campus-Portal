@@ -18,6 +18,7 @@
 
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/dark-mode.css" />
+    <link rel="stylesheet" href="css/profile-edit.css" />
     <link rel="stylesheet" href="css/chat-bot.css" />
     <title>Welcome To UAlbany Campus</title>
   </head>
@@ -77,7 +78,7 @@
           <h1 class="large text-primary">Create Your Profile</h1>
           <p class="lead">
             <i class="fas fa-user"></i> Let's get some information to make your
-            profile stand out
+            profile stand out (you can edit this anytime)
           </p>
           <small>* = required field</small>
           <form class="form" id="create-profile-form">
@@ -202,7 +203,7 @@
               <i class="fab fa-instagram fa-2x"></i>
               <input type="text" placeholder="Instagram URL" name="instagram" />
             </div>
-            <input type="submit" class="btn btn-primary my-1" />
+            <input type="submit" class="btn btn-primary my-1" value="Submit" />
             <a class="btn btn-light my-1" href="dashboard.html">Go Back</a>
           </form>
         </section>
@@ -237,7 +238,13 @@
     <!-- Chat Bot Script -->
     <script src="js/chat-bot.js"></script>
 
-    <!-- Create Profile Form Handler -->
+    <!-- Profile Form Validation - Real-time error display -->
+    <script src="frontend/js/profile-form-validation.js"></script>
+
+    <!-- Profile Form Handler - Integrates with API -->
+    <script src="frontend/js/profile-form-handler.js"></script>
+
+    <!-- Route Protection for Create Profile -->
     <script>
       /**
        * Protect profile creation page - require authentication
@@ -248,7 +255,6 @@
           function () {
             // User is authenticated, enable form
             document.getElementById('page-content').style.display = 'block';
-            loadProfileDataIntoForm();
           },
           {
             redirectOnFail: true, // Redirect to login if not authenticated
@@ -256,143 +262,6 @@
             showLoadingMessage: true,
           },
         );
-      });
-
-      /**
-       * Load saved profile data into form fields
-       * Pre-populates form when user returns to create-profile.html
-       */
-      function loadProfileDataIntoForm() {
-        const profileData = localStorage.getItem('profileData');
-        if (!profileData) return;
-
-        try {
-          const data = JSON.parse(profileData);
-          const form = document.getElementById('create-profile-form');
-          if (!form) return;
-
-          // Populate form fields with saved data
-          const nameInput = form.querySelector('[name="name"]');
-          if (nameInput) nameInput.value = data.name || '';
-
-          const titleInput = form.querySelector('[name="title"]');
-          if (titleInput) titleInput.value = data.title || '';
-
-          const companyInput = form.querySelector('[name="company"]');
-          if (companyInput) companyInput.value = data.company || '';
-
-          const statusSelect = form.querySelector('[name="status"]');
-          if (statusSelect) statusSelect.value = data.status || '0';
-
-          const locationInput = form.querySelector('[name="location"]');
-          if (locationInput) locationInput.value = data.location || '';
-
-          const skillsInput = form.querySelector('[name="skills"]');
-          if (skillsInput) skillsInput.value = data.skills || '';
-
-          const githubInput = form.querySelector('[name="githubusername"]');
-          if (githubInput) githubInput.value = data.githubusername || '';
-
-          const bioTextarea = form.querySelector('[name="bio"]');
-          if (bioTextarea) bioTextarea.value = data.bio || '';
-
-          // Populate social links
-          if (data.social) {
-            const websiteInput = form.querySelector('[name="website"]');
-            if (websiteInput) websiteInput.value = data.social.website || '';
-
-            const githubInput = form.querySelector('[name="github"]');
-            if (githubInput) githubInput.value = data.social.github || '';
-
-            const twitterInput = form.querySelector('[name="twitter"]');
-            if (twitterInput) twitterInput.value = data.social.twitter || '';
-
-            const facebookInput = form.querySelector('[name="facebook"]');
-            if (facebookInput) facebookInput.value = data.social.facebook || '';
-
-            const youtubeInput = form.querySelector('[name="youtube"]');
-            if (youtubeInput) youtubeInput.value = data.social.youtube || '';
-
-            const linkedinInput = form.querySelector('[name="linkedin"]');
-            if (linkedinInput) linkedinInput.value = data.social.linkedin || '';
-
-            const instagramInput = form.querySelector('[name="instagram"]');
-            if (instagramInput)
-              instagramInput.value = data.social.instagram || '';
-          }
-
-          console.log('Profile data loaded into form:', data);
-        } catch (e) {
-          console.error('Error loading profile data into form:', e);
-        }
-      }
-
-      /**
-       * Handle create profile form submission
-       * Saves data to localStorage and syncs to profile.html
-       */
-      document.addEventListener('DOMContentLoaded', function () {
-        // Pre-populate form with saved data
-        loadProfileDataIntoForm();
-
-        const form = document.getElementById('create-profile-form');
-        if (!form) return;
-
-        form.addEventListener('submit', function (e) {
-          e.preventDefault();
-
-          // Get form data
-          const formData = {
-            name: form.querySelector('[name="name"]').value.trim(),
-            title: form.querySelector('[name="title"]').value.trim(),
-            company: form.querySelector('[name="company"]').value.trim(),
-            status: form.querySelector('[name="status"]').value,
-            location: form.querySelector('[name="location"]').value.trim(),
-            skills: form.querySelector('[name="skills"]').value.trim(),
-            githubusername:
-              form.querySelector('[name="githubusername"]').value.trim() || '',
-            bio: form.querySelector('[name="bio"]').value.trim(),
-            social: {
-              website:
-                form.querySelector('[name="website"]').value.trim() || '',
-              github: form.querySelector('[name="github"]').value.trim() || '',
-              twitter:
-                form.querySelector('[name="twitter"]').value.trim() || '',
-              facebook:
-                form.querySelector('[name="facebook"]').value.trim() || '',
-              youtube:
-                form.querySelector('[name="youtube"]').value.trim() || '',
-              linkedin:
-                form.querySelector('[name="linkedin"]').value.trim() || '',
-              instagram:
-                form.querySelector('[name="instagram"]').value.trim() || '',
-            },
-          };
-
-          // Validate required fields
-          if (
-            !formData.name ||
-            !formData.title ||
-            !formData.company ||
-            formData.status === '0' ||
-            !formData.skills
-          ) {
-            alert('Please fill in all required fields (marked with *).');
-            return;
-          }
-
-          // Save to localStorage
-          try {
-            localStorage.setItem('profileData', JSON.stringify(formData));
-            console.log('Profile data saved:', formData);
-            alert('Profile created successfully!');
-            // Redirect to profile page
-            window.location.href = 'profile.html';
-          } catch (e) {
-            console.error('Error saving profile:', e);
-            alert('Error saving profile. Please try again.');
-          }
-        });
       });
     </script>
   </body>
