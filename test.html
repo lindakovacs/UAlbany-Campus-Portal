@@ -140,6 +140,28 @@
       <code>apiLogout()</code>
 
       <hr />
+
+      <h2>Posts CRUD Operations:</h2>
+
+      <h3>17. Get All Posts (Paginated)</h3>
+      <code>apiGetPosts(1, 10)</code>
+
+      <h3>18. Create New Post</h3>
+      <code
+        >apiCreatePost({ content: 'This is my first post! Thrilled to share
+        updates with the campus community.' })</code
+      >
+
+      <h3>19. Get Specific Post</h3>
+      <code>apiGetPost(1)</code>
+
+      <h3>20. Update Post</h3>
+      <code>apiUpdatePost(1, { content: 'Updated post content!' })</code>
+
+      <h3>21. Delete Post</h3>
+      <code>apiDeletePost(1)</code>
+
+      <hr />
       <p>
         <strong>Backend Status:</strong>
         <span id="backend-status">Checking...</span>
@@ -214,6 +236,13 @@
           'apiAddExperience',
           'apiUpdateExperience',
           'apiDeleteExperience',
+        ],
+        posts: [
+          'apiGetPosts',
+          'apiGetPost',
+          'apiCreatePost',
+          'apiUpdatePost',
+          'apiDeletePost',
         ],
         utils: [
           'getToken',

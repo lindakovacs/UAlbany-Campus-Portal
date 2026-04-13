@@ -12,6 +12,7 @@ const profilesEducationRoutes = require('./routes/profilesEducation');
 const profilesExperienceRoutes = require('./routes/profilesExperience');
 const educationRoutes = require('./routes/education');
 const experienceRoutes = require('./routes/experience');
+const postRoutes = require('./routes/posts');
 const { ApiError } = require('./utils/errors');
 
 // Middleware
@@ -75,15 +76,14 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// Routes
+// Routes (order matters: more specific routes first)
 app.use('/api/auth', authRoutes);
-app.use('/api/profiles', profileRoutes);
-app.use('/api/profiles', profilesEducationRoutes);
-app.use('/api/profiles', profilesExperienceRoutes);
+app.use('/api/profiles', profilesEducationRoutes); // More specific: /:userId/education
+app.use('/api/profiles', profilesExperienceRoutes); // More specific: /:userId/experience
+app.use('/api/profiles', profileRoutes); // General: / and /:userId
 app.use('/api/education', educationRoutes);
 app.use('/api/experience', experienceRoutes);
-// app.use('/api/posts', postRoutes);
-// etc.
+app.use('/api/posts', postRoutes);
 
 // Error handler middleware
 app.use((err, req, res, next) => {

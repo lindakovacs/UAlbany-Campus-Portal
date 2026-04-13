@@ -876,6 +876,139 @@ The backend API runs on `http://localhost:3001` during development. Below are al
   }
   ```
 
+#### Posts Endpoints
+
+**GET /api/posts** - Get all posts (Paginated)
+
+- **URL:** `http://localhost:3001/api/posts?page=1&limit=10`
+- **Method:** GET
+- **Query Parameters:**
+  - `page` (optional, default: 1) - Page number
+  - `limit` (optional, default: 10, max: 50) - Items per page
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "data": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "name": "John Doe",
+        "email": "john@example.com",
+        "content": "Just finished an amazing project! Thrilled to share it with the campus community.",
+        "created_at": "2026-04-12T10:30:00Z",
+        "updated_at": "2026-04-12T10:30:00Z"
+      }
+    ],
+    "pagination": {
+      "total": 25,
+      "page": 1,
+      "limit": 10,
+      "pages": 3
+    }
+  }
+  ```
+
+**POST /api/posts** - Create new post (Protected)
+
+- **URL:** `http://localhost:3001/api/posts`
+- **Method:** POST
+- **Headers:**
+  - `Content-Type: application/json`
+  - `Authorization: Bearer <your_jwt_token>`
+- **Body (JSON):**
+  ```json
+  {
+    "content": "Just finished an amazing project! Thrilled to share it with the campus community."
+  }
+  ```
+- **Expected Response (201):**
+  ```json
+  {
+    "status": "success",
+    "message": "Post created successfully",
+    "data": {
+      "id": 1,
+      "user_id": 1,
+      "content": "Just finished an amazing project! Thrilled to share it with the campus community.",
+      "created_at": "2026-04-12T10:30:00Z",
+      "updated_at": "2026-04-12T10:30:00Z"
+    }
+  }
+  ```
+- **Error Cases:**
+  - `401` - Missing token or not authenticated
+  - `400` - Missing content or content exceeds 5000 characters
+
+**GET /api/posts/:postId** - Get specific post
+
+- **URL:** `http://localhost:3001/api/posts/1`
+- **Method:** GET
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "data": {
+      "id": 1,
+      "user_id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "content": "Just finished an amazing project! Thrilled to share it with the campus community.",
+      "created_at": "2026-04-12T10:30:00Z",
+      "updated_at": "2026-04-12T10:30:00Z"
+    }
+  }
+  ```
+- **Error Cases:**
+  - `404` - Post not found
+
+**PUT /api/posts/:postId** - Update post (Protected, owner only)
+
+- **URL:** `http://localhost:3001/api/posts/1`
+- **Method:** PUT
+- **Headers:**
+  - `Content-Type: application/json`
+  - `Authorization: Bearer <your_jwt_token>`
+- **Body (JSON):**
+  ```json
+  {
+    "content": "Updated post content with new information!"
+  }
+  ```
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "message": "Post updated successfully",
+    "data": {
+      "id": 1,
+      "user_id": 1,
+      "content": "Updated post content with new information!",
+      "updated_at": "2026-04-12T11:45:00Z"
+    }
+  }
+  ```
+- **Error Cases:**
+  - `401` - Missing token or not post owner
+  - `404` - Post not found
+  - `400` - Missing content or content exceeds 5000 characters
+
+**DELETE /api/posts/:postId** - Delete post (Protected, owner only)
+
+- **URL:** `http://localhost:3001/api/posts/1`
+- **Method:** DELETE
+- **Headers:** `Authorization: Bearer <your_jwt_token>`
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "message": "Post deleted successfully"
+  }
+  ```
+- **Error Cases:**
+  - `401` - Missing token or not post owner
+  - `404` - Post not found
+
 ### Postman Workflow Example
 
 1. **Register a new user:**

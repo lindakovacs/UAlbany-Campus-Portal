@@ -653,6 +653,151 @@ async function apiDeleteExperience(experienceId) {
 }
 
 // ============================================
+// Posts Endpoints
+// ============================================
+
+/**
+ * Get all posts (paginated)
+ * @param {number} page - Page number (default: 1)
+ * @param {number} limit - Items per page (default: 10, max: 50)
+ * @returns {Promise<Object>} - {status, data, pagination}
+ */
+async function apiGetPosts(page = 1, limit = 10) {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/posts?page=${page}&limit=${limit}`,
+      { method: 'GET' },
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Posts fetched:', data.data.length, 'items');
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Get posts error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get specific post by ID
+ * @param {number} postId - Post ID
+ * @returns {Promise<Object>} - {status, data}
+ */
+async function apiGetPost(postId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+      method: 'GET',
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Post fetched:', data.data);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Get post error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Create new post (protected)
+ * @param {Object} postData - {content}
+ * @returns {Promise<Object>} - {status, message, data}
+ */
+async function apiCreatePost(postData) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify(postData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Post created:', data.data);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Create post error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Update post (protected, owner only)
+ * @param {number} postId - Post ID
+ * @param {Object} postData - {content}
+ * @returns {Promise<Object>} - {status, message, data}
+ */
+async function apiUpdatePost(postId, postData) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify(postData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Post updated:', data.data);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Update post error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Delete post (protected, owner only)
+ * @param {number} postId - Post ID
+ * @returns {Promise<Object>} - {status, message}
+ */
+async function apiDeletePost(postId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Post deleted');
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Delete post error:', error);
+    throw error;
+  }
+}
+
+// ============================================
 // Utility Functions
 // ============================================
 
