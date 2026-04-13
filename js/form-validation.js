@@ -111,7 +111,7 @@ function validateLoginForm(event) {
     showError(emailField, 'Email is required');
     isFormValid = false;
   } else if (!isValidEmail(emailField.value)) {
-    showError(emailField, 'Please enter a valid email address');
+    showError(emailField, 'Enter a valid email address');
     isFormValid = false;
   } else {
     clearError(emailField);
@@ -172,7 +172,7 @@ function validateRegisterForm(event) {
     showError(emailField, 'Email is required');
     isFormValid = false;
   } else if (!isValidEmail(emailField.value)) {
-    showError(emailField, 'Please enter a valid email address');
+    showError(emailField, 'Enter a valid email address');
     isFormValid = false;
   } else {
     clearError(emailField);
@@ -220,7 +220,7 @@ function initializeFieldValidation(field) {
 
     if (fieldName === 'email') {
       if (this.value.trim() && !isValidEmail(this.value)) {
-        showError(this, 'Please enter a valid email address');
+        showError(this, 'Enter a valid email address');
       } else {
         clearError(this);
       }
@@ -244,7 +244,7 @@ function initializeFieldValidation(field) {
       }
     } else if (fieldName === 'phone') {
       if (this.value && !isValidPhone(this.value)) {
-        showError(this, 'Please enter a valid phone number');
+        showError(this, 'Enter a valid phone number');
       } else {
         clearError(this);
       }

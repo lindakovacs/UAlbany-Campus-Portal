@@ -591,7 +591,7 @@ function saveExperienceEntry(form) {
   const description = form.querySelector('.exp-description').value.trim();
 
   if (!company || !title || !from) {
-    alert('Please fill in required fields: Company, Position, and From Date');
+    alert('Fill in required fields: Company, Position, and From Date');
     return;
   }
 
@@ -641,7 +641,7 @@ function saveEducationEntry(form) {
   const description = form.querySelector('.edu-description').value.trim();
 
   if (!school || !degree || !field || !from) {
-    alert('Please fill in all required fields: School, Degree, Minor, and From Date');
+    alert('Fill in all required fields: School, Degree, Minor, and From Date');
     return;
   }
 

@@ -189,7 +189,7 @@ class APIClient {
       const userId = user.id || localStorage.getItem('userId');
       
       if (!userId) {
-        throw new APIError('User ID not found - please log in first', 401, { error: 'Not authenticated' });
+        throw new APIError('User ID not found - log in first', 401, { error: 'Not authenticated' });
       }
       
       const endpoint = `/profiles/${userId}`;
@@ -406,13 +406,13 @@ class APIError extends Error {
 
   getUniendlyMessage() {
     const messages = {
-      400: 'Invalid request. Please check your input.',
-      401: 'Unauthorized. Please log in again.',
+      400: 'Invalid request. Check your input.',
+      401: 'Unauthorized. Log in again.',
       403: 'You do not have permission to perform this action.',
       404: 'The requested resource was not found.',
       409: 'Conflict. This resource may already exist.',
-      429: 'Too many requests. Please try again later.',
-      500: 'Server error. Please try again later.',
+      429: 'Too many requests. Try again later.',
+      500: 'Server error. Try again later.',
     };
 
     return messages[this.status] || this.message;

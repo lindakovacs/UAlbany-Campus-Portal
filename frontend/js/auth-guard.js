@@ -58,7 +58,7 @@ function requireAuth(callback, options = {}) {
     callback();
   } catch (error) {
     console.error('Error in requireAuth callback:', error);
-    showErrorMessage('An error occurred. Please try again.');
+    showErrorMessage('An error occurred. Try again.');
   }
 }
 
@@ -246,7 +246,7 @@ function setupTokenExpirationListener() {
   // Check token expiration periodically
   setInterval(() => {
     if (isAuthenticated() && isTokenExpired()) {
-      showErrorMessage('Your session has expired. Please log in again.');
+      showErrorMessage('Your session has expired. Log in again.');
       setTimeout(() => {
         logout();
       }, 2000);

@@ -52,7 +52,7 @@ function initializeProfileFormHandler() {
 
       if (!user.id || !token) {
         throw new Error(
-          'You must be logged in to submit this form. Please log in first.',
+          'You must be logged in to submit this form. Log in first.',
         );
       }
 
@@ -60,7 +60,7 @@ function initializeProfileFormHandler() {
       const validation = validateProfileForm(form);
       if (!validation.isValid) {
         const errorMessages = Object.values(validation.errors).join('\n');
-        showErrorMessage(`Please fix the following errors:\n${errorMessages}`);
+        showErrorMessage(`Fix the following errors:\n${errorMessages}`);
 
         // Restore button - this is critical
         submitBtn.disabled = false;
@@ -91,9 +91,7 @@ function initializeProfileFormHandler() {
       }, 1500);
     } catch (error) {
       console.error('Error submitting profile form:', error);
-      showErrorMessage(
-        error.message || 'Error saving profile. Please try again.',
-      );
+      showErrorMessage(error.message || 'Error saving profile. Try again.');
 
       // Re-enable submit button and restore text
       const submitBtn = form.querySelector('input[type="submit"]');
@@ -186,18 +184,16 @@ async function saveProfileToAPI(profileData) {
     // Provide more descriptive error messages
     if (error.status === 401) {
       throw new Error(
-        error.message || 'Your session has expired. Please log in again.',
+        error.message || 'Your session has expired. Log in again.',
       );
     } else if (error.status === 404) {
-      throw new Error(
-        'Profile endpoint error. Please try again or contact support.',
-      );
+      throw new Error('Profile endpoint error. Try again or contact support.');
     } else if (error.status === 400) {
       throw new Error(
-        error.message || 'Invalid profile data. Please check your information.',
+        error.message || 'Invalid profile data. Check your information.',
       );
     } else if (error.status === 500) {
-      throw new Error('Server error. Please try again later.');
+      throw new Error('Server error. Try again later.');
     } else {
       throw new Error(error.message || 'Failed to save profile');
     }

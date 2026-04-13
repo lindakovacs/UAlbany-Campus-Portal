@@ -329,7 +329,7 @@ function initializeCommentForm() {
 
     // Validate input
     if (!textarea.value.trim()) {
-      alert('Please enter a comment before submitting');
+      alert('Enter a comment before submitting');
       textarea.focus();
       return;
     }

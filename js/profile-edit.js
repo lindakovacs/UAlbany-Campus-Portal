@@ -302,13 +302,15 @@ function saveProfileChanges() {
 
   // Validate inputs
   if (!nameInput?.value.trim()) {
-    alert('Please enter your name');
+    alert('Enter your name');
     nameInput?.focus();
     return;
   }
 
   // Get existing profile data to preserve fields set from create-profile
-  const existingData = JSON.parse(localStorage.getItem(PROFILE_STORAGE_KEY) || '{}');
+  const existingData = JSON.parse(
+    localStorage.getItem(PROFILE_STORAGE_KEY) || '{}',
+  );
 
   // Prepare updated data, preserving existing fields
   const profileData = {
@@ -566,14 +568,60 @@ function addExperience(experienceData) {
  * Delete experience with confirmation
  * @param {string} expId - Experience ID to delete
  */
-function deleteExperience(expId) {
+async function deleteExperience(expId) {
   if (!confirm('Are you sure you want to delete this experience?')) return;
 
-  let experiences = getExperienceList();
-  experiences = experiences.filter((exp) => exp.id !== expId);
-  saveExperienceList(experiences);
-  renderExperienceList();
-  announceA11yChange('Experience deleted');
+  try {
+    console.log('Deleting experience with ID:', expId);
+    const userId = localStorage.getItem('userId');
+
+    // Delete from API first
+    if (userId && typeof apiClient !== 'undefined' && apiClient.experience) {
+      try {
+        await apiClient.experience.delete(expId);
+        console.log('Experience deleted from API successfully');
+      } catch (apiError) {
+        console.warn('Could not delete from API:', apiError);
+      }
+    }
+
+    // Delete from localStorage - try both by ID and by checking against saved list
+    let experiences = getExperienceList();
+    const originalLength = experiences.length;
+    experiences = experiences.filter((exp) => exp.id !== expId);
+
+    // Check if anything was actually deleted
+    if (experiences.length < originalLength) {
+      console.log('Experience removed from localStorage');
+      saveExperienceList(experiences);
+    } else {
+      console.warn(
+        'Experience ID not found in localStorage. Original list:',
+        getExperienceList(),
+      );
+    }
+
+    // Refresh display on profile page
+    if (typeof renderExperienceList === 'function') {
+      renderExperienceList();
+    }
+    if (typeof displayExperience === 'function' && userId) {
+      try {
+        const response = await apiClient.experience.getForUser(userId);
+        displayExperience(response.data || response || []);
+      } catch (e) {
+        console.log('Could not refresh from API, using local render');
+      }
+    }
+
+    announceA11yChange('Experience deleted successfully');
+    alert(
+      'Experience deleted! Refresh the Dashboard and Add Experience pages to see the changes.',
+    );
+  } catch (error) {
+    console.error('Error deleting experience:', error);
+    alert('Error deleting experience. Try again.');
+  }
 }
 
 /**
@@ -601,6 +649,14 @@ function renderExperienceList() {
 
   if (!container) return;
 
+  // Clear entire container completely (no duplicates with displayExperience)
+  container.innerHTML = '';
+
+  if (!experiences || experiences.length === 0) {
+    container.innerHTML = '<p class="text-muted">No experience added yet</p>';
+    return;
+  }
+
   // Sort experiences: current first, then by most recent
   experiences = experiences.sort((a, b) => {
     if (a.current && !b.current) return -1;
@@ -610,15 +666,13 @@ function renderExperienceList() {
     return dateB - dateA;
   });
 
-  // Remove only existing experience items (class="experience-list div")
-  const existingItems = container.querySelectorAll('.exp-item');
-  existingItems.forEach((item) => item.remove());
-
   // Add new experience items
   experiences.forEach((exp) => {
     const expDiv = document.createElement('div');
     expDiv.className = 'exp-item';
-    const currentBadge = exp.current ? '<span class="badge badge-success" style="margin-left: 0.5rem;">Current</span>' : '';
+    const currentBadge = exp.current
+      ? '<span class="badge badge-success" style="margin-left: 0.5rem;">Current</span>'
+      : '';
     expDiv.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
         <div style="flex: 1;">
@@ -635,7 +689,7 @@ function renderExperienceList() {
           <button class="btn btn-primary btn-sm" onclick="editExperienceFromProfile('${exp.id}')" style="white-space: nowrap;">
             <i class="fas fa-edit"></i> Edit
           </button>
-          <button class="btn btn-danger btn-sm" onclick="deleteExperience('${exp.id}')" style="white-space: nowrap;">
+          <button class="btn btn-danger btn-sm" onclick="(async () => await deleteExperience('${exp.id}'))()" style="white-space: nowrap;">
             <i class="fas fa-trash"></i> Delete
           </button>
         </div>
@@ -655,6 +709,14 @@ function renderEducationList() {
 
   if (!container) return;
 
+  // Clear entire container completely (no duplicates with displayEducation)
+  container.innerHTML = '';
+
+  if (!educations || educations.length === 0) {
+    container.innerHTML = '<p class="text-muted">No education added yet</p>';
+    return;
+  }
+
   // Sort educations: current first, then by most recent
   educations = educations.sort((a, b) => {
     if (a.current && !b.current) return -1;
@@ -664,15 +726,13 @@ function renderEducationList() {
     return dateB - dateA;
   });
 
-  // Remove only existing education items
-  const existingItems = container.querySelectorAll('.edu-item');
-  existingItems.forEach((item) => item.remove());
-
   // Add new education items
   educations.forEach((edu) => {
     const eduDiv = document.createElement('div');
     eduDiv.className = 'edu-item';
-    const currentBadge = edu.current ? '<span class="badge badge-success" style="margin-left: 0.5rem;">Current</span>' : '';
+    const currentBadge = edu.current
+      ? '<span class="badge badge-success" style="margin-left: 0.5rem;">Current</span>'
+      : '';
     eduDiv.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
         <div style="flex: 1;">
@@ -689,7 +749,7 @@ function renderEducationList() {
           <button class="btn btn-primary btn-sm" onclick="editEducationFromProfile('${edu.id}')" style="white-space: nowrap;">
             <i class="fas fa-edit"></i> Edit
           </button>
-          <button class="btn btn-danger btn-sm" onclick="deleteEducation('${edu.id}')" style="white-space: nowrap;">
+          <button class="btn btn-danger btn-sm" onclick="(async () => await deleteEducation('${edu.id}'))()" style="white-space: nowrap;">
             <i class="fas fa-trash"></i> Delete
           </button>
         </div>
@@ -727,13 +787,8 @@ function saveEducationList(educations) {
  * @param {object} educationData - Education form data
  */
 function addEducation(educationData) {
-  if (
-    !educationData.school ||
-    !educationData.degree ||
-    !educationData.fieldofstudy ||
-    !educationData.from
-  ) {
-    alert('School, Degree, Minor, and From Date are required');
+  if (!educationData.school || !educationData.degree || !educationData.from) {
+    alert('School, Degree, and From Date are required');
     return false;
   }
 
@@ -755,14 +810,60 @@ function addEducation(educationData) {
  * Delete education with confirmation
  * @param {string} eduId - Education ID to delete
  */
-function deleteEducation(eduId) {
+async function deleteEducation(eduId) {
   if (!confirm('Are you sure you want to delete this education?')) return;
 
-  let educations = getEducationList();
-  educations = educations.filter((edu) => edu.id !== eduId);
-  saveEducationList(educations);
-  renderEducationList();
-  announceA11yChange('Education deleted');
+  try {
+    console.log('Deleting education with ID:', eduId);
+    const userId = localStorage.getItem('userId');
+
+    // Delete from API first
+    if (userId && typeof apiClient !== 'undefined' && apiClient.education) {
+      try {
+        await apiClient.education.delete(eduId);
+        console.log('Education deleted from API successfully');
+      } catch (apiError) {
+        console.warn('Could not delete from API:', apiError);
+      }
+    }
+
+    // Delete from localStorage - try both by ID and by checking against saved list
+    let educations = getEducationList();
+    const originalLength = educations.length;
+    educations = educations.filter((edu) => edu.id !== eduId);
+
+    // Check if anything was actually deleted
+    if (educations.length < originalLength) {
+      console.log('Education removed from localStorage');
+      saveEducationList(educations);
+    } else {
+      console.warn(
+        'Education ID not found in localStorage. Original list:',
+        getEducationList(),
+      );
+    }
+
+    // Refresh display on profile page
+    if (typeof renderEducationList === 'function') {
+      renderEducationList();
+    }
+    if (typeof displayEducation === 'function' && userId) {
+      try {
+        const response = await apiClient.education.getForUser(userId);
+        displayEducation(response.data || response || []);
+      } catch (e) {
+        console.log('Could not refresh from API, using local render');
+      }
+    }
+
+    announceA11yChange('Education deleted successfully');
+    alert(
+      'Education deleted! Refresh the Dashboard and Add Education pages to see the changes.',
+    );
+  } catch (error) {
+    console.error('Error deleting education:', error);
+    alert('Error deleting education. Try again.');
+  }
 }
 
 /**
@@ -800,7 +901,7 @@ function toggleAddExperienceForm() {
 /**
  * Submit Add Experience Form
  */
-function submitAddExperienceForm() {
+async function submitAddExperienceForm() {
   const title = document.getElementById('exp-title')?.value.trim();
   const company = document.getElementById('exp-company')?.value.trim();
   const location = document.getElementById('exp-location')?.value.trim();
@@ -809,7 +910,14 @@ function submitAddExperienceForm() {
   const current = document.getElementById('exp-current')?.checked;
   const description = document.getElementById('exp-description')?.value.trim();
 
-  const experienceData = {
+  // Validate required fields
+  if (!title || !company || !from) {
+    alert('Title, Company, and From Date are required');
+    return false;
+  }
+
+  // Format for localStorage (original format)
+  const experienceDataLocal = {
     title,
     company,
     location,
@@ -819,9 +927,53 @@ function submitAddExperienceForm() {
     description,
   };
 
-  if (addExperience(experienceData)) {
-    toggleAddExperienceForm();
-    document.getElementById('add-experience-form').reset();
+  // Format for API (snake_case format)
+  const experienceDataAPI = {
+    title,
+    company,
+    location,
+    from_date: from,
+    to_date: current ? null : to,
+    current,
+    description,
+  };
+
+  try {
+    // Save to API
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = user.id || localStorage.getItem('userId');
+
+    if (userId && typeof apiClient !== 'undefined' && apiClient.experience) {
+      await apiClient.experience.add(experienceDataAPI);
+      console.log('Experience saved to API');
+
+      // Also save to localStorage for edit pages
+      if (addExperience(experienceDataLocal)) {
+        // Refresh experience display from API - this includes items from dashboard
+        const experienceResponse =
+          await apiClient.experience.getForUser(userId);
+        let experiences = experienceResponse.data || experienceResponse || [];
+
+        // Transform API response from snake_case to camelCase for displayExperience
+        experiences = experiences.map((exp) => ({
+          ...exp,
+          from: exp.from || exp.from_date,
+          to: exp.to || exp.to_date,
+        }));
+
+        if (typeof displayExperience === 'function') {
+          displayExperience(Array.isArray(experiences) ? experiences : []);
+        }
+
+        // Hide form and clear after success
+        toggleAddExperienceForm();
+        document.getElementById('add-experience-form').reset();
+        announceA11yChange('Experience added successfully');
+      }
+    }
+  } catch (error) {
+    console.error('Error adding experience:', error);
+    alert('Failed to save experience. Try again.');
   }
 }
 
@@ -842,7 +994,7 @@ function toggleAddEducationForm() {
 /**
  * Submit Add Education Form
  */
-function submitAddEducationForm() {
+async function submitAddEducationForm() {
   const school = document.getElementById('edu-school')?.value.trim();
   const degree = document.getElementById('edu-degree')?.value.trim();
   const fieldofstudy = document
@@ -853,7 +1005,14 @@ function submitAddEducationForm() {
   const current = document.getElementById('edu-current')?.checked;
   const description = document.getElementById('edu-description')?.value.trim();
 
-  const educationData = {
+  // Validate required fields
+  if (!school || !degree || !from) {
+    alert('School, Degree, and From Date are required');
+    return false;
+  }
+
+  // Format for localStorage (original format)
+  const educationDataLocal = {
     school,
     degree,
     fieldofstudy,
@@ -863,9 +1022,53 @@ function submitAddEducationForm() {
     description,
   };
 
-  if (addEducation(educationData)) {
-    toggleAddEducationForm();
-    document.getElementById('add-education-form').reset();
+  // Format for API (snake_case format)
+  const educationDataAPI = {
+    school,
+    degree,
+    field_of_study: fieldofstudy,
+    from_date: from,
+    to_date: current ? null : to,
+    current,
+    description,
+  };
+
+  try {
+    // Save to API
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = user.id || localStorage.getItem('userId');
+
+    if (userId && typeof apiClient !== 'undefined' && apiClient.education) {
+      await apiClient.education.add(educationDataAPI);
+      console.log('Education saved to API');
+
+      // Also save to localStorage for edit pages
+      if (addEducation(educationDataLocal)) {
+        // Refresh education display from API - this includes items from dashboard
+        const educationResponse = await apiClient.education.getForUser(userId);
+        let educations = educationResponse.data || educationResponse || [];
+
+        // Transform API response from snake_case to camelCase for displayEducation
+        educations = educations.map((edu) => ({
+          ...edu,
+          from: edu.from || edu.from_date,
+          to: edu.to || edu.to_date,
+          fieldofstudy: edu.fieldofstudy || edu.field_of_study,
+        }));
+
+        if (typeof displayEducation === 'function') {
+          displayEducation(Array.isArray(educations) ? educations : []);
+        }
+
+        // Hide form and clear after success
+        toggleAddEducationForm();
+        document.getElementById('add-education-form').reset();
+        announceA11yChange('Education added successfully');
+      }
+    }
+  } catch (error) {
+    console.error('Error adding education:', error);
+    alert('Failed to save education. Try again.');
   }
 }
 
@@ -875,14 +1078,14 @@ function submitAddEducationForm() {
  */
 function loadProfilePhoto() {
   const storedPhoto = localStorage.getItem(PROFILE_PHOTO_STORAGE_KEY);
-  
+
   if (storedPhoto) {
     // Update profile.html image
     const profileImg = document.querySelector('.profile-top .round-img');
     if (profileImg) {
       profileImg.src = storedPhoto;
     }
-    
+
     // Update dashboard.html image
     const dashboardImg = document.querySelector('.photo-card .profile-photo');
     if (dashboardImg) {
@@ -898,48 +1101,48 @@ function loadProfilePhoto() {
  */
 function handlePhotoUpload(event) {
   const file = event.target.files[0];
-  
+
   if (!file) return;
-  
+
   // Validate file is an image
   if (!file.type.startsWith('image/')) {
-    alert('Please select a valid image file');
+    alert('Select a valid image file');
     return;
   }
-  
+
   // Validate file size (5MB max)
   const maxSize = 5 * 1024 * 1024; // 5MB
   if (file.size > maxSize) {
     alert('File size must be less than 5MB');
     return;
   }
-  
+
   // Read file and convert to base64
   const reader = new FileReader();
   reader.onload = function (e) {
     const photoData = e.target.result; // This is the base64 encoded image
-    
+
     // Store in localStorage
     localStorage.setItem(PROFILE_PHOTO_STORAGE_KEY, photoData);
-    
+
     // Update all profile images on the page
     const profileImg = document.querySelector('.profile-top .round-img');
     if (profileImg) {
       profileImg.src = photoData;
     }
-    
+
     const dashboardImg = document.querySelector('.photo-card .profile-photo');
     if (dashboardImg) {
       dashboardImg.src = photoData;
     }
-    
+
     console.log('Profile photo updated and saved to localStorage');
   };
-  
+
   reader.onerror = function () {
-    alert('Error reading file. Please try again.');
+    alert('Error reading file. Try again.');
   };
-  
+
   reader.readAsDataURL(file);
 }
 
@@ -998,7 +1201,10 @@ In 2020 I enrolled in a 10 months Full Stack Deeveloper online Bootcamp at Tripp
         .map((s) => s.trim())
         .filter((s) => s);
       skillsContainer.innerHTML = skillsArray
-        .map((skill) => `<div class="p-1"><i class="fa fa-check"></i> ${skill}</div>`)
+        .map(
+          (skill) =>
+            `<div class="p-1"><i class="fa fa-check"></i> ${skill}</div>`,
+        )
         .join('');
     }
 
@@ -1037,13 +1243,13 @@ document.addEventListener('DOMContentLoaded', function () {
   renderExperienceList();
   renderEducationList();
   loadProfilePhoto();
-  
+
   // Add photo upload event listeners
   const profilePhotoInput = document.getElementById('profile-photo');
   if (profilePhotoInput) {
     profilePhotoInput.addEventListener('change', handlePhotoUpload);
   }
-  
+
   const dashboardPhotoInput = document.getElementById('dashboard-photo');
   if (dashboardPhotoInput) {
     dashboardPhotoInput.addEventListener('change', handlePhotoUpload);

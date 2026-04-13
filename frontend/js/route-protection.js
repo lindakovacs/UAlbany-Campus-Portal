@@ -156,7 +156,7 @@ function setupPageProtection() {
     document.addEventListener('DOMContentLoaded', function () {
       if (!isAuthenticated()) {
         // Show message and redirect
-        showErrorMessage('Access denied. Please log in.');
+        showErrorMessage('Access denied. Log in.');
         setTimeout(() => {
           redirectToLogin('login.html');
         }, 1500);

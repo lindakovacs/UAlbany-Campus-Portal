@@ -143,8 +143,10 @@ async function getGeminiResponse(userMessage) {
   } catch (error) {
     // Handle rate limit error (429)
     if (error.status === 429 || error.message?.includes('429')) {
-      console.warn('⚠️  Rate limit reached - Gemini API (429 Too Many Requests)');
-      return "🤖 The AI chatbot is temporarily busy due to high traffic. Please try again in a moment! In the meantime, here's what you can do: Visit https://www.albany.edu for more information about UAlbany.";
+      console.warn(
+        '⚠️  Rate limit reached - Gemini API (429 Too Many Requests)',
+      );
+      return "🤖 The AI chatbot is temporarily busy due to high traffic. Try again in a moment! In the meantime, here's what you can do: Visit https://www.albany.edu for more information about UAlbany.";
     }
 
     // Handle other API errors
@@ -170,7 +172,7 @@ const chatWithBot = async (req, res, next) => {
     if (!message || typeof message !== 'string') {
       return res.status(400).json({
         status: 'error',
-        error: 'Invalid message - please provide a non-empty message',
+        error: 'Invalid message - provide a non-empty message',
       });
     }
 

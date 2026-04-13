@@ -157,6 +157,9 @@
     <!-- Chat Bot Script -->
     <script src="js/chat-bot.js"></script>
 
+    <!-- Profile Management Scripts -->
+    <script src="js/profile-edit.js"></script>
+
     <!-- Form Toggle Script -->
     <script>
       /**
@@ -364,7 +367,7 @@
 
             // Validate required fields
             if (!experienceData.title || !experienceData.company) {
-              alert('Please fill in all required fields (Title and Company)');
+              alert('Fill in all required fields (Title and Company)');
               return;
             }
 
@@ -392,7 +395,42 @@
                 'experienceList',
                 JSON.stringify(experiences),
               );
-              console.log('Experience saved:', experienceData);
+              console.log('Experience saved to localStorage:', experienceData);
+
+              // Save to API as well
+              (async () => {
+                try {
+                  const user = JSON.parse(localStorage.getItem('user') || '{}');
+                  const userId = user.id || localStorage.getItem('userId');
+
+                  if (
+                    userId &&
+                    typeof apiClient !== 'undefined' &&
+                    apiClient.experience
+                  ) {
+                    // Transform to API format
+                    const apiData = {
+                      title: experienceData.title,
+                      company: experienceData.company,
+                      location: experienceData.location,
+                      from_date: experienceData.from,
+                      to_date: experienceData.to || null,
+                      current: experienceData.current,
+                      description: experienceData.description,
+                    };
+
+                    if (editingId) {
+                      await apiClient.experience.update(editingId, apiData);
+                      console.log('Experience updated in API');
+                    } else {
+                      await apiClient.experience.add(apiData);
+                      console.log('Experience added to API');
+                    }
+                  }
+                } catch (apiError) {
+                  console.warn('Could not save to API:', apiError);
+                }
+              })();
 
               // Reset form
               form.reset();
@@ -403,7 +441,7 @@
               displaySavedExperiences();
             } catch (e) {
               console.error('Error saving experience:', e);
-              alert('Error saving experience. Please try again.');
+              alert('Error saving experience. Try again later.');
             }
           });
         }

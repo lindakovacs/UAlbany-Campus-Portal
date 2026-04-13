@@ -421,7 +421,7 @@ Request Flow:
 
 ```
 User sees: "🤖 The AI chatbot is temporarily busy due to high traffic.
-Please try again in a moment! Visit https://www.albany.edu for more info."
+Try again in a moment! Visit https://www.albany.edu for more info."
 ```
 
 ### Chatbot Endpoints

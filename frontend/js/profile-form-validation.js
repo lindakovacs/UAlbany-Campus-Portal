@@ -74,12 +74,12 @@ const profileValidationRules = {
     label: 'Skills',
     validate: (value) => {
       if (!value || value.trim().length === 0) {
-        return 'Skills are required. Please add at least one skill.';
+        return 'Skills are required. Add at least one skill.';
       }
       // Check if there's at least one comma-separated skill
       const skills = value.split(',').filter((s) => s.trim().length > 0);
       if (skills.length === 0) {
-        return 'Please add at least one skill (comma-separated)';
+        return 'Add at least one skill (comma-separated)';
       }
       return null;
     },
@@ -98,7 +98,7 @@ const profileValidationRules = {
     validate: (value) => {
       if (!value) return null; // Optional field
       if (!isValidURL(value)) {
-        return 'Please enter a valid website URL';
+        return 'Enter a valid website URL';
       }
       return null;
     },
@@ -108,7 +108,7 @@ const profileValidationRules = {
     validate: (value) => {
       if (!value) return null;
       if (!isValidURL(value)) {
-        return 'Please enter a valid LinkedIn URL';
+        return 'Enter a valid LinkedIn URL';
       }
       return null;
     },
@@ -118,7 +118,7 @@ const profileValidationRules = {
     validate: (value) => {
       if (!value) return null;
       if (!isValidURL(value)) {
-        return 'Please enter a valid GitHub URL';
+        return 'Enter a valid GitHub URL';
       }
       return null;
     },
@@ -128,7 +128,7 @@ const profileValidationRules = {
     validate: (value) => {
       if (!value) return null;
       if (!isValidURL(value)) {
-        return 'Please enter a valid Twitter URL';
+        return 'Enter a valid Twitter URL';
       }
       return null;
     },
@@ -138,7 +138,7 @@ const profileValidationRules = {
     validate: (value) => {
       if (!value) return null;
       if (!isValidURL(value)) {
-        return 'Please enter a valid Facebook URL';
+        return 'Enter a valid Facebook URL';
       }
       return null;
     },
@@ -148,7 +148,7 @@ const profileValidationRules = {
     validate: (value) => {
       if (!value) return null;
       if (!isValidURL(value)) {
-        return 'Please enter a valid YouTube URL';
+        return 'Enter a valid YouTube URL';
       }
       return null;
     },
@@ -158,7 +158,7 @@ const profileValidationRules = {
     validate: (value) => {
       if (!value) return null;
       if (!isValidURL(value)) {
-        return 'Please enter a valid Instagram URL';
+        return 'Enter a valid Instagram URL';
       }
       return null;
     },

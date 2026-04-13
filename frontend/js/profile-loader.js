@@ -217,20 +217,31 @@ function displayExperience(experiences) {
     const startDate = formatDate(exp.from);
     const endDate = exp.current ? 'Now' : formatDate(exp.to);
     const dateRange = `${startDate} - ${endDate}`;
+    const expId = exp.id || Date.now().toString();
+    const currentBadge = exp.current
+      ? '<span class="badge badge-success" style="white-space: nowrap; margin-left: 0.5rem;">Current</span>'
+      : '';
 
     const expDiv = document.createElement('div');
     expDiv.className = 'bg-white p-2 my-1 card';
     expDiv.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: start;">
-        <div>
-          <h4 class="text-primary" style="margin: 0 0 0.25rem 0;">${exp.title || 'Position'}</h4>
+      <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+        <div style="flex: 1;">
+          <h4 class="text-primary" style="margin: 0 0 0.25rem 0;">${exp.title || 'Position'}${currentBadge}</h4>
           <p style="margin: 0 0 0.5rem 0; font-weight: bold;">${exp.company || 'Company'}</p>
           <p style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: #666;">${dateRange}</p>
           ${exp.location ? `<p style="margin: 0; font-size: 0.9rem; color: #666;">${exp.location}</p>` : ''}
+          ${exp.description ? `<p style="margin: 0.5rem 0 0 0; color: #555;">${exp.description}</p>` : ''}
         </div>
-        ${exp.current ? '<span class="badge badge-success" style="white-space: nowrap;">Current</span>' : ''}
+        <div style="display: flex; gap: 0.5rem; white-space: nowrap; flex-direction: column;">
+          <button class="btn btn-primary btn-sm" onclick="editExperienceFromProfile('${expId}')" style="white-space: nowrap;">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="(async () => await deleteExperience('${expId}'))()" style="white-space: nowrap;">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
       </div>
-      ${exp.description ? `<p style="margin: 0.5rem 0 0 0; color: #555;">${exp.description}</p>` : ''}
     `;
     container.appendChild(expDiv);
   });
@@ -262,20 +273,32 @@ function displayEducation(educations) {
     const startDate = formatDate(edu.from);
     const endDate = edu.current ? 'Now' : formatDate(edu.to);
     const dateRange = `${startDate} - ${endDate}`;
+    const eduId = edu.id || Date.now().toString();
+    const currentBadge = edu.current
+      ? '<span class="badge badge-success" style="white-space: nowrap; margin-left: 0.5rem;">Current</span>'
+      : '';
 
     const eduDiv = document.createElement('div');
     eduDiv.className = 'bg-white p-2 my-1 card';
     eduDiv.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: start;">
-        <div>
-          <h4 class="text-primary" style="margin: 0 0 0.25rem 0;">${edu.school || 'School'}</h4>
+      <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+        <div style="flex: 1;">
+          <h4 class="text-primary" style="margin: 0 0 0.25rem 0;">${edu.school || 'School'}${currentBadge}</h4>
           <p style="margin: 0 0 0.5rem 0; font-weight: bold;">${edu.degree || 'Degree'}</p>
           <p style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: #666;">${dateRange}</p>
           ${edu.fieldOfStudy ? `<p style="margin: 0; font-size: 0.9rem; color: #666;"><strong>Field:</strong> ${edu.fieldOfStudy}</p>` : ''}
+          ${edu.fieldofstudy ? `<p style="margin: 0; font-size: 0.9rem; color: #666;"><strong>Field:</strong> ${edu.fieldofstudy}</p>` : ''}
+          ${edu.description ? `<p style="margin: 0.5rem 0 0 0; color: #555;">${edu.description}</p>` : ''}
         </div>
-        ${edu.current ? '<span class="badge badge-success" style="white-space: nowrap;">Current</span>' : ''}
+        <div style="display: flex; gap: 0.5rem; white-space: nowrap; flex-direction: column;">
+          <button class="btn btn-primary btn-sm" onclick="editEducationFromProfile('${eduId}')" style="white-space: nowrap;">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="(async () => await deleteEducation('${eduId}'))()" style="white-space: nowrap;">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
       </div>
-      ${edu.description ? `<p style="margin: 0.5rem 0 0 0; color: #555;">${edu.description}</p>` : ''}
     `;
     container.appendChild(eduDiv);
   });
@@ -379,7 +402,7 @@ async function initializeProfilePage() {
     hideLoadingMessage();
   } catch (error) {
     console.error('Error initializing profile page:', error);
-    showErrorMessage('Failed to load profile. Please try again.');
+    showErrorMessage('Failed to load profile. Try again.');
     // Still hide loading message even on error
     hideLoadingMessage();
   }

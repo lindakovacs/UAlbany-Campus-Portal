@@ -268,8 +268,7 @@ async function sendChatMessage() {
 
     // Show error message
     const errorMessage =
-      error.message ||
-      'Sorry, I encountered an error. Please try again later.';
+      error.message || 'Sorry, I encountered an error. Try again later.';
     addMessageToChat(errorMessage, 'bot');
     saveChatMessage(errorMessage, 'bot');
   } finally {
@@ -336,7 +335,9 @@ async function getBotResponseFromAPI(userMessage) {
   try {
     // Get backend URL from config if available, otherwise construct it
     const backendUrl =
-      typeof CONFIG !== 'undefined' && CONFIG.BACKEND_HOST && CONFIG.BACKEND_PORT
+      typeof CONFIG !== 'undefined' &&
+      CONFIG.BACKEND_HOST &&
+      CONFIG.BACKEND_PORT
         ? `${CONFIG.BACKEND_HOST}:${CONFIG.BACKEND_PORT}`
         : 'http://localhost:3001';
 
@@ -357,15 +358,14 @@ async function getBotResponseFromAPI(userMessage) {
       // Handle 429 Too Many Requests (rate limit)
       if (response.status === 429) {
         throw new Error(
-          '🤖 The AI chatbot is temporarily busy due to high traffic. Please try again in a moment! Visit https://www.albany.edu for more information.',
+          '🤖 The AI chatbot is temporarily busy due to high traffic. Try again in a moment! Visit https://www.albany.edu for more information.',
         );
       }
 
       // Handle other HTTP errors
       const errorData = await response.json().catch(() => ({}));
       throw new Error(
-        errorData.error ||
-          `Server error (${response.status}). Please try again.`,
+        errorData.error || `Server error (${response.status}). Try again.`,
       );
     }
 
@@ -383,7 +383,7 @@ async function getBotResponseFromAPI(userMessage) {
     // If it's a network error, show helpful message
     if (error instanceof TypeError) {
       throw new Error(
-        'Unable to connect to the chat service. Please check your connection and try again.',
+        'Unable to connect to the chat service. Check your connection and try again.',
       );
     }
 
@@ -446,7 +446,7 @@ function getBotResponse(userMessage) {
  *     return data.choices[0].message.content;
  *   } catch (error) {
  *     console.error('API Error:', error);
- *     return 'Sorry, I\'m having trouble connecting. Please try again later.';
+ *     return 'Sorry, I\'m having trouble connecting. Try again later.';
  *   }
  * }
  */

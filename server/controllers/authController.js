@@ -1,6 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { validateEmail, validatePassword, validateName } = require('../utils/validators');
+const {
+  validateEmail,
+  validatePassword,
+  validateName,
+} = require('../utils/validators');
 const {
   ValidationError,
   AuthenticationError,
@@ -17,7 +21,7 @@ const register = async (req, res) => {
       throw new ValidationError('Name must be 2-100 characters');
     }
     if (!validateEmail(email)) {
-      throw new ValidationError('Please provide a valid email');
+      throw new ValidationError('Provide a valid email');
     }
     if (!validatePassword(password)) {
       throw new ValidationError('Password must be at least 8 characters');
@@ -47,17 +51,12 @@ const register = async (req, res) => {
     const userId = result.insertId;
 
     // Auto-create profile for new user
-    await req.db.query(
-      'INSERT INTO profiles (user_id) VALUES (?)',
-      [userId],
-    );
+    await req.db.query('INSERT INTO profiles (user_id) VALUES (?)', [userId]);
 
     // Generate JWT token
-    const token = jwt.sign(
-      { id: userId, email },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRE || '7d' },
-    );
+    const token = jwt.sign({ id: userId, email }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE || '7d',
+    });
 
     res.status(201).json({
       message: 'User registered successfully',
@@ -84,7 +83,7 @@ const login = async (req, res) => {
 
     // Validation
     if (!validateEmail(email)) {
-      throw new ValidationError('Please provide a valid email');
+      throw new ValidationError('Provide a valid email');
     }
     if (!password) {
       throw new ValidationError('Password is required');

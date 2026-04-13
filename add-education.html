@@ -158,6 +158,9 @@
     <!-- Chat Bot Script -->
     <script src="js/chat-bot.js"></script>
 
+    <!-- Profile Management Scripts -->
+    <script src="js/profile-edit.js"></script>
+
     <!-- Form Toggle Script -->
     <script>
       /**
@@ -367,7 +370,7 @@
 
             // Validate required fields
             if (!educationData.school || !educationData.degree) {
-              alert('Please fill in all required fields (School and Degree)');
+              alert('Fill in all required fields (School and Degree)');
               return;
             }
 
@@ -392,7 +395,45 @@
             // Save to localStorage
             try {
               localStorage.setItem('educationList', JSON.stringify(educations));
-              console.log('Education saved:', educationData);
+              console.log('Education saved to localStorage:', educationData);
+
+              // Save to API as well
+              (async () => {
+                try {
+                  const user = JSON.parse(localStorage.getItem('user') || '{}');
+                  const userId = user.id || localStorage.getItem('userId');
+
+                  if (
+                    userId &&
+                    typeof apiClient !== 'undefined' &&
+                    apiClient.education
+                  ) {
+                    // Transform to API format
+                    const apiData = {
+                      school: educationData.school,
+                      degree: educationData.degree,
+                      field_of_study: educationData.fieldofstudy,
+                      from_date: educationData.from,
+                      to_date: educationData.to || null,
+                      current: educationData.current,
+                      description: educationData.description,
+                    };
+
+                    if (editingId) {
+                      await apiClient.education.update(
+                        educationData.id,
+                        apiData,
+                      );
+                      console.log('Education updated in API');
+                    } else {
+                      await apiClient.education.add(apiData);
+                      console.log('Education added to API');
+                    }
+                  }
+                } catch (apiError) {
+                  console.warn('Could not save to API:', apiError);
+                }
+              })();
 
               // Reset form
               form.reset();
@@ -403,7 +444,7 @@
               displaySavedEducations();
             } catch (e) {
               console.error('Error saving education:', e);
-              alert('Error saving education. Please try again.');
+              alert('Error saving education. Try again later.');
             }
           });
         }

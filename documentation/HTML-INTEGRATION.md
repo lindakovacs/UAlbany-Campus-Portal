@@ -551,7 +551,7 @@ try {
     // Redirect to login
     window.location.href = 'login.html';
   } else if (error.status === 429) {
-    showError('Too many requests. Please try again later.');
+    showError('Too many requests. Try again later.');
   } else {
     showError(error.getUniendlyMessage?.() || error.message);
   }

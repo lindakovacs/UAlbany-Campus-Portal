@@ -420,25 +420,57 @@
         return experiences.sort((a, b) => {
           if (a.current && !b.current) return -1;
           if (!a.current && b.current) return 1;
-          const dateA = new Date(a.to || a.from);
-          const dateB = new Date(b.to || b.from);
+          // Handle both API format (from_date/to_date) and localStorage format (from/to)
+          const dateA = new Date(a.to || a.to_date || a.from || a.from_date);
+          const dateB = new Date(b.to || b.to_date || b.from || b.from_date);
           return dateB - dateA;
         });
       }
 
       /**
-       * Populate experience table from localStorage
+       * Populate experience table from API (with localStorage fallback)
        */
-      function populateDashboardExperience() {
+      async function populateDashboardExperience() {
         const tbody = document.getElementById('dashboard-experience-tbody');
         if (!tbody) return;
 
-        let experienceList = JSON.parse(
-          localStorage.getItem('experienceList') || '[]',
-        );
+        let experienceList = [];
+
+        try {
+          // Try to fetch from API first
+          const user = await apiClient.auth.getCurrentUser();
+          console.log('Current user:', user);
+          if (!user || !user.id) {
+            throw new Error('No user ID available');
+          }
+
+          const response = await apiClient.experience.getForUser(user.id);
+          console.log('API response for experience:', response);
+
+          experienceList = Array.isArray(response.data)
+            ? response.data
+            : Array.isArray(response)
+              ? response
+              : [];
+          console.log('Parsed experience list from API:', experienceList);
+        } catch (error) {
+          console.error(
+            'Error loading experience from API, trying localStorage:',
+            error,
+          );
+          // Fallback to localStorage
+          experienceList = JSON.parse(
+            localStorage.getItem('experienceList') || '[]',
+          );
+          console.log(
+            'Using localStorage fallback, experience list:',
+            experienceList,
+          );
+        }
 
         // Sort experiences
         experienceList = sortExperiences(experienceList);
+        console.log('Sorted experience list:', experienceList);
 
         tbody.innerHTML = '';
 
@@ -449,8 +481,11 @@
         }
 
         experienceList.forEach((exp) => {
-          const fromDate = formatDashboardDate(exp.from);
-          const toDate = exp.to ? formatDashboardDate(exp.to) : 'Now';
+          const fromDate = formatDashboardDate(exp.from || exp.from_date);
+          const toDate =
+            exp.to || exp.to_date
+              ? formatDashboardDate(exp.to || exp.to_date)
+              : 'Now';
           const years = `${fromDate} - ${toDate}`;
           const currentBadge = exp.current
             ? '<span class="badge badge-success">Current</span>'
@@ -481,25 +516,57 @@
         return educations.sort((a, b) => {
           if (a.current && !b.current) return -1;
           if (!a.current && b.current) return 1;
-          const dateA = new Date(a.to || a.from);
-          const dateB = new Date(b.to || b.from);
+          // Handle both API format (from_date/to_date) and localStorage format (from/to)
+          const dateA = new Date(a.to || a.to_date || a.from || a.from_date);
+          const dateB = new Date(b.to || b.to_date || b.from || b.from_date);
           return dateB - dateA;
         });
       }
 
       /**
-       * Populate education table from localStorage
+       * Populate education table from API (with localStorage fallback)
        */
-      function populateDashboardEducation() {
+      async function populateDashboardEducation() {
         const tbody = document.getElementById('dashboard-education-tbody');
         if (!tbody) return;
 
-        let educationList = JSON.parse(
-          localStorage.getItem('educationList') || '[]',
-        );
+        let educationList = [];
+
+        try {
+          // Try to fetch from API first
+          const user = await apiClient.auth.getCurrentUser();
+          console.log('Current user:', user);
+          if (!user || !user.id) {
+            throw new Error('No user ID available');
+          }
+
+          const response = await apiClient.education.getForUser(user.id);
+          console.log('API response for education:', response);
+
+          educationList = Array.isArray(response.data)
+            ? response.data
+            : Array.isArray(response)
+              ? response
+              : [];
+          console.log('Parsed education list from API:', educationList);
+        } catch (error) {
+          console.error(
+            'Error loading education from API, trying localStorage:',
+            error,
+          );
+          // Fallback to localStorage
+          educationList = JSON.parse(
+            localStorage.getItem('educationList') || '[]',
+          );
+          console.log(
+            'Using localStorage fallback, education list:',
+            educationList,
+          );
+        }
 
         // Sort educations
         educationList = sortEducations(educationList);
+        console.log('Sorted education list:', educationList);
 
         tbody.innerHTML = '';
 
@@ -510,8 +577,11 @@
         }
 
         educationList.forEach((edu) => {
-          const fromDate = formatDashboardDate(edu.from);
-          const toDate = edu.to ? formatDashboardDate(edu.to) : 'Now';
+          const fromDate = formatDashboardDate(edu.from || edu.from_date);
+          const toDate =
+            edu.to || edu.to_date
+              ? formatDashboardDate(edu.to || edu.to_date)
+              : 'Now';
           const years = `${fromDate} - ${toDate}`;
           const currentBadge = edu.current
             ? '<span class="badge badge-success">Current</span>'
@@ -527,7 +597,7 @@
                 <i class="fas fa-edit"></i> Edit
               </button>
               <button class="btn btn-danger btn-sm" onclick="deleteDashboardEducation('${edu.id}')">
-                <i class="fas fa-trash\"></i> Delete
+                <i class="fas fa-trash"></i> Delete
               </button>
             </td>
           `;
@@ -644,7 +714,7 @@
        * Delete experience from dashboard
        * @param {string} expId - Experience ID
        */
-      function deleteDashboardExperience(expId) {
+      async function deleteDashboardExperience(expId) {
         if (!confirm('Are you sure you want to delete this experience?'))
           return;
 
@@ -654,14 +724,14 @@
         experiences = experiences.filter((exp) => exp.id !== expId);
         localStorage.setItem('experienceList', JSON.stringify(experiences));
 
-        populateDashboardExperience();
+        await populateDashboardExperience();
       }
 
       /**
        * Delete education from dashboard
        * @param {string} eduId - Education ID
        */
-      function deleteDashboardEducation(eduId) {
+      async function deleteDashboardEducation(eduId) {
         if (!confirm('Are you sure you want to delete this education?')) return;
 
         let educations = JSON.parse(
@@ -670,7 +740,7 @@
         educations = educations.filter((edu) => edu.id !== eduId);
         localStorage.setItem('educationList', JSON.stringify(educations));
 
-        populateDashboardEducation();
+        await populateDashboardEducation();
       }
 
       // Populate tables and load bio, skills, and social links when page loads
@@ -695,12 +765,12 @@
             }
 
             // Load local profile data for supporting UI
-            setTimeout(function () {
+            setTimeout(async function () {
               loadDashboardBio();
               loadDashboardSkills();
               loadDashboardSocial();
-              populateDashboardExperience();
-              populateDashboardEducation();
+              await populateDashboardExperience();
+              await populateDashboardEducation();
 
               // Hide loading, show content
               if (loadingDiv) loadingDiv.style.display = 'none';
@@ -708,15 +778,15 @@
             }, 200);
           } catch (error) {
             console.error('Error loading dashboard:', error);
-            showErrorMessage('Failed to load dashboard. Please try again.');
+            showErrorMessage('Failed to load dashboard. Try again.');
 
             // Still try to show content with local data
-            setTimeout(function () {
+            setTimeout(async function () {
               loadDashboardBio();
               loadDashboardSkills();
               loadDashboardSocial();
-              populateDashboardExperience();
-              populateDashboardEducation();
+              await populateDashboardExperience();
+              await populateDashboardEducation();
 
               if (loadingDiv) loadingDiv.style.display = 'none';
               if (contentDiv) contentDiv.style.display = 'block';

@@ -55,13 +55,13 @@ Result: Chatbot responds with intelligent AI answer
 ```
 API Error 429 (Rate Limit) → 
 "🤖 The AI chatbot is temporarily busy due to high traffic. 
-Please try again in a moment!"
+Try again in a moment!"
 
 Other API Errors →
 Fall back to mock responses automatically
 
 Network Error →
-"Unable to connect to the chat service. Please try again."
+"Unable to connect to the chat service. Try again later."
 ```
 
 ## Setup Instructions
