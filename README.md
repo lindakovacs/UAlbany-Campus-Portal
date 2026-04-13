@@ -393,6 +393,7 @@ To enable the real Gemini API with advanced AI responses:
 ### Rate Limiting & Quotas
 
 **Gemini 2.5 Flash-Lite (Free Tier):**
+
 - ✅ **1,000 requests per day** - Perfect for a small student team
 - ✅ **No credit card required**
 - ✅ No rate limits during development
@@ -416,7 +417,7 @@ Request Flow:
 **What happens if rate limit (429) is reached?:**
 
 ```
-User sees: "🤖 The AI chatbot is temporarily busy due to high traffic. 
+User sees: "🤖 The AI chatbot is temporarily busy due to high traffic.
 Please try again in a moment! Visit https://www.albany.edu for more info."
 ```
 
@@ -466,13 +467,147 @@ The chatbot is automatically integrated into HTML pages via `js/chat-bot.js`:
 ```
 
 **Features:**
+
 - 💬 Floating chat bubble in corner
 - 📱 Mobile-responsive interface
 - ♿ WCAG AA accessibility compliant
 - 🔒 Secure (API key stored on backend only)
 - 💾 Chat history saved to localStorage
 
-## Frontend API Testing
+## Frontend API Client Helper
+
+The frontend includes a modern **API Client Helper** ([frontend/js/api-client.js](frontend/js/api-client.js)) that simplifies integrating the backend API into HTML pages.
+
+### APIClient Class
+
+The `APIClient` class provides a clean, organized interface for all API operations:
+
+```javascript
+// Global instance automatically created
+apiClient.auth.login(credentials);
+apiClient.profiles.get(userId);
+apiClient.posts.create(postData);
+apiClient.comments.getForPost(postId);
+// ... and many more
+```
+
+### Features
+
+- ✅ **Automatic token management** - JWT tokens automatically added to requests
+- ✅ **Error handling** - Built-in error catching and user-friendly messages
+- ✅ **Loading states** - Visual feedback during API calls
+- ✅ **Organized API calls** - Methods grouped by resource (auth, profiles, posts, etc.)
+- ✅ **Async/await support** - Modern Promise-based API
+- ✅ **Response validation** - Automatic response parsing and error detection
+
+### Quick Start
+
+1. **Include the API client in your HTML:**
+
+   ```html
+   <script src="frontend/config.js"></script>
+   <script src="js/api-client.js"></script>
+   ```
+
+2. **Use in your JavaScript:**
+
+   ```javascript
+   // Register user
+   const user = await apiClient.auth.register({
+     name: 'John Doe',
+     email: 'john@example.com',
+     password: 'password123',
+     passwordConfirm: 'password123',
+   });
+
+   // Get profiles
+   const profiles = await apiClient.profiles.getAll(1, 20);
+
+   // Create post
+   const post = await apiClient.posts.create({
+     content: 'Hello everyone!',
+   });
+
+   // Add comment
+   const comment = await apiClient.comments.create(postId, {
+     content: 'Great post!',
+   });
+   ```
+
+3. **Handle errors:**
+
+   ```javascript
+   try {
+     const result = await apiClient.auth.login(credentials);
+   } catch (error) {
+     console.error(error.status); // Error code (401, 429, 500, etc.)
+     console.error(error.message); // Error message
+     console.error(error.getUniendlyMessage()); // User-friendly message
+   }
+   ```
+
+### UI Helpers
+
+Show loading indicators and alerts:
+
+```javascript
+// Show loading spinner
+showLoader('container-id');
+
+// Hide loading spinner
+hideLoader();
+
+// Show error alert
+showError('Something went wrong!');
+
+// Show success alert
+showSuccess('Operation completed!');
+```
+
+### Form Integration Example
+
+```html
+<form id="login-form">
+  <input type="email" name="email" required />
+  <input type="password" name="password" required />
+  <button type="submit">Login</button>
+  <div id="form-alerts"></div>
+</form>
+
+<script>
+  document
+    .getElementById('login-form')
+    .addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const credentials = Object.fromEntries(formData);
+
+      try {
+        await apiClient.auth.login(credentials);
+        showSuccess('Logged in successfully!');
+        // Redirect to dashboard
+      } catch (error) {
+        showError(error.message);
+      }
+    });
+</script>
+```
+
+### Complete Documentation
+
+For comprehensive integration guide including:
+
+- HTML structure for API-ready pages
+- Form binding patterns
+- Component examples (profile cards, post lists, comments)
+- Error handling strategies
+- Loading state management
+- And more...
+
+See: **[HTML-INTEGRATION.md](HTML-INTEGRATION.md)**
+
+## Frontend API Testing (Legacy)
 
 Test the API directly from your browser without using Postman. The frontend includes a comprehensive testing interface that connects to your backend and database.
 

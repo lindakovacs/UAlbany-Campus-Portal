@@ -33,6 +33,10 @@
         .then((response) => response.text())
         .then((html) => {
           document.getElementById('navbar-container').innerHTML = html;
+          // Update navbar auth state after navbar is loaded
+          if (typeof updateNavbarAuth === 'function') {
+            updateNavbarAuth();
+          }
         })
         .catch((error) => console.error('Error loading navbar:', error));
     </script>
@@ -129,6 +133,9 @@
     <!-- Accessibility Features Scripts -->
     <script src="js/accessibility.js"></script>
     <script src="js/accessibility-ui.js"></script>
+
+    <!-- Navbar Authentication Handler -->
+    <script src="js/navbar-auth.js"></script>
 
     <!-- Chat Bot Script -->
     <script src="js/chat-bot.js"></script>

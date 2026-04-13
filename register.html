@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="css/dark-mode.css" />
     <link rel="stylesheet" href="css/chat-bot.css" />
     <title>Welcome To UAlbany Campus - Register</title>
+    <!-- API Configuration -->
+    <script src="frontend/config.js"></script>
   </head>
   <body>
     <!-- top anchor for Back-to-Top -->
@@ -32,6 +34,10 @@
         .then((response) => response.text())
         .then((html) => {
           document.getElementById('navbar-container').innerHTML = html;
+          // Update navbar auth state after navbar is loaded
+          if (typeof updateNavbarAuth === 'function') {
+            updateNavbarAuth();
+          }
         })
         .catch((error) => console.error('Error loading navbar:', error));
     </script>
@@ -39,12 +45,31 @@
       <section class="container">
         <h1 class="large text-primary">Sign Up</h1>
         <p class="lead"><i class="fas fa-user"></i> Create Your Account</p>
-        <form class="form" action="create-profile.html">
+        <div id="form-alerts"></div>
+        <form
+          class="form"
+          id="register-form"
+          data-api-endpoint="/auth/register"
+        >
           <div class="form-group">
-            <input type="text" placeholder="Name" name="name" required />
+            <input
+              type="text"
+              placeholder="Name"
+              name="name"
+              id="name"
+              required
+              aria-label="Full name"
+            />
           </div>
           <div class="form-group">
-            <input type="email" placeholder="Email Address" name="email" />
+            <input
+              type="email"
+              placeholder="Email Address"
+              name="email"
+              id="email"
+              required
+              aria-label="Email address"
+            />
             <small class="form-text"
               >This site uses Gravatar so if you want a profile image, use a
               Gravatar email</small
@@ -55,18 +80,29 @@
               type="password"
               placeholder="Password"
               name="password"
+              id="password"
               minlength="6"
+              required
+              aria-label="Password"
             />
           </div>
           <div class="form-group">
             <input
               type="password"
               placeholder="Confirm Password"
-              name="password2"
+              name="passwordConfirm"
+              id="passwordConfirm"
               minlength="6"
+              required
+              aria-label="Confirm password"
             />
           </div>
-          <input type="submit" class="btn btn-primary" value="Register" />
+          <input
+            type="submit"
+            class="btn btn-primary"
+            value="Register"
+            id="register-btn"
+          />
         </form>
         <p class="my-1">
           Already have an account? <a href="login.html">Sign In</a>
@@ -86,9 +122,56 @@
     <!-- Form Validation Script -->
     <script src="js/form-validation.js"></script>
 
+    <!-- API Client Helper -->
+    <script src="frontend/js/api-client.js"></script>
+
+    <!-- Register Form Handler -->
+    <script>
+      document
+        .getElementById('register-form')
+        .addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const alertsDiv = document.getElementById('form-alerts');
+          alertsDiv.innerHTML = '';
+
+          try {
+            const formData = new FormData(form);
+            const userData = {
+              name: formData.get('name'),
+              email: formData.get('email'),
+              password: formData.get('password'),
+              passwordConfirm: formData.get('passwordConfirm'),
+            };
+
+            const response = await apiClient.auth.register(userData);
+
+            // Show success message
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-success';
+            alert.innerHTML = `<strong>Success!</strong> Registration successful! Redirecting to dashboard...`;
+            alertsDiv.appendChild(alert);
+
+            // Redirect after 2 seconds
+            setTimeout(() => {
+              window.location.href = 'dashboard.html';
+            }, 2000);
+          } catch (error) {
+            // Show error message
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-danger';
+            alert.innerHTML = `<strong>Error:</strong> ${error.message}`;
+            alertsDiv.appendChild(alert);
+          }
+        });
+    </script>
+
     <!-- Accessibility Features Scripts -->
     <script src="js/accessibility.js"></script>
     <script src="js/accessibility-ui.js"></script>
+
+    <!-- Navbar Authentication Handler -->
+    <script src="js/navbar-auth.js"></script>
 
     <!-- Chat Bot Script -->
     <script src="js/chat-bot.js"></script>
