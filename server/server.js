@@ -13,6 +13,7 @@ const profilesExperienceRoutes = require('./routes/profilesExperience');
 const educationRoutes = require('./routes/education');
 const experienceRoutes = require('./routes/experience');
 const postRoutes = require('./routes/posts');
+const likeRoutes = require('./routes/likes');
 const { ApiError } = require('./utils/errors');
 
 // Middleware
@@ -83,7 +84,8 @@ app.use('/api/profiles', profilesExperienceRoutes); // More specific: /:userId/e
 app.use('/api/profiles', profileRoutes); // General: / and /:userId
 app.use('/api/education', educationRoutes);
 app.use('/api/experience', experienceRoutes);
-app.use('/api/posts', postRoutes);
+app.use('/api/posts', likeRoutes); // Like endpoints: /:postId/like, /:postId/likes
+app.use('/api/posts', postRoutes); // Post CRUD endpoints: /, /:postId, etc.
 
 // Error handler middleware
 app.use((err, req, res, next) => {

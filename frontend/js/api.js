@@ -797,6 +797,123 @@ async function apiDeletePost(postId) {
   }
 }
 
+/**
+ * Toggle like on post (like if not liked, unlike if already liked)
+ * @param {number} postId - Post ID
+ * @returns {Promise<Object>} - {status, message, data: {liked}}
+ */
+async function apiToggleLike(postId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts/${postId}/like`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log(`✅ ${data.data.liked ? 'Liked' : 'Unliked'} post`);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Toggle like error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get like count for a post
+ * @param {number} postId - Post ID
+ * @returns {Promise<Object>} - {status, data: {like_count}}
+ */
+async function apiGetLikeCount(postId) {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/posts/${postId}/likes/count`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log(`✅ Post likes: ${data.data.like_count}`);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Get like count error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get list of users who liked a post
+ * @param {number} postId - Post ID
+ * @param {number} limit - Max users to return (default: 10, max: 100)
+ * @returns {Promise<Object>} - {status, data: [{id, name, email, created_at}]}
+ */
+async function apiGetLikesList(postId, limit = 10) {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/posts/${postId}/likes?limit=${limit}`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log(`✅ Likes list: ${data.data.length} users`);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Get likes list error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Check if current user liked a post
+ * @param {number} postId - Post ID
+ * @returns {Promise<Object>} - {status, data: {liked}}
+ */
+async function apiCheckIfLiked(postId) {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/posts/${postId}/likes/check`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(getToken() && { Authorization: `Bearer ${getToken()}` }),
+        },
+      },
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log(`✅ Post ${data.data.liked ? 'is' : 'is not'} liked`);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Check if liked error:', error);
+    throw error;
+  }
+}
+
 // ============================================
 // Utility Functions
 // ============================================

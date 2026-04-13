@@ -9,6 +9,8 @@
 
 const CONFIG = {
   // Matches SERVER FRONTEND_URL (.env) - Backend's allowed CORS origin
+  // Production: http://localhost:3000
+  // Development (Live Server): http://127.0.0.1:5500
   FRONTEND_URL: 'http://localhost:3000',
 
   // Backend server connection

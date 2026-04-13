@@ -28,19 +28,28 @@ const getPosts = async (req, res, next) => {
       'SELECT COUNT(*) as total FROM posts',
     );
 
-    // Get paginated posts with user info
+    // Get paginated posts with user info and like count
     const [posts] = await pool.query(
-      `SELECT p.id, p.user_id, u.name, u.email, p.text as content, p.created_at
+      `SELECT p.id, p.user_id, u.name, u.email, p.text as content, p.created_at,
+              COUNT(l.id) as like_count
        FROM posts p
        JOIN users u ON p.user_id = u.id
+       LEFT JOIN likes l ON p.id = l.post_id
+       GROUP BY p.id, p.user_id, u.name, u.email, p.text, p.created_at
        ORDER BY p.created_at DESC
        LIMIT ? OFFSET ?`,
       [parseInt(limit), parseInt(offset)],
     );
 
+    // Convert like_count to integer
+    const formattedPosts = posts.map((post) => ({
+      ...post,
+      like_count: parseInt(post.like_count),
+    }));
+
     res.status(200).json({
       status: 'success',
-      data: posts,
+      data: formattedPosts,
       pagination: {
         total,
         page: parseInt(page),
@@ -68,10 +77,13 @@ const getPost = async (req, res, next) => {
 
     const pool = req.db;
     const [post] = await pool.query(
-      `SELECT p.id, p.user_id, u.name, u.email, p.text as content, p.created_at
+      `SELECT p.id, p.user_id, u.name, u.email, p.text as content, p.created_at,
+              COUNT(l.id) as like_count
        FROM posts p
        JOIN users u ON p.user_id = u.id
-       WHERE p.id = ?`,
+       LEFT JOIN likes l ON p.id = l.post_id
+       WHERE p.id = ?
+       GROUP BY p.id, p.user_id, u.name, u.email, p.text, p.created_at`,
       [postId],
     );
 
@@ -79,9 +91,14 @@ const getPost = async (req, res, next) => {
       throw new NotFoundError('Post not found');
     }
 
+    const postData = {
+      ...post[0],
+      like_count: parseInt(post[0].like_count),
+    };
+
     res.status(200).json({
       status: 'success',
-      data: post[0],
+      data: postData,
     });
   } catch (error) {
     next(error);

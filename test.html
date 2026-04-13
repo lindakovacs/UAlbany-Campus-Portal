@@ -161,6 +161,21 @@
       <h3>21. Delete Post</h3>
       <code>apiDeletePost(1)</code>
 
+      <h3>22. Toggle Like on Post</h3>
+      <code>apiToggleLike(1)</code>
+
+      <h3>23. Get Like Count for Post</h3>
+      <code>apiGetLikeCount(1)</code>
+
+      <h3>24. Get List of Users Who Liked Post</h3>
+      <code>apiGetLikesList(1, 5)</code>
+
+      <h3>25. Check If Current User Liked Post</h3>
+      <code>apiCheckIfLiked(1)</code>
+
+      <h3>26. View Posts with Like Counts</h3>
+      <code>apiGetPosts(1, 10)</code>
+
       <hr />
       <p>
         <strong>Backend Status:</strong>
@@ -243,6 +258,12 @@
           'apiCreatePost',
           'apiUpdatePost',
           'apiDeletePost',
+        ],
+        likes: [
+          'apiToggleLike',
+          'apiGetLikeCount',
+          'apiGetLikesList',
+          'apiCheckIfLiked',
         ],
         utils: [
           'getToken',
