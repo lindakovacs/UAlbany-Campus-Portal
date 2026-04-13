@@ -80,39 +80,63 @@
         'password123', passwordConfirm: 'password123' })</code
       >
 
-      <h3>3. Get Current User</h3>
+      <h3>3. Login (Optional - if already registered)</h3>
+      <code
+        >apiLogin({ email: 'test@example.com', password: 'password123' })</code
+      >
+
+      <h3>4. Get Current User</h3>
       <code>apiGetCurrentUser()</code>
 
-      <h3>4. List All Profiles</h3>
+      <h3>5. List All Profiles</h3>
       <code>apiListProfiles(1, 10)</code>
 
-      <h3>5. Update Your Profile</h3>
+      <h3>6. Update Your Profile</h3>
       <code
         >apiUpdateProfile(1, { bio: 'Hello! I\'m a test user', skills:
         ['JavaScript', 'React', 'Node.js'] })</code
       >
 
-      <h3>6. Add Education</h3>
+      <h3>7. Get Education (Nested under Profiles)</h3>
+      <code>apiGetProfileEducation(1)</code>
+
+      <h3>8. Add Education (Nested under Profiles)</h3>
       <code
-        >apiAddEducation(1, { school: 'University of Albany', degree: 'Bachelor
-        of Science', field_of_study: 'Computer Science', from_date:
+        >apiAddProfileEducation({ school: 'University of Albany', degree:
+        'Bachelor of Science', field_of_study: 'Computer Science', from_date:
         '2020-09-01', to_date: '2024-05-31' })</code
       >
 
-      <h3>7. Get Education</h3>
+      <h3>9. Delete Education (Nested under Profiles)</h3>
+      <code>apiDeleteProfileEducation(1)</code>
+
+      <h3>10. Get Education (Alternative Route)</h3>
       <code>apiGetEducation(1)</code>
 
-      <h3>8. Add Experience</h3>
+      <h3>11. Get Experience (Nested under Profiles)</h3>
+      <code>apiGetProfileExperience(1)</code>
+
+      <h3>12. Add Experience (Nested under Profiles)</h3>
+      <code
+        >apiAddProfileExperience({ company: 'Tech Company Inc', title: 'Software
+        Developer', location: 'New York, NY', from_date: '2024-06-01', current:
+        true })</code
+      >
+
+      <h3>13. Delete Experience (Nested under Profiles)</h3>
+      <code>apiDeleteProfileExperience(1)</code>
+
+      <h3>14. Add Experience (Alternative Route)</h3>
       <code
         >apiAddExperience(1, { company: 'Tech Company Inc', title: 'Software
         Developer', location: 'New York, NY', from_date: '2024-06-01', current:
         true })</code
       >
 
-      <h3>9. Get Experience</h3>
+      <h3>15. Get Experience (Alternative Route)</h3>
       <code>apiGetExperience(1)</code>
 
-      <h3>10. Logout</h3>
+      <h3>16. Logout</h3>
       <code>apiLogout()</code>
 
       <hr />
@@ -169,6 +193,16 @@
       console.log('Available functions:', {
         auth: ['apiRegister', 'apiLogin', 'apiGetCurrentUser', 'apiLogout'],
         profiles: ['apiListProfiles', 'apiGetProfile', 'apiUpdateProfile'],
+        profilesEducation: [
+          'apiGetProfileEducation',
+          'apiAddProfileEducation',
+          'apiDeleteProfileEducation',
+        ],
+        profilesExperience: [
+          'apiGetProfileExperience',
+          'apiAddProfileExperience',
+          'apiDeleteProfileExperience',
+        ],
         education: [
           'apiGetEducation',
           'apiAddEducation',

@@ -229,6 +229,99 @@ async function apiUpdateProfile(userId, profileData) {
 }
 
 // ============================================
+// Profiles Education Endpoints (Nested)
+// ============================================
+
+/**
+ * Get user's education history (nested under profiles)
+ * @param {number} userId - User ID
+ * @returns {Promise<Object>} - {status, data}
+ */
+async function apiGetProfileEducation(userId) {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/profiles/${userId}/education`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Education fetched:', data.data.length, 'entries');
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Get education error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Add education entry for authenticated user (nested under profiles)
+ * @param {Object} educationData - {school, degree, field_of_study, from_date, to_date, current, description}
+ * @returns {Promise<Object>} - {status, message, data}
+ */
+async function apiAddProfileEducation(educationData) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/profiles/education`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify(educationData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Education added:', data.data);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Add education error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Delete education entry (nested under profiles, owner only)
+ * @param {number} eduId - Education ID
+ * @returns {Promise<Object>} - {status, message}
+ */
+async function apiDeleteProfileEducation(eduId) {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/profiles/education/${eduId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      },
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Education deleted');
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Delete education error:', error);
+    throw error;
+  }
+}
+
+// ============================================
 // Education Endpoints
 // ============================================
 
@@ -343,6 +436,99 @@ async function apiDeleteEducation(educationId) {
     }
   } catch (error) {
     console.error('❌ Delete education error:', error);
+    throw error;
+  }
+}
+
+// ============================================
+// Profiles Experience Endpoints (Nested)
+// ============================================
+
+/**
+ * Get user's work experience (nested under profiles)
+ * @param {number} userId - User ID
+ * @returns {Promise<Object>} - {status, data}
+ */
+async function apiGetProfileExperience(userId) {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/profiles/${userId}/experience`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Experience fetched:', data.data.length, 'entries');
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Get experience error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Add experience entry for authenticated user (nested under profiles)
+ * @param {Object} experienceData - {company, title, location, from_date, to_date, current, description}
+ * @returns {Promise<Object>} - {status, message, data}
+ */
+async function apiAddProfileExperience(experienceData) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/profiles/experience`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify(experienceData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Experience added:', data.data);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Add experience error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Delete experience entry (nested under profiles, owner only)
+ * @param {number} expId - Experience ID
+ * @returns {Promise<Object>} - {status, message}
+ */
+async function apiDeleteProfileExperience(expId) {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/profiles/experience/${expId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      },
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Experience deleted');
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Delete experience error:', error);
     throw error;
   }
 }

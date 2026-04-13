@@ -79,8 +79,6 @@ Deployed Static Webapp via [GitHub Pages](https://lindakovacs.github.io/UAlbany-
 
 ### Verify Everything is Running
 
-### Verify Everything is Running
-
 - Frontend: Open browser and visit `http://localhost:3000` (or `http://127.0.0.1:5500`)
 - Backend: Open DevTools (F12) and in Console run: `apiGetCurrentUser()` (should show error if not logged in - that's normal)
 - Load modules: Include `<script src="config.js"></script>` and `<script src="js/api.js"></script>` in your HTML file
@@ -254,7 +252,13 @@ The project includes a centralized API utility module (`frontend/js/api.js`) for
 - `apiGetProfile(userId)` - Get specific profile
 - `apiUpdateProfile(userId, profileData)` - Update profile
 
-**Education:**
+**Profiles Education (Nested):**
+
+- `apiGetProfileEducation(userId)` - Get user's education history
+- `apiAddProfileEducation(educationData)` - Add education entry (for authenticated user)
+- `apiDeleteProfileEducation(eduId)` - Delete education entry (owner only)
+
+**Education (Alternative routes):**
 
 - `apiGetEducation(userId)` - Get user's education history
 - `apiAddEducation(userId, educationData)` - Add education entry
@@ -592,6 +596,90 @@ The backend API runs on `http://localhost:3001` during development. Below are al
   - `401` - Missing token or unauthorized user (not profile owner)
   - `404` - Profile not found
   - `400` - Invalid user ID or invalid data
+
+#### Education Endpoints (Nested under Profiles)
+
+**GET /api/profiles/:userId/education** - Get user's education history
+
+- **URL:** `http://localhost:3001/api/profiles/1/education`
+- **Method:** GET
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "data": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "school": "University of Albany",
+        "degree": "Bachelor of Science",
+        "field_of_study": "Computer Science",
+        "from_date": "2020-09-01",
+        "to_date": "2024-05-31",
+        "current": false,
+        "description": "Completed coursework in algorithms and software engineering",
+        "created_at": "2026-04-12T10:30:00Z"
+      }
+    ]
+  }
+  ```
+
+**POST /api/profiles/education** - Add education entry (Protected)
+
+- **URL:** `http://localhost:3001/api/profiles/education`
+- **Method:** POST
+- **Headers:**
+  - `Content-Type: application/json`
+  - `Authorization: Bearer <your_jwt_token>`
+- **Body (JSON):**
+  ```json
+  {
+    "school": "University of Albany",
+    "degree": "Bachelor of Science",
+    "field_of_study": "Computer Science",
+    "from_date": "2020-09-01",
+    "to_date": "2024-05-31",
+    "current": false,
+    "description": "Completed coursework in algorithms and software engineering"
+  }
+  ```
+- **Expected Response (201):**
+  ```json
+  {
+    "status": "success",
+    "message": "Education entry added successfully",
+    "data": {
+      "id": 1,
+      "user_id": 1,
+      "school": "University of Albany",
+      "degree": "Bachelor of Science",
+      "field_of_study": "Computer Science",
+      "from_date": "2020-09-01",
+      "to_date": "2024-05-31",
+      "current": false,
+      "description": "Completed coursework in algorithms and software engineering"
+    }
+  }
+  ```
+- **Error Cases:**
+  - `401` - Missing token or not authenticated
+  - `400` - Missing required fields (school, degree, from_date)
+
+**DELETE /api/profiles/education/:eduId** - Delete education entry (Protected, owner only)
+
+- **URL:** `http://localhost:3001/api/profiles/education/1`
+- **Method:** DELETE
+- **Headers:** `Authorization: Bearer <your_jwt_token>`
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "message": "Education entry deleted successfully"
+  }
+  ```
+- **Error Cases:**
+  - `401` - Missing token or not owner
+  - `404` - Education entry not found
 
 #### Education Endpoints
 

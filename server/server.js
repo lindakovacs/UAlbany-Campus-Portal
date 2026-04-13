@@ -8,6 +8,8 @@ const dbMiddleware = require('./middleware/db');
 const pool = require('./config/db');
 const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profiles');
+const profilesEducationRoutes = require('./routes/profilesEducation');
+const profilesExperienceRoutes = require('./routes/profilesExperience');
 const educationRoutes = require('./routes/education');
 const experienceRoutes = require('./routes/experience');
 const { ApiError } = require('./utils/errors');
@@ -76,6 +78,8 @@ app.get('/api/health', async (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profiles', profileRoutes);
+app.use('/api/profiles', profilesEducationRoutes);
+app.use('/api/profiles', profilesExperienceRoutes);
 app.use('/api/education', educationRoutes);
 app.use('/api/experience', experienceRoutes);
 // app.use('/api/posts', postRoutes);
