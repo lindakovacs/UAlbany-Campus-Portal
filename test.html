@@ -177,6 +177,32 @@
       <code>apiGetPosts(1, 10)</code>
 
       <hr />
+
+      <h2>Comments Management:</h2>
+
+      <h3>27. Get All Comments on Post (Paginated)</h3>
+      <code>apiGetPostComments(1, 1, 20)</code>
+
+      <h3>28. Get Specific Comment</h3>
+      <code>apiGetComment(1)</code>
+
+      <h3>29. Create New Comment</h3>
+      <code>
+        apiCreateComment(1, { content: 'Great post! Thanks for sharing.' })
+      </code>
+
+      <h3>30. Update Comment</h3>
+      <code>
+        apiUpdateComment(1, { content: 'Updated comment with new thoughts.' })
+      </code>
+
+      <h3>31. Delete Comment</h3>
+      <code>apiDeleteComment(1)</code>
+
+      <h3>32. Get Comment Count for Post</h3>
+      <code>apiGetCommentCount(1)</code>
+
+      <hr />
       <p>
         <strong>Backend Status:</strong>
         <span id="backend-status">Checking...</span>
@@ -264,6 +290,14 @@
           'apiGetLikeCount',
           'apiGetLikesList',
           'apiCheckIfLiked',
+        ],
+        comments: [
+          'apiGetPostComments',
+          'apiGetComment',
+          'apiCreateComment',
+          'apiUpdateComment',
+          'apiDeleteComment',
+          'apiGetCommentCount',
         ],
         utils: [
           'getToken',

@@ -288,6 +288,15 @@ The project includes a centralized API utility module (`frontend/js/api.js`) for
 - `apiGetLikesList(postId, limit)` - Get list of users who liked post
 - `apiCheckIfLiked(postId)` - Check if current user liked post
 
+**Comments:**
+
+- `apiGetPostComments(postId, page, limit)` - Get all comments for a post (paginated)
+- `apiGetComment(commentId)` - Get specific comment by ID
+- `apiCreateComment(postId, commentData)` - Create new comment (protected)
+- `apiUpdateComment(commentId, commentData)` - Update comment (protected, owner only)
+- `apiDeleteComment(commentId)` - Delete comment (protected, owner only)
+- `apiGetCommentCount(postId)` - Get comment count for post
+
 **Utilities:**
 
 - `configureBackend(port, host)` - Configure backend server connection (call before API requests if on different port/host)

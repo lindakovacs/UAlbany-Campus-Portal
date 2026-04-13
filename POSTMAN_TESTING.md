@@ -702,6 +702,164 @@ The backend API runs on `http://localhost:3001` during development. Below are al
   ```
 - **Note:** Returns `liked: false` if not authenticated
 
+## Comments Endpoints
+
+**GET /api/posts/:postId/comments** - Get all comments for a post (Paginated)
+
+- **URL:** `http://localhost:3001/api/posts/1/comments?page=1&limit=20`
+- **Method:** GET
+- **Query Parameters:**
+  - `page` (optional, default: 1) - Page number
+  - `limit` (optional, default: 20, max: 100) - Comments per page
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "data": [
+      {
+        "id": 1,
+        "post_id": 1,
+        "user_id": 2,
+        "name": "Jane Smith",
+        "email": "jane@example.com",
+        "content": "Great post! I really enjoyed reading this.",
+        "created_at": "2026-04-12T12:00:00Z",
+        "updated_at": "2026-04-12T12:00:00Z"
+      }
+    ],
+    "pagination": {
+      "total": 5,
+      "page": 1,
+      "limit": 20,
+      "pages": 1
+    }
+  }
+  ```
+- **Error Cases:**
+  - `404` - Post not found
+
+**POST /api/posts/:postId/comments** - Add comment to post (Protected)
+
+- **URL:** `http://localhost:3001/api/posts/1/comments`
+- **Method:** POST
+- **Headers:**
+  - `Content-Type: application/json`
+  - `Authorization: Bearer <your_jwt_token>`
+- **Body (JSON):**
+  ```json
+  {
+    "content": "Great post! I really enjoyed reading this."
+  }
+  ```
+- **Expected Response (201):**
+  ```json
+  {
+    "status": "success",
+    "message": "Comment added successfully",
+    "data": {
+      "id": 1,
+      "post_id": 1,
+      "user_id": 2,
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "content": "Great post! I really enjoyed reading this.",
+      "created_at": "2026-04-12T12:00:00Z"
+    }
+  }
+  ```
+- **Error Cases:**
+  - `401` - Missing token or not authenticated
+  - `404` - Post not found
+  - `400` - Missing content or content exceeds 1000 characters
+
+**GET /api/comments/:commentId** - Get specific comment
+
+- **URL:** `http://localhost:3001/api/comments/1`
+- **Method:** GET
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "data": {
+      "id": 1,
+      "post_id": 1,
+      "user_id": 2,
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "content": "Great post! I really enjoyed reading this.",
+      "created_at": "2026-04-12T12:00:00Z",
+      "updated_at": "2026-04-12T12:00:00Z"
+    }
+  }
+  ```
+- **Error Cases:**
+  - `404` - Comment not found
+
+**PUT /api/comments/:commentId** - Update comment (Protected, owner only)
+
+- **URL:** `http://localhost:3001/api/comments/1`
+- **Method:** PUT
+- **Headers:**
+  - `Content-Type: application/json`
+  - `Authorization: Bearer <your_jwt_token>`
+- **Body (JSON):**
+  ```json
+  {
+    "content": "Updated comment with new information."
+  }
+  ```
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "message": "Comment updated successfully",
+    "data": {
+      "id": 1,
+      "post_id": 1,
+      "user_id": 2,
+      "content": "Updated comment with new information.",
+      "updated_at": "2026-04-12T12:30:00Z"
+    }
+  }
+  ```
+- **Error Cases:**
+  - `401` - Missing token or not comment owner
+  - `404` - Comment not found
+  - `400` - Missing content or content exceeds 1000 characters
+
+**DELETE /api/comments/:commentId** - Delete comment (Protected, owner only)
+
+- **URL:** `http://localhost:3001/api/comments/1`
+- **Method:** DELETE
+- **Headers:** `Authorization: Bearer <your_jwt_token>`
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "message": "Comment deleted successfully"
+  }
+  ```
+- **Error Cases:**
+  - `401` - Missing token or not comment owner
+  - `404` - Comment not found
+
+**GET /api/posts/:postId/comments/count** - Get comment count for post
+
+- **URL:** `http://localhost:3001/api/posts/1/comments/count`
+- **Method:** GET
+- **Expected Response (200):**
+  ```json
+  {
+    "status": "success",
+    "data": {
+      "post_id": 1,
+      "comment_count": 5
+    }
+  }
+  ```
+- **Error Cases:**
+  - `404` - Post not found
+
 ## Postman Workflow Example
 
 1. **Register a new user:**

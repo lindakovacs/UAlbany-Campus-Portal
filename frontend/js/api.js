@@ -951,6 +951,181 @@ function clearStorage() {
 }
 
 // ============================================
+// Comments Endpoints
+// ============================================
+
+/**
+ * Get all comments for a post (paginated)
+ * @param {number} postId - Post ID
+ * @param {number} page - Page number (default: 1)
+ * @param {number} limit - Comments per page (default: 20, max: 100)
+ * @returns {Promise<Object>} - {status, data, pagination}
+ */
+async function apiGetPostComments(postId, page = 1, limit = 20) {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/posts/${postId}/comments?page=${page}&limit=${limit}`,
+      { method: 'GET' },
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Comments fetched:', data.data.length, 'items');
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Get comments error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get a specific comment by ID
+ * @param {number} commentId - Comment ID
+ * @returns {Promise<Object>} - {status, data}
+ */
+async function apiGetComment(commentId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/comments/${commentId}`, {
+      method: 'GET',
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Comment fetched:', data.data);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Get comment error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Create a new comment on a post (protected)
+ * @param {number} postId - Post ID
+ * @param {Object} commentData - {content}
+ * @returns {Promise<Object>} - {status, message, data}
+ */
+async function apiCreateComment(postId, commentData) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify(commentData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Comment created:', data.data);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Create comment error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Update a comment (protected, owner only)
+ * @param {number} commentId - Comment ID
+ * @param {Object} commentData - {content}
+ * @returns {Promise<Object>} - {status, message, data}
+ */
+async function apiUpdateComment(commentId, commentData) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/comments/${commentId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify(commentData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Comment updated:', data.data);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Update comment error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Delete a comment (protected, owner only)
+ * @param {number} commentId - Comment ID
+ * @returns {Promise<Object>} - {status, message}
+ */
+async function apiDeleteComment(commentId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/comments/${commentId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Comment deleted');
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Delete comment error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get comment count for a post
+ * @param {number} postId - Post ID
+ * @returns {Promise<Object>} - {status, data: {comment_count}}
+ */
+async function apiGetCommentCount(postId) {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/posts/${postId}/comments/count`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log(`✅ Post comments: ${data.data.comment_count}`);
+      return data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('❌ Get comment count error:', error);
+    throw error;
+  }
+}
+
+// ============================================
 // Example Usage in Browser Console
 // ============================================
 

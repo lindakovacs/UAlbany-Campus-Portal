@@ -92,8 +92,16 @@ CREATE TABLE IF NOT EXISTS comments (
   post_id INT NOT NULL,
   text VARCHAR(2000) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
   INDEX idx_post_id (post_id),
   INDEX idx_user_id (user_id)
 );
+
+-- =====================================================
+-- MIGRATION: Add updated_at to comments (if needed)
+-- =====================================================
+-- Uncomment the line below only if you have an existing comments table
+-- without the updated_at column. This will add the column to your existing data.
+-- ALTER TABLE comments ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
