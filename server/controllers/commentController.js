@@ -159,11 +159,12 @@ const createComment = async (req, res, next) => {
       [userId, postId, trimmedContent],
     );
 
-    // Get the created comment with user info
+    // Get the created comment with user info and profile photo
     const [comments] = await pool.query(
-      `SELECT c.id, c.post_id, c.user_id, u.name, u.email, c.text as content, c.created_at
+      `SELECT c.id, c.post_id, c.user_id, u.name, u.email, c.text as content, c.created_at, pr.profile_photo
        FROM comments c
        JOIN users u ON c.user_id = u.id
+       LEFT JOIN profiles pr ON c.user_id = pr.user_id
        WHERE c.id = ?`,
       [result.insertId],
     );

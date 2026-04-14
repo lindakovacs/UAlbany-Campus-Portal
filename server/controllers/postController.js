@@ -28,13 +28,16 @@ const getPosts = async (req, res, next) => {
       'SELECT COUNT(*) as total FROM posts',
     );
 
-    // Get paginated posts with user info and like count
+    // Get paginated posts with user info, like count, and comment count
     const [posts] = await pool.query(
       `SELECT p.id, p.user_id, u.name, u.email, p.text as content, p.created_at,
-              COUNT(l.id) as like_count, pr.profile_photo
+              COUNT(DISTINCT l.id) as like_count,
+              COUNT(DISTINCT c.id) as comment_count,
+              pr.profile_photo
        FROM posts p
        JOIN users u ON p.user_id = u.id
        LEFT JOIN likes l ON p.id = l.post_id
+       LEFT JOIN comments c ON p.id = c.post_id
        LEFT JOIN profiles pr ON p.user_id = pr.user_id
        GROUP BY p.id, p.user_id, u.name, u.email, p.text, p.created_at, pr.profile_photo
        ORDER BY p.created_at DESC
@@ -42,10 +45,11 @@ const getPosts = async (req, res, next) => {
       [parseInt(limit), parseInt(offset)],
     );
 
-    // Convert like_count to integer
+    // Convert counts to integers
     const formattedPosts = posts.map((post) => ({
       ...post,
       like_count: parseInt(post.like_count),
+      comment_count: parseInt(post.comment_count),
     }));
 
     res.status(200).json({
@@ -79,10 +83,13 @@ const getPost = async (req, res, next) => {
     const pool = req.db;
     const [post] = await pool.query(
       `SELECT p.id, p.user_id, u.name, u.email, p.text as content, p.created_at,
-              COUNT(l.id) as like_count, pr.profile_photo
+              COUNT(DISTINCT l.id) as like_count,
+              COUNT(DISTINCT c.id) as comment_count,
+              pr.profile_photo
        FROM posts p
        JOIN users u ON p.user_id = u.id
        LEFT JOIN likes l ON p.id = l.post_id
+       LEFT JOIN comments c ON p.id = c.post_id
        LEFT JOIN profiles pr ON p.user_id = pr.user_id
        WHERE p.id = ?
        GROUP BY p.id, p.user_id, u.name, u.email, p.text, p.created_at, pr.profile_photo`,
@@ -96,6 +103,7 @@ const getPost = async (req, res, next) => {
     const postData = {
       ...post[0],
       like_count: parseInt(post[0].like_count),
+      comment_count: parseInt(post[0].comment_count),
     };
 
     res.status(200).json({

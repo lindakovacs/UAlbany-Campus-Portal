@@ -43,8 +43,10 @@ function formatPostDate(dateStr) {
 async function loadPost() {
   currentPostId = getPostIdFromUrl();
 
+  console.log('Loading post with ID:', currentPostId);
+
   if (!currentPostId) {
-    showErrorMessage('Post ID not found');
+    showErrorMessage('Post ID not found in URL parameters');
     return;
   }
 
@@ -133,15 +135,23 @@ function isCurrentUserAuthor(post) {
  * Load comments for the post
  */
 async function loadComments() {
-  if (!currentPostId) return;
+  if (!currentPostId) {
+    console.error('Cannot load comments: currentPostId is not set', {
+      currentPostId,
+    });
+    return;
+  }
+
+  console.log('Loading comments for post:', currentPostId);
 
   try {
     const response = await apiClient.comments.getForPost(currentPostId, 1, 100);
     const comments = Array.isArray(response) ? response : response.data || [];
 
+    console.log('Comments loaded successfully:', comments);
     displayComments(comments);
   } catch (error) {
-    console.error('Error loading comments:', error);
+    console.error('Error loading comments for post', currentPostId, ':', error);
     const commentsContainer = document.querySelector('.comments');
     if (commentsContainer) {
       commentsContainer.innerHTML =
@@ -158,9 +168,8 @@ function displayComments(comments) {
   const commentsContainer = document.querySelector('.comments');
   if (!commentsContainer) return;
 
-  // Clear existing comments (keep the initial structure)
-  const existingComments = commentsContainer.querySelectorAll('.post');
-  existingComments.forEach((c) => c.remove());
+  // Completely clear the container
+  commentsContainer.innerHTML = '';
 
   if (!comments || comments.length === 0) {
     commentsContainer.innerHTML =
@@ -228,16 +237,40 @@ function displayComments(comments) {
  * Handle comment form submission
  */
 function setupCommentForm() {
-  const form = document.querySelector('.post-form form');
-  if (!form) return;
+  // Find the comment form - on post.html there's only one .post-form
+  // which contains the "Leave A Comment" section
+  const postForm = document.querySelector('main > section > .post-form');
 
+  if (!postForm) {
+    console.warn('Comment form container not found');
+    return;
+  }
+
+  const form = postForm.querySelector('form');
+  if (!form) {
+    console.error('Form element not found in post-form');
+    return;
+  }
+
+  const textarea = form.querySelector('textarea');
+  if (!textarea) {
+    console.error('Textarea not found in comment form');
+    return;
+  }
+
+  console.log('Setting up comment form listener');
+
+  // Attach listener directly without cloning
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    console.log('Comment form submitted');
 
-    const textarea = form.querySelector('textarea');
     const commentText = textarea.value.trim();
+    console.log('Comment text:', commentText, 'Length:', commentText.length);
 
-    if (!commentText) {
+    // Only show the error and return if actually empty
+    if (!commentText || commentText.length === 0) {
+      console.log('Validation failed - comment is empty');
       alert('Comment cannot be empty');
       return;
     }
@@ -255,15 +288,22 @@ function setupCommentForm() {
         content: commentText,
       });
 
-      if (response && response.data && response.data.id) {
+      // Check if response has the comment data
+      const commentData = response && (response.data || response);
+      if (commentData && commentData.id) {
         // Clear form
         textarea.value = '';
 
         // Show success message
-        alert('Comment added successfully!');
+        console.log('Comment added successfully');
 
-        // Reload comments
+        // Reload comments to reflect the new comment
         await loadComments();
+      } else {
+        // If no ID in response, throw error
+        throw new Error(
+          'Invalid response from server - no comment ID returned',
+        );
       }
     } catch (error) {
       console.error('Error creating comment:', error);
@@ -368,9 +408,9 @@ function escapeHtml(text) {
  * Initialize post detail page
  */
 document.addEventListener('DOMContentLoaded', async () => {
-  // Setup comment form
-  setupCommentForm();
-
-  // Load post and comments (no auth required for viewing)
+  // Load post and comments first (sets currentPostId)
   await loadPost();
+
+  // Setup comment form AFTER post is loaded
+  setupCommentForm();
 });

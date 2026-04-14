@@ -52,6 +52,8 @@ Deployed Static Webapp via [GitHub Pages](https://lindakovacs.github.io/UAlbany-
 
 Comprehensive setup and feature documentation is available in the `documentation/` folder:
 
+### Core Features
+
 - **[Profile Setup & Configuration](documentation/PROFILE_SETUP.md)** - Complete guide to user profiles, profile photos, education/experience tracking, and related API endpoints
   - Profile component overview
   - Database schema and migrations
@@ -59,6 +61,59 @@ Comprehensive setup and feature documentation is available in the `documentation
   - API endpoints and usage examples
   - Frontend integration details
   - Testing procedures
+
+- **[Posts & Comments System](documentation/POSTS_COMMENTS.md)** - Social feed, comments, likes, and real-time interactions
+  - Database schema (posts, comments, likes)
+  - Backend API endpoints with examples
+  - Frontend JavaScript modules
+  - XSS prevention and input validation
+  - Pagination and performance
+  - Testing and troubleshooting
+
+- **[Authentication System](documentation/AUTHENTICATION.md)** - JWT tokens, route protection, session management
+  - Architecture and components
+  - Route protection and role-based access
+  - Token management and expiration
+  - Logout and session handling
+  - Frontend implementation
+
+### Integration & API
+
+- **[API Client Reference](documentation/API-CLIENT-REFERENCE.md)** - Quick reference for using the apiClient helper
+  - All available API methods by resource
+  - Request/response examples
+  - Error handling patterns
+  - Browser console testing
+
+- **[HTML Integration Guide](documentation/HTML-INTEGRATION.md)** - How to integrate API into HTML pages
+  - Component examples (forms, lists, cards)
+  - API call patterns
+  - Error handling strategies
+  - Loading state management
+
+- **[Postman API Testing](documentation/POSTMAN_TESTING.md)** - Complete API documentation with Postman workflows
+  - All endpoint specifications
+  - Request/response examples
+  - Authentication and authorization
+  - Protected vs public endpoints
+  - Error cases and troubleshooting
+  - Workflow examples and best practices
+
+### Setup & Deployment
+
+- **[Security Documentation](documentation/SECURITY.md)** - Security features and best practices
+  - XSS prevention and testing
+  - SQL injection prevention
+  - JWT authentication and authorization
+  - Input validation and sanitization
+  - Password hashing and CORS
+  - Security checklist and recommendations
+
+- **[Gemini AI Chatbot Setup](documentation/GEMINI_SETUP.md)** - Integration with Google Gemini API
+  - API key setup and configuration
+  - Backend endpoint implementation
+  - Frontend chatbot module
+  - Testing and troubleshooting
 
 ## Getting Started
 
@@ -754,7 +809,20 @@ A: Expected behavior - token expiration check runs every minute. Log in again.
 
 ### Complete Documentation
 
-See **[AUTHENTICATION.md](documentation/AUTHENTICATION.md)** for comprehensive authentication system documentation including:
+For comprehensive authentication system documentation including:
+
+- Frontend route protection and guards
+- Token management and expiration
+- User profile display and session management
+- API token injection and error handling
+- Login/logout flows and redirects
+
+See **[AUTHENTICATION.md](documentation/AUTHENTICATION.md)** and **[SECURITY.md](documentation/SECURITY.md)** for:
+
+- JWT implementation details
+- Authorization and role-based access control
+- Security best practices (XSS, SQL injection prevention)
+- Testing security features
 
 - Complete architecture overview
 - All authentication functions and APIs
