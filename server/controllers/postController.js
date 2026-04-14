@@ -31,11 +31,12 @@ const getPosts = async (req, res, next) => {
     // Get paginated posts with user info and like count
     const [posts] = await pool.query(
       `SELECT p.id, p.user_id, u.name, u.email, p.text as content, p.created_at,
-              COUNT(l.id) as like_count
+              COUNT(l.id) as like_count, pr.profile_photo
        FROM posts p
        JOIN users u ON p.user_id = u.id
        LEFT JOIN likes l ON p.id = l.post_id
-       GROUP BY p.id, p.user_id, u.name, u.email, p.text, p.created_at
+       LEFT JOIN profiles pr ON p.user_id = pr.user_id
+       GROUP BY p.id, p.user_id, u.name, u.email, p.text, p.created_at, pr.profile_photo
        ORDER BY p.created_at DESC
        LIMIT ? OFFSET ?`,
       [parseInt(limit), parseInt(offset)],
@@ -78,12 +79,13 @@ const getPost = async (req, res, next) => {
     const pool = req.db;
     const [post] = await pool.query(
       `SELECT p.id, p.user_id, u.name, u.email, p.text as content, p.created_at,
-              COUNT(l.id) as like_count
+              COUNT(l.id) as like_count, pr.profile_photo
        FROM posts p
        JOIN users u ON p.user_id = u.id
        LEFT JOIN likes l ON p.id = l.post_id
+       LEFT JOIN profiles pr ON p.user_id = pr.user_id
        WHERE p.id = ?
-       GROUP BY p.id, p.user_id, u.name, u.email, p.text, p.created_at`,
+       GROUP BY p.id, p.user_id, u.name, u.email, p.text, p.created_at, pr.profile_photo`,
       [postId],
     );
 

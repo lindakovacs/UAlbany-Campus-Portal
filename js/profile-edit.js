@@ -1136,6 +1136,19 @@ function handlePhotoUpload(event) {
       dashboardImg.src = photoData;
     }
 
+    // Upload photo to server if apiClient is available
+    if (typeof apiClient !== 'undefined' && apiClient.profiles) {
+      apiClient.profiles
+        .uploadPhoto(photoData)
+        .then((response) => {
+          console.log('Profile photo uploaded to server:', response);
+        })
+        .catch((error) => {
+          console.warn('Failed to upload profile photo to server:', error);
+          // Don't fail - photo is still saved locally
+        });
+    }
+
     console.log('Profile photo updated and saved to localStorage');
   };
 

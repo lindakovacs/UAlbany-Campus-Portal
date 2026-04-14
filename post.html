@@ -21,6 +21,29 @@
     <link rel="stylesheet" href="css/chat-bot.css" />
     <title>Post Discussion - UAlbany Campus</title>
   </head>
+
+  <style>
+    #page-loading {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    #page-loading.active {
+      display: flex;
+    }
+    #page-loading p {
+      color: white;
+      font-size: 1.2rem;
+    }
+  </style>
   <body>
     <!-- top anchor for Back-to-Top -->
     <a id="top"></a>
@@ -40,28 +63,13 @@
         .catch((error) => console.error('Error loading navbar:', error));
     </script>
     <main>
+      <div id="page-loading">
+        <p>Loading...</p>
+      </div>
       <section class="container">
         <a href="posts.html" class="btn">Back To Posts</a>
-        <div class="post bg-white p-1 my-1 card">
-          <div>
-            <a href="profile.html">
-              <img
-                class="round-img"
-                src="https://linda-kovacs.com/wp-content/uploads/2017/03/Linda-Kovacs.jpg?s=200"
-                alt=""
-              />
-              <h4>Linda Kovacs</h4>
-            </a>
-          </div>
-          <div>
-            <p class="my-1">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
-              possimus corporis sunt necessitatibus! Minus nesciunt soluta
-              suscipit nobis. Amet accusamus distinctio cupiditate blanditiis
-              dolor? Illo perferendis eveniet cum cupiditate aliquam?
-            </p>
-          </div>
-        </div>
+        <!-- Main post will be loaded here by post-detail.js -->
+        <div class="post bg-white p-1 my-1 card"></div>
 
         <div class="post-form">
           <div class="bg-primary p">
@@ -79,54 +87,8 @@
           </form>
         </div>
 
-        <div class="comments">
-          <div class="post bg-white p-1 my-1 card">
-            <div>
-              <a href="profile.html">
-                <img
-                  class="round-img"
-                  src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
-                  alt=""
-                />
-                <h4>John Doe</h4>
-              </a>
-            </div>
-            <div>
-              <p class="my-1">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
-                possimus corporis sunt necessitatibus! Minus nesciunt soluta
-                suscipit nobis. Amet accusamus distinctio cupiditate blanditiis
-                dolor? Illo perferendis eveniet cum cupiditate aliquam?
-              </p>
-              <p class="post-date">Posted on 04/16/2019</p>
-            </div>
-          </div>
-
-          <div class="post bg-white p-1 my-1 card">
-            <div>
-              <a href="profile.html">
-                <img
-                  class="round-img"
-                  src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
-                  alt=""
-                />
-                <h4>John Doe</h4>
-              </a>
-            </div>
-            <div>
-              <p class="my-1">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
-                possimus corporis sunt necessitatibus! Minus nesciunt soluta
-                suscipit nobis. Amet accusamus distinctio cupiditate blanditiis
-                dolor? Illo perferendis eveniet cum cupiditate aliquam?
-              </p>
-              <p class="post-date">Posted on 04/16/2019</p>
-              <button type="button" class="btn btn-danger">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-          </div>
-        </div>
+        <!-- Comments will be loaded here by post-detail.js -->
+        <div class="comments"></div>
       </section>
     </main>
     <!-- Footer loaded from modules -->
@@ -144,6 +106,15 @@
 
     <!-- Comments Module Script -->
     <script src="js/comments.js"></script>
+
+    <!-- Frontend Configuration -->
+    <script src="frontend/config.js"></script>
+
+    <!-- API Client -->
+    <script src="frontend/js/api-client.js"></script>
+
+    <!-- Post Detail Module (loads post and comments from API) -->
+    <script src="js/post-detail.js"></script>
 
     <!-- Accessibility Features Scripts -->
     <script src="js/accessibility.js"></script>

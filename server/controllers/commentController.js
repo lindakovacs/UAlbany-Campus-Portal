@@ -47,9 +47,10 @@ const getPostComments = async (req, res, next) => {
 
     // Get comments with user info
     const [comments] = await pool.query(
-      `SELECT c.id, c.post_id, c.user_id, u.name, u.email, c.text as content, c.created_at
+      `SELECT c.id, c.post_id, c.user_id, u.name, u.email, c.text as content, c.created_at, pr.profile_photo
        FROM comments c
        JOIN users u ON c.user_id = u.id
+       LEFT JOIN profiles pr ON c.user_id = pr.user_id
        WHERE c.post_id = ?
        ORDER BY c.created_at DESC
        LIMIT ? OFFSET ?`,

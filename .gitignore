@@ -26,4 +26,5 @@ config/default.json
 dist/
 build/
 server/logs/
+server/migrations/
 *.log*

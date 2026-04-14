@@ -85,7 +85,7 @@ class APIClient {
       // Check content type to determine if response is JSON
       const contentType = response.headers.get('content-type');
       let data;
-      
+
       if (contentType && contentType.includes('application/json')) {
         data = await response.json();
       } else {
@@ -98,7 +98,7 @@ class APIClient {
         throw new APIError(
           data.error || data.message || 'API Error',
           response.status,
-          data
+          data,
         );
       }
 
@@ -187,14 +187,16 @@ class APIClient {
       // Get current user ID
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       const userId = user.id || localStorage.getItem('userId');
-      
+
       if (!userId) {
-        throw new APIError('User ID not found - log in first', 401, { error: 'Not authenticated' });
+        throw new APIError('User ID not found - log in first', 401, {
+          error: 'Not authenticated',
+        });
       }
-      
+
       const endpoint = `/profiles/${userId}`;
       console.log('Calling profile update:', { endpoint, profileData, userId });
-      
+
       try {
         return await this.request(endpoint, {
           method: 'PUT',
@@ -210,6 +212,13 @@ class APIClient {
     search: async (query) => {
       return this.request(`/profiles/search?q=${encodeURIComponent(query)}`, {
         method: 'GET',
+      });
+    },
+
+    uploadPhoto: async (photoData) => {
+      return this.request('/profiles/photo/upload', {
+        method: 'POST',
+        body: JSON.stringify({ photoData }),
       });
     },
   };

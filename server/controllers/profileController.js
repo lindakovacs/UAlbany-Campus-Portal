@@ -225,8 +225,66 @@ const listProfiles = async (req, res, next) => {
   }
 };
 
+/**
+ * Upload/Update profile photo
+ * @param {Object} req - Express request object with user.id and photoData in body
+ * @param {Object} res - Express response object
+ */
+const uploadProfilePhoto = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { photoData } = req.body;
+
+    // Validate photo data
+    if (!photoData) {
+      throw new ValidationError('Photo data is required');
+    }
+
+    if (typeof photoData !== 'string' || !photoData.startsWith('data:')) {
+      throw new ValidationError(
+        'Invalid photo format. Must be base64 encoded data URL.',
+      );
+    }
+
+    // Limit photo size (max ~2MB when encoded)
+    if (photoData.length > 2500000) {
+      throw new ValidationError('Photo is too large. Maximum size is ~2MB.');
+    }
+
+    const pool = req.db;
+
+    // Check if profile exists
+    const [profiles] = await pool.query(
+      'SELECT id FROM profiles WHERE user_id = ?',
+      [userId],
+    );
+
+    if (profiles.length === 0) {
+      throw new NotFoundError('Profile not found');
+    }
+
+    // Update profile photo
+    const [result] = await pool.query(
+      'UPDATE profiles SET profile_photo = ? WHERE user_id = ?',
+      [photoData, userId],
+    );
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Profile photo updated successfully',
+      data: {
+        user_id: userId,
+        photo_updated: true,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getProfile,
   updateProfile,
   listProfiles,
+  uploadProfilePhoto,
 };

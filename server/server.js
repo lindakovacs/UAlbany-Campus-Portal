@@ -86,9 +86,9 @@ app.use('/api/profiles', profilesExperienceRoutes); // More specific: /:userId/e
 app.use('/api/profiles', profileRoutes); // General: / and /:userId
 app.use('/api/education', educationRoutes);
 app.use('/api/experience', experienceRoutes);
+app.use('/api/posts', postRoutes); // Post CRUD endpoints: /, /:postId, etc. (MUST come first before comment/like routes)
 app.use('/api/posts', commentRoutes); // Comment endpoints: /:postId/comments, /:commentId, etc.
 app.use('/api/posts', likeRoutes); // Like endpoints: /:postId/like, /:postId/likes
-app.use('/api/posts', postRoutes); // Post CRUD endpoints: /, /:postId, etc.
 app.use('/api/comments', commentRoutes); // Alternative comment endpoint: /api/comments/:commentId
 app.use('/api/chat', chatRoutes); // Chatbot endpoint: /api/chat
 

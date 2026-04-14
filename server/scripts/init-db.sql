@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   website VARCHAR(500),
   location VARCHAR(255),
   bio VARCHAR(2000),
+  profile_photo LONGTEXT COMMENT 'Base64 encoded profile photo',
   skills JSON,
   social_links JSON,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -106,3 +107,11 @@ CREATE TABLE IF NOT EXISTS comments (
 -- Uncomment the line below only if you have an existing comments table
 -- without the updated_at column. This will add the column to your existing data.
 -- ALTER TABLE comments ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+-- =====================================================
+-- MIGRATION: Add profile_photo to profiles (if needed)
+-- =====================================================
+-- Uncomment the lines below only if you have an existing profiles table
+-- without the profile_photo column. This will add the column to your existing data.
+-- ALTER TABLE profiles ADD COLUMN profile_photo LONGTEXT DEFAULT NULL COMMENT 'Base64 encoded profile photo';
+-- ALTER TABLE profiles ADD KEY idx_user_id (user_id);

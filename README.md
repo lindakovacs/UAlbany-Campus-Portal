@@ -48,6 +48,18 @@ Deployed Static Webapp via [GitHub Pages](https://lindakovacs.github.io/UAlbany-
 - css/style.css
 - img/ (static images)
 
+## Documentation
+
+Comprehensive setup and feature documentation is available in the `documentation/` folder:
+
+- **[Profile Setup & Configuration](documentation/PROFILE_SETUP.md)** - Complete guide to user profiles, profile photos, education/experience tracking, and related API endpoints
+  - Profile component overview
+  - Database schema and migrations
+  - Profile photo storage and synchronization
+  - API endpoints and usage examples
+  - Frontend integration details
+  - Testing procedures
+
 ## Getting Started
 
 ### Start Backend Server

@@ -1,5 +1,10 @@
 const express = require('express');
-const { getProfile, updateProfile, listProfiles } = require('../controllers/profileController');
+const {
+  getProfile,
+  updateProfile,
+  listProfiles,
+  uploadProfilePhoto,
+} = require('../controllers/profileController');
 const { authMiddleware } = require('../middleware/auth');
 
 const router = express.Router();
@@ -12,6 +17,14 @@ const router = express.Router();
  * @query   limit - Items per page (default: 10, max: 50)
  */
 router.get('/', listProfiles);
+
+/**
+ * @route   POST /api/profiles/photo/upload
+ * @desc    Upload profile photo (authenticated user)
+ * @access  Private
+ * @body    photoData - Base64 encoded photo data URL
+ */
+router.post('/photo/upload', authMiddleware, uploadProfilePhoto);
 
 /**
  * @route   GET /api/profiles/:userId
