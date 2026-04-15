@@ -115,6 +115,22 @@ Comprehensive setup and feature documentation is available in the `documentation
   - Frontend chatbot module
   - Testing and troubleshooting
 
+- **[Production Configuration & Deployment](documentation/PRODUCTION_CONFIG.md)** - Deploy to zeet.co with security hardening
+  - Security headers (X-Content-Type-Options, X-Frame-Options, CSP, HSTS)
+  - CORS configuration for development and production
+  - HTTPS enforcement via zeet.co
+  - Secrets management and .gitignore
+  - zeet.co deployment step-by-step guide
+  - Monitoring and maintenance procedures
+  - Security checklist
+
+- **[Security Implementation Verification](documentation/SECURITY_VERIFICATION.md)** - Verification report of all security measures
+  - Security headers verification (live test results)
+  - CORS configuration validation
+  - HTTPS/SSL setup confirmation
+  - Secrets management verification
+  - Complete security checklist and status
+
 ## Getting Started
 
 ### Start Backend Server
