@@ -29,3 +29,6 @@ build/
 server/logs/
 server/migrations/
 *.log*
+
+# Postman API testing
+.postman/
