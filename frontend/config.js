@@ -17,6 +17,7 @@ const IS_PRODUCTION =
 
 const CONFIG = IS_PRODUCTION
   ? {
+      API_BASE: 'https://ualbany-campus-portal.onrender.com/api', 
       // Production: Render deployment
       FRONTEND_URL: 'https://ualbany-campus-frontend.onrender.com',
       BACKEND_HOST: 'https://ualbany-campus-portal.onrender.com',
@@ -28,6 +29,7 @@ const CONFIG = IS_PRODUCTION
       BACKEND_HOST: 'http://localhost',
       BACKEND_PORT: 3001,
     };
+
 
 // ============================================
 // HOW TO DEPLOY TO RENDER
