@@ -32,7 +32,7 @@ app.use(
           'http://localhost:*',
           'https://localhost:*',
           'https://ualbany-campus-portal.onrender.com',
-          'https://ualbany-campus-frontend.onrender.com',
+          'https://ualbany-portal.onrender.com',
         ],
         fontSrc: ["'self'", 'https:'],
         objectSrc: ["'none'"],
