@@ -101,19 +101,14 @@ Comprehensive setup and feature documentation is available in the `documentation
 
 ### Setup & Deployment
 
-- **[Security Documentation](documentation/SECURITY.md)** - Security features and best practices
-  - XSS prevention and testing
-  - SQL injection prevention
-  - JWT authentication and authorization
-  - Input validation and sanitization
-  - Password hashing and CORS
-  - Security checklist and recommendations
-
-- **[Gemini AI Chatbot Setup](documentation/GEMINI_SETUP.md)** - Integration with Google Gemini API
-  - API key setup and configuration
-  - Backend endpoint implementation
-  - Frontend chatbot module
+- **[Render Deployment Guide](documentation/RENDER_DEPLOYMENT.md)** - Deploy to Render.com (recommended)
+  - Backend API deployment (Node.js/Express)
+  - Frontend deployment (static site)
+  - Environment variables setup
+  - CORS configuration for production
+  - Automatic API URL configuration
   - Testing and troubleshooting
+  - Monitoring and maintenance
 
 - **[Production Configuration & Deployment](documentation/PRODUCTION_CONFIG.md)** - Deploy to zeet.co with security hardening
   - Security headers (X-Content-Type-Options, X-Frame-Options, CSP, HSTS)
@@ -124,12 +119,26 @@ Comprehensive setup and feature documentation is available in the `documentation
   - Monitoring and maintenance procedures
   - Security checklist
 
+- **[Security Documentation](documentation/SECURITY.md)** - Security features and best practices
+  - XSS prevention and testing
+  - SQL injection prevention
+  - JWT authentication and authorization
+  - Input validation and sanitization
+  - Password hashing and CORS
+  - Security checklist and recommendations
+
 - **[Security Implementation Verification](documentation/SECURITY_VERIFICATION.md)** - Verification report of all security measures
   - Security headers verification (live test results)
   - CORS configuration validation
   - HTTPS/SSL setup confirmation
   - Secrets management verification
   - Complete security checklist and status
+
+- **[Gemini AI Chatbot Setup](documentation/GEMINI_SETUP.md)** - Integration with Google Gemini API
+  - API key setup and configuration
+  - Backend endpoint implementation
+  - Frontend chatbot module
+  - Testing and troubleshooting
 
 ## Getting Started
 
