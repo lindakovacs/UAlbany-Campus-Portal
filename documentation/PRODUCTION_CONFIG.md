@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide covers security headers, CORS configuration, HTTPS enforcement, secrets management, and deployment to zeet.co for the UAlbany Campus Portal.
+This guide covers security headers, CORS configuration, HTTPS enforcement, secrets management, and deployment to Render.com for the UAlbany Campus Portal.
 
 ## Security Headers
 
@@ -165,9 +165,9 @@ app.use(cors(corsOptions));
 ```bash
 # In server/.env
 NODE_ENV=production
-FRONTEND_URL=https://ualbany-portal.zeet.co
+FRONTEND_URL=https://ualbany-portal.onrender.com
 
-# Only HTTPS://ualbany-portal.zeet.co is allowed
+# Only HTTPS://ualbany-portal.onrender.com is allowed
 # All other origins get: "Not allowed by CORS"
 ```
 
@@ -207,18 +207,18 @@ http://localhost:3001  (backend)
 http://127.0.0.1:5500  (frontend)
 ```
 
-### Production (zeet.co)
+### Production (Render)
 
 **HTTPS Mandatory:**
-- ✅ zeet.co provides free SSL/TLS certificates
+- ✅ Render provides free SSL/TLS certificates
 - ✅ Automatic HTTPS redirect (HTTP → HTTPS)
 - ✅ Certificate auto-renewal
 
 **Configuration:**
 ```bash
-# In production .env via zeet.co dashboard:
+# In production .env via Render dashboard:
 NODE_ENV=production
-FRONTEND_URL=https://ualbany-portal.zeet.co
+FRONTEND_URL=https://ualbany-portal.onrender.com
 ```
 
 **HSTS Header Automatically Set:**
@@ -283,11 +283,11 @@ PORT=3001
 NODE_ENV=development
 ```
 
-### Production Secrets (zeet.co)
+### Production Secrets (Render)
 
-**Setup via zeet.co Dashboard:**
+**Setup via Render Dashboard:**
 
-1. **Log into zeet.co**
+1. **Log into Render.com**
 2. Navigate to your application
 3. Go to **Settings → Environment Variables**
 4. Add each secret:
@@ -299,7 +299,7 @@ DB_PASSWORD      = [STRONG PASSWORD - 32+ chars, special chars]
 DATABASE         = ualbany_campus
 JWT_SECRET       = [STRONG SECRET - 64+ chars, random]
 JWT_EXPIRE       = 7d
-FRONTEND_URL     = https://ualbany-portal.zeet.co
+FRONTEND_URL     = https://ualbany-portal.onrender.com
 NODE_ENV         = production
 PORT             = 3001 (usually auto-set by platform)
 GEMINI_API_KEY   = [Optional - get from ai.google.dev]
@@ -325,21 +325,21 @@ GEMINI_API_KEY   = [Optional - get from ai.google.dev]
 
 ---
 
-## Deployment to zeet.co
+## Deployment to Render
 
 ### Prerequisites
 
 1. **GitHub Account** - Code repository
-2. **zeet.co Account** - Free tier available
+2. **Render Account** - Free tier available
 3. **MySQL Database** - Local or cloud (JawsDB, PlanetScale)
 4. **Domain Name** (optional) - For custom domain
 
 ### Step 1: Connect GitHub Repository
 
-1. Log into zeet.co
-2. Click **"Create Service"**
+1. Log into Render.com
+2. Click **"New Web Service"**
 3. Select **"GitHub"**
-4. Authorize zeet.co access to your repositories
+4. Authorize Render access to your repositories
 5. Select **UAlbany-Campus-Portal** repository
 6. Choose **main** branch
 
@@ -361,12 +361,12 @@ GEMINI_API_KEY   = [Optional - get from ai.google.dev]
 
 ### Step 3: Add Environment Variables
 
-In zeet.co dashboard **Settings → Environment Variables:**
+In Render dashboard **Environment → Environment Variables:**
 
 ```
 NODE_ENV=production
 PORT=3001
-FRONTEND_URL=https://ualbany-portal.zeet.co
+FRONTEND_URL=https://ualbany-portal.onrender.com
 
 DB_HOST=your-mysql-host.com
 DB_USER=your_db_user
@@ -384,14 +384,14 @@ GEMINI_API_KEY=your_gemini_key_here
 1. Update `frontend/config.js`:
    ```javascript
    const CONFIG = {
-     BACKEND_HOST: 'https://api.ualbany-portal.zeet.co',  // Update domain
+     BACKEND_HOST: 'https://ualbany-campus-portal.onrender.com',  // Update domain
      BACKEND_PORT: 443,
    };
    ```
 
 2. Update `frontend/.env.production`:
    ```
-   VITE_BACKEND_URL=https://api.ualbany-portal.zeet.co
+   VITE_BACKEND_URL=https://ualbany-campus-portal.onrender.com
    ```
 
 ### Step 5: Deploy
@@ -403,27 +403,27 @@ GEMINI_API_KEY=your_gemini_key_here
    git push origin main
    ```
 
-2. zeet.co automatically detects changes and deploys
+2. Render automatically detects changes and deploys
 
-3. Monitor deployment in zeet.co dashboard
+3. Monitor deployment in Render dashboard
 
 ### Step 6: Verify Deployment
 
 **Test API:**
 ```bash
-curl https://ualbany-portal.zeet.co/api/health
+curl https://ualbany-portal.onrender.com/api/health
 # Should return: {"status":"ok","db":"connected"}
 ```
 
 **Test HTTPS:**
 ```bash
-curl -i https://ualbany-portal.zeet.co/api/health
+curl -i https://ualbany-portal.onrender.com/api/health
 # Check for: Strict-Transport-Security header
 ```
 
 **Test Security Headers:**
 ```bash
-curl -i https://ualbany-portal.zeet.co/api/health
+curl -i https://ualbany-portal.onrender.com/api/health
 # Check headers:
 # - X-Content-Type-Options: nosniff ✅
 # - X-Frame-Options: DENY ✅
@@ -445,7 +445,7 @@ curl -i https://ualbany-portal.zeet.co/api/health
 - [x] JWT authentication
 - [x] Input validation
 
-### ✅ Production (zeet.co)
+### ✅ Production (Render)
 
 - [x] HTTPS enforced automatically
 - [x] SSL/TLS certificate auto-renewal
@@ -501,7 +501,7 @@ npm update @package/name@latest  # Major version update
 
 **View deployment logs:**
 ```bash
-# In zeet.co dashboard:
+# In Render dashboard:
 # Deployment → View Logs
 # Real-time logs, search, filter by level
 ```
@@ -587,5 +587,5 @@ For issues or questions:
 - **v1.0** (Apr 2024) - Initial production config
   - Security headers via helmet.js
   - CORS configuration
-  - zeet.co deployment guide
+  - Render deployment guide
   - Secrets management best practices

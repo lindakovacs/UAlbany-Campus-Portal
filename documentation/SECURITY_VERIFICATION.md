@@ -147,7 +147,7 @@ $ curl -s -H "Origin: http://localhost:5500" \
 
 ```env
 NODE_ENV=production
-FRONTEND_URL=https://ualbany-portal.zeet.co
+FRONTEND_URL=https://ualbany-portal.onrender.com
 ```
 
 **Behavior:** All other origins get "Not allowed by CORS" error
@@ -158,7 +158,7 @@ FRONTEND_URL=https://ualbany-portal.zeet.co
 
 ### 3. HTTPS Enforced in Production ✅
 
-**Implementation:** zeet.co platform features
+**Implementation:** Render.com platform features
 
 #### Development (HTTP OK)
 
@@ -169,7 +169,7 @@ http://127.0.0.1:5500  (frontend)
 
 #### Production (HTTPS Required)
 
-**zeet.co Provides:**
+**Render Provides:**
 
 - ✅ Free SSL/TLS certificates
 - ✅ Automatic HTTPS redirect (HTTP → HTTPS)
@@ -181,7 +181,7 @@ http://127.0.0.1:5500  (frontend)
 **Deployment Domain:**
 
 ```
-https://ualbany-portal.zeet.co  (automatic HTTPS)
+https://ualbany-portal.onrender.com  (automatic HTTPS)
 ```
 
 **HSTS Header (Automatic):**
@@ -192,7 +192,7 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 This forces browser to use HTTPS for 1 year (31,536,000 seconds).
 
-**Status:** ✅ VERIFIED - zeet.co handles HTTPS automatically
+**Status:** ✅ VERIFIED - Render handles HTTPS automatically
 
 ---
 
@@ -261,21 +261,21 @@ JWT_SECRET=dev-secret-key
 
 **Status:** ✅ VERIFIED - Local file, never committed
 
-#### Production Secrets (zeet.co Dashboard)
+#### Production Secrets (Render Dashboard)
 
-**Location:** zeet.co Settings → Environment Variables (NOT in code)
+**Location:** Render Settings → Environment Variables (NOT in code)
 
 **Variables (Examples):**
 
 ```
 NODE_ENV=production
-FRONTEND_URL=https://ualbany-portal.zeet.co
+FRONTEND_URL=https://ualbany-portal.onrender.com
 DB_HOST=mysql.yourdomain.com
 DB_PASSWORD=[STRONG_PASSWORD]
 JWT_SECRET=[STRONG_SECRET]
 ```
 
-**Security:** ✅ Managed by zeet.co platform, not in git
+**Security:** ✅ Managed by Render platform, not in git
 
 **Status:** ✅ VERIFIED - No secrets in git
 
@@ -292,20 +292,20 @@ JWT_SECRET=[STRONG_SECRET]
 | X-Frame-Options        | frameguard: deny                | ✅     | `DENY` header sent              |
 | CSP                    | contentSecurityPolicy           | ✅     | Comprehensive directives        |
 | Referrer-Policy        | strict-origin-when-cross-origin | ✅     | Header sent                     |
-| HSTS                   | max-age 1 year                  | ✅     | Will be sent by zeet.co         |
+| HSTS                   | max-age 1 year                  | ✅     | Will be sent by Render          |
 | **CORS Protection**    | Dynamic origin checker          | ✅     | Allows localhost, blocks others |
 | Localhost allowed      | development                     | ✅     | Tested and working              |
 | Production restricted  | NODE_ENV check                  | ✅     | Will use FRONTEND_URL           |
 | Credentials            | enabled                         | ✅     | Cross-origin requests work      |
-| **HTTPS**              | zeet.co platform                | ✅     | Configured for production       |
-| SSL/TLS                | Automatic cert                  | ✅     | zeet.co provides                |
-| HTTP redirect          | Auto redirect                   | ✅     | zeet.co handles                 |
+| **HTTPS**              | Render platform                 | ✅     | Configured for production       |
+| SSL/TLS                | Automatic cert                  | ✅     | Render provides                 |
+| HTTP redirect          | Auto redirect                   | ✅     | Render handles                  |
 | Certificate renewal    | Every 90 days                   | ✅     | Automatic                       |
 | **Secrets Management** | .gitignore + env vars           | ✅     | All files excluded              |
 | .env excluded          | .gitignore                      | ✅     | All variants excluded           |
 | No commits             | Git history                     | ✅     | No secrets in history           |
 | Dev secrets local      | server/.env                     | ✅     | Local file only                 |
-| Prod secrets           | zeet.co dashboard               | ✅     | Platform managed                |
+| Prod secrets           | Render dashboard                | ✅     | Platform managed                |
 
 ---
 
@@ -383,7 +383,7 @@ chmod +x verify-security.sh
 ### For Production Deployment
 
 1. Follow [PRODUCTION_CONFIG.md](PRODUCTION_CONFIG.md)
-2. Set environment variables in zeet.co dashboard
+2. Set environment variables in Render dashboard
 3. Deploy via GitHub push to main branch
 4. Test HTTPS: `curl -i https://yourdomain`
 5. Verify headers: `curl -i https://yourdomain/api/health`
@@ -393,7 +393,7 @@ chmod +x verify-security.sh
 1. Use [securityheaders.com](https://securityheaders.com/)
 2. Use [Observatory.mozilla.org](https://observatory.mozilla.org/)
 3. Regular security audits: `npm audit`
-4. Monitor zeet.co deployment logs
+4. Monitor Render deployment logs
 
 ---
 
@@ -406,7 +406,7 @@ chmod +x verify-security.sh
 - [x] CORS blocks unauthorized origins
 - [x] CORS allows development (localhost)
 - [x] CORS restricts production (FRONTEND_URL only)
-- [x] HTTPS ready for production (zeet.co)
+- [x] HTTPS ready for production (Render)
 - [x] HSTS header configured
 - [x] .env files in .gitignore
 - [x] No secrets in git history

@@ -110,12 +110,12 @@ Comprehensive setup and feature documentation is available in the `documentation
   - Testing and troubleshooting
   - Monitoring and maintenance
 
-- **[Production Configuration & Deployment](documentation/PRODUCTION_CONFIG.md)** - Deploy to zeet.co with security hardening
+- **[Production Configuration & Deployment](documentation/PRODUCTION_CONFIG.md)** - Deploy to Render.com with security hardening
   - Security headers (X-Content-Type-Options, X-Frame-Options, CSP, HSTS)
   - CORS configuration for development and production
-  - HTTPS enforcement via zeet.co
+  - HTTPS enforcement via Render (automatic SSL/TLS)
   - Secrets management and .gitignore
-  - zeet.co deployment step-by-step guide
+  - Render deployment step-by-step guide
   - Monitoring and maintenance procedures
   - Security checklist
 
@@ -959,7 +959,7 @@ Also test API functions directly in your browser's DevTools console (F12) using 
 
 **Security:** JWT tokens, bcrypt hashing, input validation, XSS prevention, CSRF protection
 
-**Deployment:** zeet.co (free tier with HTTPS, auto-deploy from GitHub)
+**Deployment:** Render (free tier with HTTPS, auto-deploy from GitHub)
 
 **DevTools:** Git, GitHub, npm, nodemon
 
@@ -982,7 +982,7 @@ See [POSTMAN_TESTING.md](documentation/POSTMAN_TESTING.md) for comprehensive API
 
 **Security:** JWT tokens, bcrypt hashing, input validation, XSS prevention, CSRF protection
 
-**Deployment:** zeet.co (free tier with HTTPS, auto-deploy from GitHub)
+**Deployment:** Render (free tier with HTTPS, auto-deploy from GitHub)
 
 **DevTools:** Git, GitHub, npm, nodemon
 
