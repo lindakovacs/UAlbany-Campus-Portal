@@ -14,6 +14,8 @@ Full-stack web application for Albany Campus Portal platform. This project is a 
 - **Security:** HTTPS, input validation, XSS prevention, CSRF protection
 - **Responsive Design:** Mobile-first approach with tablets and desktop support
 
+**Deployed Dynamic Webapp via [Render](https://ualbany-portal.onrender.com/)** ✨
+
 Deployed Static Webapp via [GitHub Pages](https://lindakovacs.github.io/UAlbany-Campus-Portal-Theme/)
 
 ## Project Team:
@@ -883,6 +885,17 @@ Test the API directly from your browser without using Postman. The frontend incl
 **Browser Console Testing:**
 Also test API functions directly in your browser's DevTools console (F12) using the built-in API utility functions. See **Quick Start** section above for example console commands.
 
+## API Endpoints & Testing with Postman
+
+See [POSTMAN_TESTING.md](documentation/POSTMAN_TESTING.md) for comprehensive API documentation including:
+
+- All endpoint specifications with request/response examples
+- Installation and setup instructions
+- Authentication and authorization details
+- Protected vs public endpoint markings
+- Error cases and troubleshooting
+- Postman workflow examples and best practices
+
 ## Project Structure
 
 ```
@@ -961,32 +974,12 @@ Also test API functions directly in your browser's DevTools console (F12) using 
 
 **Deployment:** Render (free tier with HTTPS, auto-deploy from GitHub)
 
-**DevTools:** Git, GitHub, npm, nodemon
+**DevTools:** Git, GitHub, npm, nodemon, Postman
 
-## API Endpoints & Testing with Postman
-
-See [POSTMAN_TESTING.md](documentation/POSTMAN_TESTING.md) for comprehensive API documentation including:
-
-- All endpoint specifications with request/response examples
-- Installation and setup instructions
-- Authentication and authorization details
-- Protected vs public endpoint markings
-- Error cases and troubleshooting
-- Postman workflow examples and best practices
-
-## Technologies
-
-**Frontend:** HTML5, CSS3, JavaScript (Vanilla - no frameworks), DOM Manipulation, Fetch API
-
-**Backend:** Node.js, Express.js, MySQL, JWT Authentication, bcryptjs
-
-**Security:** JWT tokens, bcrypt hashing, input validation, XSS prevention, CSRF protection
-
-**Deployment:** Render (free tier with HTTPS, auto-deploy from GitHub)
-
-**DevTools:** Git, GitHub, npm, nodemon
 
 ## Project Links
+
+[Dynamic Webapp Deployed via Render](https://ualbany-portal.onrender.com/)
 
 [GitHub Repository - Version Control & Collaboration](https://github.com/lindakovacs/UAlbany-Campus-Portal)
 
